@@ -1,5 +1,5 @@
 // src/pages/TutorialPage.tsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   FaArrowLeft,
@@ -30,6 +30,7 @@ const TutorialPage = () => {
   const [tutorial, setTutorial] = useState<Tutorial | undefined>(undefined)
   const [relatedTutorials, setRelatedTutorials] = useState<Tutorial[]>([])
   const [shareSuccess, setShareSuccess] = useState(false)
+  const hasIncrementedViews = useRef(false) // Referência para controlar o incremento
 
   useEffect(() => {
     if (id) {
@@ -37,8 +38,11 @@ const TutorialPage = () => {
       setTutorial(foundTutorial)
 
       if (foundTutorial) {
-        // Incrementar visualizações
-        incrementViews(id)
+        // Incrementar visualizações apenas uma vez por sessão
+        if (!hasIncrementedViews.current) {
+          incrementViews(id)
+          hasIncrementedViews.current = true
+        }
 
         const related = getTutorialsByCategory(foundTutorial.category)
           .filter(t => t.id !== id)

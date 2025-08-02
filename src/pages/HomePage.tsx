@@ -54,18 +54,22 @@ const HomePage: React.FC = () => {
         <div className='row mb-4'>
           <div className='col-12'>
             <div className='alert alert-info d-flex align-items-center justify-content-between'>
-              <div className='d-flex align-items-center gap-2'>
-                <span>{selectedCategoryData.icon}</span>
-                <div>
-                  <strong>Categoria selecionada:</strong>{' '}
-                  {selectedCategoryData.name}
+              <div>
+                <div className='d-flex align-items-center gap-2 mb-2'>
+                  <span className='fs-4'>{selectedCategoryData.icon}</span>
+                  <h2 className='mb-0'>{selectedCategoryData.name}</h2>
                   <span className='badge bg-primary ms-2'>
                     {filteredTutorials.length} tutorial
                     {filteredTutorials.length !== 1 ? 's' : ''}
                   </span>
                 </div>
+                <p className='mb-0'>{selectedCategoryData.description}</p>
               </div>
-              <Link to='/' className='btn btn-outline-primary btn-sm'>
+              <Link
+                to='/'
+                className='btn btn-outline-primary btn-sm'
+                aria-label='Limpar filtro de categoria'
+              >
                 Limpar filtro
               </Link>
             </div>
@@ -110,6 +114,7 @@ const HomePage: React.FC = () => {
                       {category.tutorialCount !== 1 ? 's' : ''}
                     </span>
                   </div>
+                  <p className='text-muted mb-3'>{category.description}</p>
                   <div className='row g-4'>
                     {category.tutorials.map(tutorial => (
                       <div key={tutorial.id} className='col-md-6 col-xl-4'>
@@ -124,6 +129,7 @@ const HomePage: React.FC = () => {
                     <Link
                       to={`/?category=${category.id}`}
                       className='btn btn-sm btn-outline-primary'
+                      aria-label={`Ver todos os tutoriais de ${category.name}`}
                     >
                       Ver todos em {category.name} →
                     </Link>
@@ -152,7 +158,8 @@ const HomePage: React.FC = () => {
                 </h2>
                 <p className='text-dark mb-0'>
                   {selectedCategory
-                    ? 'Tutoriais desta categoria organizados por data'
+                    ? selectedCategoryData?.description ||
+                      'Tutoriais desta categoria organizados por data'
                     : 'Conteúdo mais recente adicionado à plataforma'}
                 </p>
               </div>
@@ -182,7 +189,11 @@ const HomePage: React.FC = () => {
                     : 'Nenhum tutorial disponível no momento. Volte em breve!'}
                 </p>
                 {selectedCategory && (
-                  <Link to='/' className='btn btn-primary'>
+                  <Link
+                    to='/'
+                    className='btn btn-primary'
+                    aria-label='Voltar para todos os tutoriais'
+                  >
                     Ver todos os tutoriais
                   </Link>
                 )}
