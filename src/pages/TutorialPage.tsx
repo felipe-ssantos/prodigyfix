@@ -10,7 +10,8 @@ import {
   FaShare,
   FaPrint,
   FaHome,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaCheck
 } from 'react-icons/fa'
 import { useTutorials } from '../contexts/TutorialContext'
 import type { Tutorial } from '../types'
@@ -24,9 +25,7 @@ const TutorialPage = () => {
     getTutorialsByCategory
   } = useTutorials()
 
-  const [tutorial, setTutorial] = useState<Tutorial | undefined>(
-    getTutorialById(id || '')
-  )
+  const [tutorial, setTutorial] = useState<Tutorial | undefined>(undefined)
   const [relatedTutorials, setRelatedTutorials] = useState<Tutorial[]>([])
   const [shareSuccess, setShareSuccess] = useState(false)
 
@@ -40,8 +39,6 @@ const TutorialPage = () => {
           .filter(t => t.id !== id)
           .slice(0, 3)
         setRelatedTutorials(related)
-
-        // Update page title
         document.title = `${foundTutorial.title} - Tutorial`
       }
     }
@@ -70,7 +67,7 @@ const TutorialPage = () => {
                   className='btn btn-outline-secondary'
                 >
                   <FaArrowLeft className='me-2' />
-                  Go Back
+                  Voltar
                 </button>
               </div>
             </div>
@@ -91,7 +88,7 @@ const TutorialPage = () => {
     }
 
     try {
-      if (navigator.share && navigator.canShare(shareData)) {
+      if (navigator.share && navigator.canShare?.(shareData)) {
         await navigator.share(shareData)
       } else {
         await navigator.clipboard.writeText(window.location.href)
@@ -100,7 +97,6 @@ const TutorialPage = () => {
       }
     } catch (err) {
       console.error('Error sharing:', err)
-      // Fallback to clipboard
       try {
         await navigator.clipboard.writeText(window.location.href)
         setShareSuccess(true)
@@ -118,11 +114,11 @@ const TutorialPage = () => {
   const getDifficultyConfig = (difficulty: string) => {
     switch (difficulty) {
       case 'Iniciante':
-        return { color: 'success', text: 'Iniciante' }
-      case 'intermediate':
-        return { color: 'warning', text: 'Intermediário' }
-      case 'advanced':
-        return { color: 'danger', text: 'Avançado' }
+        return { color: 'success', icon: '🟢', text: 'Iniciante' }
+      case 'Intermediário':
+        return { color: 'warning', icon: '🟡', text: 'Intermediário' }
+      case 'Avançado':
+        return { color: 'danger', icon: '🔴', text: 'Avançado' }
       default:
         return { color: 'secondary', icon: '⚪', text: 'Desconhecido' }
     }
@@ -131,21 +127,21 @@ const TutorialPage = () => {
   const difficultyConfig = getDifficultyConfig(tutorial.difficulty)
 
   return (
-    <div className='container py-4'>
+    <div className='container-fluid py-4 tutorial-page-container'>
       {/* Success Toast for Share */}
       {shareSuccess && (
-        <div className='position-fixed top-0 end-0 p-3 shareSuccess-tutorial-page'>
+        <div className='position-fixed top-0 end-0 p-3 toast-success'>
           <div className='toast show bg-success text-white' role='alert'>
             <div className='d-flex'>
               <div className='toast-body'>
-                <i className='fas fa-check-circle me-2'></i>
-                Link copied to clipboard!
+                <FaCheck className='me-2' />
+                Link copiado para a área de transferência!
               </div>
               <button
                 type='button'
                 className='btn-close btn-close-white me-2 m-auto'
                 onClick={() => setShareSuccess(false)}
-                aria-label='Close notification'
+                aria-label='Fechar notificação'
               ></button>
             </div>
           </div>
@@ -170,7 +166,7 @@ const TutorialPage = () => {
             </Link>
           </li>
           <li
-            className='breadcrumb-item active text-truncate breadcrumb-tutorial-page'
+            className='breadcrumb-item active text-truncate'
             aria-current='page'
           >
             {tutorial.title}
@@ -178,10 +174,10 @@ const TutorialPage = () => {
         </ol>
       </nav>
 
-      <div className='row'>
+      <div className='row gx-4'>
         {/* Main Content */}
-        <div className='col-lg-8'>
-          <article className='bg-white'>
+        <div className='col-lg-9'>
+          <article className='bg-white rounded-3 shadow-sm p-4 tutorial-article'>
             {/* Header */}
             <header className='mb-5'>
               <div className='d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2'>
@@ -201,11 +197,11 @@ const TutorialPage = () => {
 
               {/* Cover Image */}
               {tutorial.imageUrl && (
-                <div className='mb-4'>
+                <div className='mb-4 tutorial-cover-image'>
                   <img
                     src={tutorial.imageUrl}
                     alt={tutorial.title}
-                    className='img-fluid rounded shadow-sm cover-image-tutorial-page'
+                    className='img-fluid rounded shadow-sm'
                   />
                 </div>
               )}
@@ -234,7 +230,7 @@ const TutorialPage = () => {
                   <div className='d-flex align-items-center'>
                     <FaCalendarAlt className='me-2 text-primary' />
                     <span>
-                      Publicado em: {new Date(tutorial.createdAt).toLocaleDateString()}
+                      {new Date(tutorial.createdAt).toLocaleDateString('pt-BR')}
                     </span>
                   </div>
                 </div>
@@ -262,21 +258,50 @@ const TutorialPage = () => {
             <div className='tutorial-content mb-5'>
               <div
                 dangerouslySetInnerHTML={{ __html: tutorial.content }}
-                className='lh-lg content-tutorial-page'
+                className='lh-lg'
               />
             </div>
 
+            {/* Quick Actions - Footer */}
+            <div className='border-top pt-4 mb-4'>
+              <div className='row'>
+                <div className='col-md-6'>
+                  <h6 className='fw-semibold mb-3 d-flex align-items-center'>
+                    <i className='fas fa-lightning-bolt me-2 text-warning'></i>
+                    Ações Rápidas
+                  </h6>
+                  <div className='d-flex gap-2 flex-wrap'>
+                    <button
+                      type='button'
+                      onClick={handleShare}
+                      className='btn btn-outline-primary btn-sm'
+                    >
+                      <FaShare className='me-2' size={14} />
+                      Compartilhar
+                    </button>
+                    <button
+                      type='button'
+                      onClick={handlePrint}
+                      className='btn btn-outline-secondary btn-sm d-print-none'
+                    >
+                      <FaPrint className='me-2' size={14} />
+                      Imprimir
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Navigation */}
-            <nav className='d-flex justify-content-between mt-5 pt-4 border-top'>
+            <nav className='d-flex justify-content-between mt-5 pt-4 border-top tutorial-navigation'>
               {prevTutorial ? (
                 <Link
                   to={`/tutorial/${prevTutorial.id}`}
-                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none'
-                  style={{ maxWidth: '45%' }}
+                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
                 >
                   <FaArrowLeft className='me-2 flex-shrink-0' />
                   <div className='text-start'>
-                    <small className='d-block text-muted'>Previous</small>
+                    <small className='d-block text-muted'>Anterior</small>
                     <span className='text-truncate d-block'>
                       {prevTutorial.title}
                     </span>
@@ -289,11 +314,10 @@ const TutorialPage = () => {
               {nextTutorial ? (
                 <Link
                   to={`/tutorial/${nextTutorial.id}`}
-                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none'
-                  style={{ maxWidth: '45%' }}
+                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
                 >
                   <div className='text-end'>
-                    <small className='d-block text-muted'>Next</small>
+                    <small className='d-block text-muted'>Próximo</small>
                     <span className='text-truncate d-block'>
                       {nextTutorial.title}
                     </span>
@@ -308,18 +332,15 @@ const TutorialPage = () => {
         </div>
 
         {/* Sidebar */}
-        <div className='col-lg-4'>
-          <div className='sticky-top sidebar-tutorial-page'>
-            {/* Quick Stats */}
-            <div className='card border-0 shadow-sm mb-4'></div>
-
+        <div className='col-lg-3'>
+          <div className='position-sticky-custom'>
             {/* Related Tutorials */}
             {relatedTutorials.length > 0 && (
               <div className='card border-0 shadow-sm mb-4'>
                 <div className='card-header bg-white border-bottom-0'>
                   <h6 className='mb-0 fw-semibold d-flex align-items-center'>
                     <i className='fas fa-bookmark me-2 text-primary'></i>
-                    Related Tutorials
+                    Tutoriais Relacionados
                   </h6>
                 </div>
                 <div className='card-body pt-0'>
@@ -379,43 +400,12 @@ const TutorialPage = () => {
                       to={`/?category=${encodeURIComponent(tutorial.category)}`}
                       className='btn btn-outline-primary btn-sm w-100'
                     >
-                      View All in {tutorial.category}
+                      Ver Todos em {tutorial.category}
                     </Link>
                   </div>
                 </div>
               </div>
             )}
-
-            {/* Quick Actions */}
-            <div className='card border-0 shadow-sm'>
-              <div className='card-header bg-white border-bottom-0'>
-                <h6 className='mb-0 fw-semibold d-flex align-items-center'>
-                  <i className='fas fa-lightning-bolt me-2 text-warning'></i>
-                  Ações rápidas
-                </h6>
-              </div>
-              <div className='card-body pt-0'>
-                <div className='d-grid gap-2'>
-                  <button
-                    type='button'
-                    onClick={handleShare}
-                    className='btn btn-outline-primary btn-sm'
-                  >
-                    <FaShare className='me-2' size={14} />
-                    Compartilhar Tutorial ?
-                  </button>
-
-                  <button
-                    type='button'
-                    onClick={handlePrint}
-                    className='btn btn-outline-secondary btn-sm d-print-none'
-                  >
-                    <FaPrint className='me-2' size={14} />
-                    Imprimir Tutorial ?
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

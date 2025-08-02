@@ -59,12 +59,10 @@ const CreateTutorial: React.FC = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('O tamanho do arquivo de imagem deve ser inferior a 5 MB')
         return
       }
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError('Selecione um arquivo de imagem válido')
         return
@@ -135,16 +133,12 @@ const CreateTutorial: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
+    if (!validateForm()) return
 
     setLoading(true)
     setError('')
 
     try {
-      // Upload image if exists
       let imageUrl = formData.imageUrl
       if (imageFile) {
         const storageRef = ref(
@@ -155,7 +149,6 @@ const CreateTutorial: React.FC = () => {
         imageUrl = await getDownloadURL(snapshot.ref)
       }
 
-      // Create tutorial object
       const tutorialData = {
         ...formData,
         imageUrl,
@@ -164,13 +157,11 @@ const CreateTutorial: React.FC = () => {
         views: 0
       }
 
-      // Save to Firestore
       const docRef = await addDoc(collection(db, 'tutorials'), tutorialData)
-
       alert(`Tutorial criado com sucesso! ID: ${docRef.id}`)
       navigate('/admin/dashboard')
     } catch (err) {
-      setError('Falha ao criar o tutorial. Tente novamente..')
+      setError('Falha ao criar o tutorial. Tente novamente.')
       console.error('Erro ao criar tutorial:', err)
     } finally {
       setLoading(false)
@@ -182,220 +173,231 @@ const CreateTutorial: React.FC = () => {
       <div className='container py-5'>
         <div className='alert alert-danger'>
           <h4 className='alert-heading'>Acesso negado</h4>
-          <p className='mb-0'>Você precisa estar logado para acessar esta página.</p>
+          <p>Você precisa estar logado para acessar esta página.</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className='container py-4'>
-      <div className='row justify-content-center'>
-        <div className='col-lg-12'>
-          <div className='card shadow-sm'>
-            <div className='card-header bg-primary text-white'>
-              <h2 className='mb-0 fw-bold'>
-                <i className='fas fa-plus-circle me-2'></i>
-                Criar novo tutorial
-              </h2>
-            </div>
-            <div className='card-body p-4'>
-              {error && (
-                <div
-                  className='alert alert-danger alert-dismissible'
-                  role='alert'
-                >
-                  <strong>Error:</strong> {error}
-                  <button
-                    type='button'
-                    className='btn-close'
-                    onClick={() => setError('')}
-                    aria-label='Close'
-                  ></button>
-                </div>
-              )}
+    <div className='container-fluid py-4 tutorial-admin-container'>
+      <div className='row gx-4'>
+        <div className='col-12'>
+          <article className='bg-white rounded-3 shadow-sm p-4 tutorial-admin-article'>
+            <header className='mb-4'>
+              <h1 className='fw-bold mb-0'>
+                <i className='fas fa-plus-circle me-2 text-primary'></i>
+                Criar Novo Tutorial
+              </h1>
+            </header>
 
-              <form onSubmit={handleSubmit}>
-                {/* Basic Information */}
-                <div className='row mb-4'>
-                  <div className='col-12'>
+            {error && (
+              <div
+                className='alert alert-danger alert-dismissible fade show mb-4'
+                role='alert'
+              >
+                <strong>Erro:</strong> {error}
+                <button
+                  type='button'
+                  className='btn-close'
+                  onClick={() => setError('')}
+                  aria-label='Close'
+                ></button>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <div className='row'>
+                {/* Left Column */}
+                <div className='col-lg-6'>
+                  <div className='mb-4'>
                     <h5 className='text-muted border-bottom pb-2 mb-3'>
-                      Informações básicas
+                      <i className='fas fa-info-circle me-2'></i>
+                      Informações Básicas
                     </h5>
-                  </div>
-
-                  <div className='col-12 mb-3'>
-                    <label htmlFor='title' className='form-label fw-semibold'>
-                      Título <span className='text-danger'>*</span>
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      id='title'
-                      name='title'
-                      value={formData.title}
-                      onChange={handleChange}
-                      placeholder='Digite o título do tutorial'
-                      required
-                    />
-                  </div>
-
-                  <div className='col-12 mb-3'>
-                    <label
-                      htmlFor='description'
-                      className='form-label fw-semibold'
-                    >
-                      Resumo <span className='text-danger'>*</span>
-                    </label>
-                    <textarea
-                      className='form-control'
-                      id='description'
-                      name='description'
-                      rows={3}
-                      value={formData.description}
-                      onChange={handleChange}
-                      placeholder='Breve resumo do tutorial'
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className='row mb-4'>
-                  <div className='col-12'>
-                    <h5 className='text-muted border-bottom pb-2 mb-3'>
-                      Conteúdo
-                    </h5>
-                  </div>
-
-                  <div className='col-12 mb-3'>
-                    <label
-                      htmlFor='content'
-                      className='form-label fw-semibold mb-2'
-                    >
-                      Conteúdo do tutorial <span className='text-danger'>*</span>
-                    </label>
-                    <TiptapEditor
-                      content={formData.content}
-                      onChange={handleContentChange}
-                      placeholder='Escreva o conteúdo detalhado do seu tutorial aqui...'
-                    />
-                  </div>
-                </div>
-
-                {/* Categorization */}
-                <div className='row mb-4'>
-                  <div className='col-12'>
-                    <h5 className='text-muted border-bottom pb-2 mb-3'>
-                      Categorização
-                    </h5>
-                  </div>
-
-                  <div className='col-md-6 mb-3'>
-                    <label
-                      htmlFor='category'
-                      className='form-label fw-semibold'
-                    >
-                      Categoria <span className='text-danger'>*</span>
-                    </label>
-                    <div className='input-group'>
-                      <select
-                        className='form-select'
-                        id='category'
-                        name='category'
-                        value={formData.category}
+                    <div className='mb-3'>
+                      <label htmlFor='title' className='form-label fw-semibold'>
+                        Título <span className='text-danger'>*</span>
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control'
+                        id='title'
+                        name='title'
+                        value={formData.title}
                         onChange={handleChange}
                         required
+                      />
+                    </div>
+
+                    <div className='mb-3'>
+                      <label
+                        htmlFor='description'
+                        className='form-label fw-semibold'
                       >
-                        <option value=''>Selecione uma categoria</option>
-                        {categories.map(cat => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        type='button'
-                        className='btn btn-outline-secondary'
-                        onClick={() => setShowCategoryModal(true)}
-                        title='Add new category'
-                      >
-                        <i className='fas fa-plus'></i> Outra (nova catergoria)
-                      </button>
+                        Resumo <span className='text-danger'>*</span>
+                      </label>
+                      <textarea
+                        className='form-control'
+                        id='description'
+                        name='description'
+                        rows={3}
+                        value={formData.description}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                   </div>
 
-                  <div className='col-md-6 mb-3'>
-                    <label
-                      htmlFor='difficulty'
-                      className='form-label fw-semibold'
-                    >
-                      Nível de dificuldade <span className='text-danger'>*</span>
-                    </label>
-                    <select
-                      className='form-select'
-                      id='difficulty'
-                      name='difficulty'
-                      value={formData.difficulty}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value='Iniciante'>Iniciante</option>
-                      <option value='Intermediário'>Intermediário</option>
-                      <option value='Avançado'>Avançado</option>
-                    </select>
-                  </div>
+                  <div className='mb-4'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      <i className='fas fa-tags me-2'></i>
+                      Categorização
+                    </h5>
+                    <div className='mb-3'>
+                      <label
+                        htmlFor='category'
+                        className='form-label fw-semibold'
+                      >
+                        Categoria <span className='text-danger'>*</span>
+                      </label>
+                      <div className='input-group'>
+                        <select
+                          className='form-select'
+                          id='category'
+                          name='category'
+                          value={formData.category}
+                          onChange={handleChange}
+                          required
+                        >
+                          <option value=''>Selecione uma categoria</option>
+                          {categories.map(cat => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          type='button'
+                          className='btn btn-outline-secondary'
+                          onClick={() => setShowCategoryModal(true)}
+                          aria-label='categoria'
+                        >
+                          <i className='fas fa-plus'>Adicionar nova categoria?</i>
+                        </button>
+                      </div>
+                    </div>
 
-                  <div className='col-md-6 mb-3'>
-                    <label htmlFor='tags' className='form-label fw-semibold'>
-                      Tags
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      id='tags'
-                      name='tags'
-                      value={formData.tags.join(', ')}
-                      onChange={handleTagsChange}
-                      placeholder='tag1, tag2, tag3'
-                    />
-                    <div className='form-text'>Separe as tags com vírgulas</div>
-                  </div>
+                    <div className='mb-3'>
+                      <label
+                        htmlFor='difficulty'
+                        className='form-label fw-semibold'
+                      >
+                        Dificuldade <span className='text-danger'>*</span>
+                      </label>
+                      <select
+                        className='form-select'
+                        id='difficulty'
+                        name='difficulty'
+                        value={formData.difficulty}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value='Iniciante'>Iniciante</option>
+                        <option value='Intermediário'>Intermediário</option>
+                        <option value='Avançado'>Avançado</option>
+                      </select>
+                    </div>
 
-                  <div className='col-md-6 mb-3'>
-                    <label
-                      htmlFor='keywords'
-                      className='form-label fw-semibold'
-                    >
-                      Palavras-chave
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      id='keywords'
-                      name='keywords'
-                      value={formData.keywords.join(', ')}
-                      onChange={handleKeywordsChange}
-                      placeholder='keyword1, keyword2, keyword3'
-                    />
-                    <div className='form-text'>Para otimização de pesquisa</div>
+                    <div className='mb-3'>
+                      <label htmlFor='tags' className='form-label fw-semibold'>
+                        Tags
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control'
+                        id='tags'
+                        name='tags'
+                        value={formData.tags.join(', ')}
+                        onChange={handleTagsChange}
+                        placeholder='tag1, tag2, tag3'
+                      />
+                      <small className='form-text text-muted'>
+                        Separe as tags com vírgulas
+                      </small>
+                    </div>
+
+                    <div className='mb-3'>
+                      <label
+                        htmlFor='keywords'
+                        className='form-label fw-semibold'
+                      >
+                        Palavras-chave
+                      </label>
+                      <input
+                        type='text'
+                        className='form-control'
+                        id='keywords'
+                        name='keywords'
+                        value={formData.keywords.join(', ')}
+                        onChange={handleKeywordsChange}
+                        placeholder='keyword1, keyword2, keyword3'
+                      />
+                      <small className='form-text text-muted'>
+                        Para otimização de pesquisa
+                      </small>
+                    </div>
                   </div>
                 </div>
 
-                {/* Additional Settings */}
-                <div className='row mb-4'>
-                  <div className='col-12'>
+                {/* Right Column */}
+                <div className='col-lg-6'>
+                  <div className='mb-4'>
                     <h5 className='text-muted border-bottom pb-2 mb-3'>
-                      Configurações adicionais
+                      <i className='fas fa-align-left me-2'></i>
+                      Conteúdo
                     </h5>
+                    <TiptapEditor
+                      content={formData.content}
+                      onChange={handleContentChange}
+                    />
                   </div>
 
-                  <div className='col-md-6 mb-3'>
+                  <div className='mb-4'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      <i className='fas fa-image me-2'></i>
+                      Imagem de Capa
+                    </h5>
+                    <div className='mb-3'>
+                      <input
+                        type='file'
+                        className='form-control'
+                        id='image'
+                        name='image'
+                        accept='image/*'
+                        onChange={handleImageChange}
+                        aria-label='imagem'
+                      />
+                      <small className='form-text text-muted'>
+                        Máx. 5MB (JPG, PNG, GIF, WebP)
+                      </small>
+                      {imageFile && (
+                        <div className='mt-2'>
+                          <span className='badge bg-success'>
+                            <i className='fas fa-check-circle me-1'></i>
+                            {imageFile.name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className='mb-3'>
                     <label
                       htmlFor='estimatedTime'
                       className='form-label fw-semibold'
                     >
-                      Tempo estimado de leitura (em minutos)
+                      Tempo Estimado (minutos)
                     </label>
                     <input
                       type='number'
@@ -403,80 +405,50 @@ const CreateTutorial: React.FC = () => {
                       id='estimatedTime'
                       name='estimatedTime'
                       min='0'
-                      max='999'
                       value={formData.estimatedTime}
                       onChange={handleChange}
-                      placeholder='0'
                     />
                   </div>
-
-                  <div className='col-md-6 mb-3'>
-                    <label htmlFor='image' className='form-label fw-semibold'>
-                      Imagem da capa
-                    </label>
-                    <input
-                      type='file'
-                      className='form-control'
-                      id='image'
-                      name='image'
-                      accept='image/*'
-                      onChange={handleImageChange}
-                    />
-                    <div className='form-text'>
-                      Max 5MB. Suportada: JPG, PNG, GIF, WebP
-                    </div>
-                    {imageFile && (
-                      <div className='mt-2'>
-                        <small className='text-success'>
-                          <i className='fas fa-check-circle me-1'></i>
-                          Selecionada: {imageFile.name}
-                        </small>
-                      </div>
-                    )}
-                  </div>
                 </div>
+              </div>
 
-                {/* Actions */}
-                <div className='d-flex justify-content-between pt-3 border-top'>
-                  <button
-                    type='button'
-                    className='btn btn-secondary px-4'
-                    onClick={() => navigate('/admin/dashboard')}
-                    disabled={loading}
-                  >
-                    <i className='fas fa-times me-2'></i>
-                    Cancelar
-                  </button>
-                  <button
-                    type='submit'
-                    className='btn btn-primary px-4'
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <div
-                          className='spinner-border spinner-border-sm me-2'
-                          role='status'
-                        >
-                          <span className='visually-hidden'>Carregando...</span>
-                        </div>
-                        Publicando tutorial...
-                      </>
-                    ) : (
-                      <>
-                        <i className='fas fa-save me-2'></i>
-                        Criar tutorial
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+              <div className='d-flex justify-content-between pt-4 border-top'>
+                <button
+                  type='button'
+                  className='btn btn-outline-secondary'
+                  onClick={() => navigate('/admin/dashboard')}
+                  disabled={loading}
+                >
+                  <i className='fas fa-arrow-left me-2'></i>
+                  Cancelar
+                </button>
+                <button
+                  type='submit'
+                  className='btn btn-primary'
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span
+                        className='spinner-border spinner-border-sm me-2'
+                        role='status'
+                        aria-hidden='true'
+                      ></span>
+                      Publicando...
+                    </>
+                  ) : (
+                    <>
+                      <i className='fas fa-save me-2'></i>
+                      Criar Tutorial
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </article>
         </div>
       </div>
 
-      {/* New Category Modal */}
       <Modal
         show={showCategoryModal}
         onHide={() => setShowCategoryModal(false)}
@@ -485,13 +457,13 @@ const CreateTutorial: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>
             <i className='fas fa-folder-plus me-2'></i>
-            Adicionar nova categoria
+            Nova Categoria
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='mb-3'>
-            <label htmlFor='newCategory' className='form-label fw-semibold'>
-              Nome da categoria
+            <label htmlFor='newCategory' className='form-label'>
+              Nome da Categoria
             </label>
             <input
               type='text'
@@ -499,7 +471,6 @@ const CreateTutorial: React.FC = () => {
               id='newCategory'
               value={newCategory}
               onChange={e => setNewCategory(e.target.value)}
-              placeholder='Ex: Ferramentas de diagnóstico'         
             />
           </div>
         </Modal.Body>
@@ -515,8 +486,7 @@ const CreateTutorial: React.FC = () => {
             onClick={handleAddCategory}
             disabled={!newCategory.trim()}
           >
-            <i className='fas fa-plus me-1'></i>
-            Adicionar categoria
+            Adicionar
           </Button>
         </Modal.Footer>
       </Modal>

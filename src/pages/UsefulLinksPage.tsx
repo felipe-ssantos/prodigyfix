@@ -20,122 +20,117 @@ const UsefulLinksPage = () => {
     tools: [
       {
         name: "Hiren's BootCD",
-        description: "The official Hiren's BootCD download and information",
+        description: "Download oficial e informações do Hiren's BootCD",
         url: 'https://www.hirensbootcd.org/',
         icon: '💿',
-        category: 'Primary Tool'
+        category: 'Ferramenta Principal'
       },
       {
         name: 'Recuva',
-        description: 'Professional file recovery software',
+        description: 'Software profissional de recuperação de arquivos',
         url: 'https://www.ccleaner.com/recuva',
         icon: '🔄',
-        category: 'Data Recovery'
+        category: 'Recuperação de Dados'
       },
       {
         name: 'GParted',
         description:
-          'Free partition editor for graphically managing disk partitions',
+          'Editor de partições gratuito para gerenciar discos graficamente',
         url: 'https://gparted.org/',
         icon: '💾',
-        category: 'Disk Management'
+        category: 'Gerenciamento de Disco'
       },
       {
         name: 'TestDisk',
-        description: 'Powerful data recovery software',
+        description: 'Software poderoso de recuperação de dados',
         url: 'https://www.cgsecurity.org/wiki/TestDisk',
         icon: '🔍',
-        category: 'Data Recovery'
+        category: 'Recuperação de Dados'
       }
     ],
     resources: [
       {
-        name: 'Microsoft Support',
-        description: 'Official Windows support and troubleshooting guides',
+        name: 'Suporte Microsoft',
+        description:
+          'Suporte oficial do Windows e guias de solução de problemas',
         url: 'https://support.microsoft.com/',
         icon: '🪟',
-        category: 'Official Support'
+        category: 'Suporte Oficial'
       },
       {
-        name: 'Ubuntu Documentation',
-        description: 'Comprehensive Linux documentation and guides',
+        name: 'Documentação Ubuntu',
+        description: 'Documentação e tutoriais completos sobre Linux',
         url: 'https://ubuntu.com/tutorials',
         icon: '🐧',
-        category: 'Linux Resources'
+        category: 'Recursos Linux'
       },
       {
         name: 'TechNet Wiki',
-        description: 'Microsoft TechNet community knowledge base',
+        description: 'Base de conhecimento da comunidade Microsoft TechNet',
         url: 'https://social.technet.microsoft.com/wiki/',
         icon: '📚',
-        category: 'Knowledge Base'
-      },
-      {
-        name: 'Stack Overflow',
-        description: 'Programming and technical Q&A community',
-        url: 'https://stackoverflow.com/',
-        icon: '💻',
-        category: 'Community'
-      }
+        category: 'Base de Conhecimento'
+      }      
     ],
     communities: [
       {
         name: 'Reddit r/techsupport',
-        description: 'Community for technical support and troubleshooting',
+        description: 'Comunidade para suporte técnico e solução de problemas',
         url: 'https://www.reddit.com/r/techsupport/',
         icon: '🤝',
-        category: 'Community Support'
+        category: 'Suporte Comunitário'
       },
       {
         name: 'SuperUser',
-        description: 'Q&A site for computer enthusiasts and power users',
+        description:
+          'Site de perguntas e respostas para entusiastas e usuários avançados',
         url: 'https://superuser.com/',
         icon: '👥',
-        category: 'Q&A Community'
+        category: 'Comunidade de Q&A'
       },
       {
         name: "Tom's Hardware",
-        description: 'Hardware reviews, news, and community forums',
+        description: 'Análises de hardware, notícias e fóruns da comunidade',
         url: 'https://www.tomshardware.com/',
         icon: '🔧',
         category: 'Hardware'
       },
       {
         name: 'BleepingComputer',
-        description: 'Security news and malware removal guides',
+        description: 'Notícias de segurança e guias de remoção de malware',
         url: 'https://www.bleepingcomputer.com/',
         icon: '🛡️',
-        category: 'Security'
+        category: 'Segurança'
       }
     ],
     learning: [
       {
         name: 'CompTIA A+',
-        description: 'Professional IT certification for hardware and software',
+        description: 'Certificação profissional de TI para hardware e software',
         url: 'https://www.comptia.org/certifications/a',
         icon: '🎓',
-        category: 'Certification'
+        category: 'Certificação'
       },
       {
-        name: 'Coursera IT Courses',
-        description: 'Online IT and computer science courses',
+        name: 'Cursos de TI - Coursera',
+        description: 'Cursos online de TI e ciência da computação',
         url: 'https://www.coursera.org/browse/business/it',
         icon: '📖',
-        category: 'Online Learning'
+        category: 'Aprendizado Online'
       },
       {
-        name: 'YouTube Tech Channels',
-        description: 'Popular tech education channels',
+        name: 'Canais de Tecnologia no YouTube',
+        description: 'Canais populares de educação tecnológica',
         url: 'https://www.youtube.com/results?search_query=computer+repair+tutorial',
         icon: '📺',
-        category: 'Video Learning'
+        category: 'Aprendizado em Vídeo'
       },
       {
         name: 'GitHub',
-        description: 'Open source projects and code repositories',
+        description: 'Projetos de código aberto e repositórios de código',
         url: 'https://github.com/',
         icon: '🐙',
-        category: 'Open Source'
+        category: 'Código Aberto'
       }
     ]
   }
@@ -159,7 +154,7 @@ const UsefulLinksPage = () => {
             className='btn btn-outline-primary btn-sm'
           >
             <FaExternalLinkAlt className='me-1' />
-            Visit Site
+            Visitar site
           </a>
         </div>
       </div>
@@ -168,101 +163,102 @@ const UsefulLinksPage = () => {
 
   return (
     <div className='container py-4'>
-      {/* Hero Section */}
+      {/* Seção Principal */}
       <div className='row mb-5'>
         <div className='col-lg-8 mx-auto text-center'>
           <h1 className='display-4 fw-bold mb-3'>
-            Useful <span className='text-primary'>Links</span>
+            <span className='text-primary'>Links</span> Úteis
           </h1>
           <p className='lead text-muted'>
-            Curated collection of essential tools, resources, and communities
-            for computer maintenance and system recovery. These links will help
-            you expand your knowledge and find additional support.
+            Coleção cuidadosamente selecionada de ferramentas, recursos e
+            comunidades essenciais para manutenção de computadores e recuperação
+            de sistemas. Esses links irão ajudá-lo a expandir seu conhecimento e
+            encontrar suporte adicional.
           </p>
         </div>
       </div>
 
-      {/* Tools Section */}
+      {/* Ferramentas Essenciais */}
       <section className='mb-5'>
         <div className='d-flex align-items-center mb-4'>
           <FaTools className='text-primary me-2' size={24} />
-          <h2 className='mb-0'>Essential Tools</h2>
+          <h2 className='mb-0'>Ferramentas Essenciais</h2>
         </div>
         <div className='row'>{links.tools.map(renderLinkCard)}</div>
       </section>
 
-      {/* Resources Section */}
+      {/* Recursos de Aprendizado */}
       <section className='mb-5'>
         <div className='d-flex align-items-center mb-4'>
           <FaBook className='text-success me-2' size={24} />
-          <h2 className='mb-0'>Learning Resources</h2>
+          <h2 className='mb-0'>Recursos de Aprendizado</h2>
         </div>
         <div className='row'>{links.resources.map(renderLinkCard)}</div>
       </section>
 
-      {/* Communities Section */}
+      {/* Comunidades e Fóruns */}
       <section className='mb-5'>
         <div className='d-flex align-items-center mb-4'>
           <FaUsers className='text-info me-2' size={24} />
-          <h2 className='mb-0'>Communities & Forums</h2>
+          <h2 className='mb-0'>Comunidades e Fóruns</h2>
         </div>
         <div className='row'>{links.communities.map(renderLinkCard)}</div>
       </section>
 
-      {/* Learning Section */}
+      {/* Aprendizado e Certificação */}
       <section className='mb-5'>
         <div className='d-flex align-items-center mb-4'>
           <FaShieldAlt className='text-warning me-2' size={24} />
-          <h2 className='mb-0'>Learning & Certification</h2>
+          <h2 className='mb-0'>Aprendizado e Certificação</h2>
         </div>
         <div className='row'>{links.learning.map(renderLinkCard)}</div>
       </section>
 
-      {/* Additional Resources */}
+      {/* Recursos Adicionais */}
       <section className='mb-5'>
         <div className='card bg-light'>
           <div className='card-body p-4'>
-            <h3 className='mb-4'>Additional Resources</h3>
+            <h3 className='mb-4'>Recursos Adicionais</h3>
             <div className='row'>
               <div className='col-md-6'>
-                <h5>Safety First</h5>
-                <ul className='list-unstyled'>
+                <h5>Segurança em Primeiro Lugar</h5>
+                <ul className='list-unstyled text-start'>
                   <li className='mb-2'>
-                    <strong>Always backup your data</strong> before attempting
-                    any system repairs
+                    <strong>Sempre faça backup dos seus dados</strong> antes de
+                    tentar qualquer reparo no sistema
                   </li>
                   <li className='mb-2'>
-                    <strong>Use official sources</strong> for downloading tools
-                    and software
+                    <strong>Use fontes oficiais</strong> para baixar ferramentas
+                    e softwares
                   </li>
                   <li className='mb-2'>
-                    <strong>Test on non-critical systems</strong> when learning
-                    new techniques
+                    <strong>Teste em sistemas não críticos</strong> ao aprender
+                    novas técnicas
                   </li>
                   <li>
-                    <strong>Keep tools updated</strong> to ensure compatibility
-                    and security
+                    <strong>Mantenha as ferramentas atualizadas</strong> para
+                    garantir compatibilidade e segurança
                   </li>
                 </ul>
               </div>
               <div className='col-md-6'>
-                <h5>Best Practices</h5>
-                <ul className='list-unstyled'>
+                <h5>Boas Práticas</h5>
+                <ul className='list-unstyled text-start'>
                   <li className='mb-2'>
-                    <strong>Document your steps</strong> when troubleshooting
-                    complex issues
+                    <strong>Documente seus passos</strong> ao solucionar
+                    problemas complexos
                   </li>
                   <li className='mb-2'>
-                    <strong>Join communities</strong> to learn from others'
-                    experiences
+                    <strong>Participe de comunidades</strong> para aprender com
+                    a experiência dos outros
                   </li>
                   <li className='mb-2'>
-                    <strong>Stay updated</strong> with the latest tools and
-                    techniques
+                    <strong>Mantenha-se atualizado</strong> com as últimas
+                    ferramentas e técnicas
                   </li>
                   <li>
-                    <strong>Share knowledge</strong> to help others in the
-                    community
+                    <strong>Compartilhe conhecimento</strong> para ajudar outras
+                    pessoas na comunidade
                   </li>
                 </ul>
               </div>
@@ -271,15 +267,16 @@ const UsefulLinksPage = () => {
         </div>
       </section>
 
-      {/* Disclaimer */}
+      {/* Aviso Legal */}
       <section>
         <div className='alert alert-info' role='alert'>
-          <h6 className='alert-heading'>Disclaimer</h6>
+          <h6 className='alert-heading'>Aviso Legal</h6>
           <p className='mb-0'>
-            These links are provided for educational and reference purposes. We
-            are not affiliated with any of these sites. Always verify the
-            authenticity of tools and resources before downloading or using
-            them. Use these tools responsibly and at your own risk.
+            Esses links são fornecidos para fins educacionais e de referência.
+            Não temos afiliação com nenhum desses sites. Sempre verifique a
+            autenticidade das ferramentas e recursos antes de fazer download ou
+            usá-los. Use essas ferramentas com responsabilidade e por sua conta
+            e risco.
           </p>
         </div>
       </section>

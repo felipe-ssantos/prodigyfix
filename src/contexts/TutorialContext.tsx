@@ -4,7 +4,8 @@ import React, {
   useContext,
   useState,
   useEffect,
-  ReactNode
+  ReactNode,
+  useCallback
 } from 'react'
 import {
   collection,
@@ -41,6 +42,8 @@ interface TutorialContextType {
   updateTutorial: (id: string, tutorialData: Partial<Tutorial>) => Promise<void>
   deleteTutorial: (id: string) => Promise<void>
   incrementViews: (id: string) => Promise<void>
+  getDifficultyLabel: (difficulty: string) => string
+  formatCategoryName: (category: string) => string
 }
 
 const TutorialContext = createContext<TutorialContextType | undefined>(
@@ -60,6 +63,36 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Helper function to normalize difficulty levels
+  const normalizeDifficulty = useCallback(
+    (difficulty: string): 'Iniciante' | 'Intermediário' | 'Avançado' => {
+      const normalized = difficulty.toLowerCase().trim()
+      switch (normalized) {
+        case 'beginner':
+        case 'iniciante':
+        case 'básico':
+        case 'basic':
+          return 'Iniciante'
+        case 'intermediate':
+        case 'intermediário':
+        case 'intermedio':
+        case 'médio':
+        case 'medio':
+          return 'Intermediário'
+        case 'advanced':
+        case 'avançado':
+        case 'avancado':
+        case 'expert':
+        case 'difícil':
+        case 'dificil':
+          return 'Avançado'
+        default:
+          return 'Iniciante'
+      }
+    },
+    []
+  )
+
   // Load tutorials from Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -70,33 +103,35 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
           const data = doc.data()
           tutorialsData.push({
             id: doc.id,
-            title: data.title,
-            description: data.description,
-            content: data.content,
-            category: data.category,
+            title: data.title || 'Sem título',
+            description: data.description || 'Sem descrição',
+            content: data.content || '',
+            category: data.category || 'Geral',
             keywords: data.keywords || [],
-            author: data.author,
+            author: data.author || 'Autor desconhecido',
             createdAt: data.createdAt?.toDate() || new Date(),
             updatedAt: data.updatedAt?.toDate() || new Date(),
             views: data.views || 0,
-            difficulty: data.difficulty || 'Iniciante',
-            estimatedTime: data.estimatedTime || 0,
+            difficulty: normalizeDifficulty(data.difficulty || 'Iniciante'),
+            estimatedTime: data.estimatedTime || 5,
             tags: data.tags || [],
-            imageUrl: data.imageUrl || ''
+            imageUrl: data.imageUrl || '',
+            version: data.version || '',
+            osCompatibility: data.osCompatibility || []
           })
         })
         setTutorials(tutorialsData)
         setLoading(false)
       },
       err => {
-        setError('Falha ao carregar tutoriais')
+        setError('Falha ao carregar tutoriais. Verifique sua conexão.')
         console.error('Erro ao carregar tutoriais:', err)
         setLoading(false)
       }
     )
 
     return () => unsubscribe()
-  }, [])
+  }, [normalizeDifficulty])
 
   // Load categories from Firestore
   useEffect(() => {
@@ -108,137 +143,255 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
           const data = doc.data()
           categoriesData.push({
             id: doc.id,
-            name: data.name,
-            description: data.description,
-            icon: data.icon,
-            tutorialCount: data.tutorialCount || 0
+            name: data.name || 'Categoria sem nome',
+            description: data.description || 'Sem descrição',
+            icon: data.icon || '📁',
+            tutorialCount: data.tutorialCount || 0,
+            isFeatured: data.isFeatured || false
           })
         })
         setCategories(categoriesData)
       } catch (err) {
         console.error('Erro ao carregar categorias:', err)
+        setError('Falha ao carregar categorias')
       }
     }
 
     loadCategories()
   }, [])
 
+  // Update tutorial counts for categories
+  useEffect(() => {
+    if (categories.length === 0) return
+
+    const updatedCategories = categories.map(category => ({
+      ...category,
+      tutorialCount: tutorials.filter(
+        tutorial => tutorial.category === category.id
+      ).length
+    }))
+
+    // Only update if there are actual changes
+    const hasChanges = updatedCategories.some(
+      (category, index) =>
+        category.tutorialCount !== categories[index]?.tutorialCount
+    )
+
+    if (hasChanges) {
+      setCategories(updatedCategories)
+    }
+  }, [tutorials, categories])
+
   // Load favorites from localStorage
   useEffect(() => {
     const savedFavorites = localStorage.getItem('bootpedia-favorites')
     if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites))
+      try {
+        setFavorites(JSON.parse(savedFavorites))
+      } catch (err) {
+        console.error('Erro ao carregar favoritos:', err)
+        setFavorites([])
+      }
     }
   }, [])
 
   // Save favorites to localStorage
   useEffect(() => {
-    localStorage.setItem('bootpedia-favorites', JSON.stringify(favorites))
+    try {
+      localStorage.setItem('bootpedia-favorites', JSON.stringify(favorites))
+    } catch (err) {
+      console.error('Erro ao salvar favoritos:', err)
+    }
   }, [favorites])
 
-  const addToFavorites = (tutorialId: string) => {
-    setFavorites(prev => [...prev, tutorialId])
-  }
-
-  const removeFromFavorites = (tutorialId: string) => {
-    setFavorites(prev => prev.filter(id => id !== tutorialId))
-  }
-
-  const isFavorite = (tutorialId: string) => {
-    return favorites.includes(tutorialId)
-  }
-
-  const searchTutorials = (searchQuery: string, filters?: SearchFilters) => {
-    return tutorials.filter(tutorial => {
-      const matchesQuery =
-        !searchQuery ||
-        tutorial.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tutorial.description
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        tutorial.tags.some(tag =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-
-      const matchesCategory =
-        !filters?.category || tutorial.category === filters.category
-      const matchesDifficulty =
-        !filters?.difficulty || tutorial.difficulty === filters.difficulty
-      const matchesTags =
-        !filters?.tags?.length ||
-        filters.tags.some(tag => tutorial.tags.includes(tag))
-
-      return matchesQuery && matchesCategory && matchesDifficulty && matchesTags
+  const addToFavorites = useCallback((tutorialId: string) => {
+    setFavorites(prev => {
+      if (!prev.includes(tutorialId)) {
+        return [...prev, tutorialId]
+      }
+      return prev
     })
-  }
+  }, [])
 
-  const getTutorialById = (id: string) => {
-    return tutorials.find(tutorial => tutorial.id === id)
-  }
+  const removeFromFavorites = useCallback((tutorialId: string) => {
+    setFavorites(prev => prev.filter(id => id !== tutorialId))
+  }, [])
 
-  const getTutorialsByCategory = (category: string) => {
-    return tutorials.filter(tutorial => tutorial.category === category)
-  }
+  const isFavorite = useCallback(
+    (tutorialId: string) => {
+      return favorites.includes(tutorialId)
+    },
+    [favorites]
+  )
 
-  const getNextTutorial = (id: string) => {
-    const currentIndex = tutorials.findIndex(tutorial => tutorial.id === id)
-    if (currentIndex !== -1 && currentIndex < tutorials.length - 1) {
-      return tutorials[currentIndex + 1]
-    }
-    return undefined
-  }
+  const searchTutorials = useCallback(
+    (searchQuery: string, filters?: SearchFilters) => {
+      const query = searchQuery?.toLowerCase().trim() || ''
 
-  const getPreviousTutorial = (id: string) => {
-    const currentIndex = tutorials.findIndex(tutorial => tutorial.id === id)
-    if (currentIndex > 0) {
-      return tutorials[currentIndex - 1]
-    }
-    return undefined
-  }
+      return tutorials.filter(tutorial => {
+        // Text search
+        const matchesQuery =
+          !query ||
+          tutorial.title.toLowerCase().includes(query) ||
+          tutorial.description.toLowerCase().includes(query) ||
+          tutorial.author.toLowerCase().includes(query) ||
+          tutorial.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          tutorial.keywords.some(keyword =>
+            keyword.toLowerCase().includes(query)
+          )
 
-  const createTutorial = async (
-    tutorialData: Omit<Tutorial, 'id' | 'createdAt' | 'updatedAt' | 'views'>
-  ) => {
-    try {
-      const docRef = await addDoc(collection(db, 'tutorials'), {
-        ...tutorialData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        views: 0
+        // Category filter
+        const matchesCategory =
+          !filters?.category || tutorial.category === filters.category
+
+        // Difficulty filter
+        const matchesDifficulty =
+          !filters?.difficulty || tutorial.difficulty === filters.difficulty
+
+        // Tags filter
+        const matchesTags =
+          !filters?.tags?.length ||
+          filters.tags.some(tag =>
+            tutorial.tags.some(tutorialTag =>
+              tutorialTag.toLowerCase().includes(tag.toLowerCase())
+            )
+          )
+
+        // Time range filter (if implemented)
+        let matchesTimeRange = true
+        if (filters?.timeRange) {
+          const now = new Date()
+          const tutorialDate = new Date(tutorial.createdAt)
+          const diffInDays = Math.floor(
+            (now.getTime() - tutorialDate.getTime()) / (1000 * 3600 * 24)
+          )
+
+          switch (filters.timeRange) {
+            case 'week':
+              matchesTimeRange = diffInDays <= 7
+              break
+            case 'month':
+              matchesTimeRange = diffInDays <= 30
+              break
+            case 'year':
+              matchesTimeRange = diffInDays <= 365
+              break
+            default:
+              matchesTimeRange = true
+          }
+        }
+
+        return (
+          matchesQuery &&
+          matchesCategory &&
+          matchesDifficulty &&
+          matchesTags &&
+          matchesTimeRange
+        )
       })
-      return docRef.id
-    } catch (err) {
-      console.error('Erro ao criar tutorial:', err)
-      throw err
-    }
-  }
+    },
+    [tutorials]
+  )
 
-  const updateTutorial = async (
-    id: string,
-    tutorialData: Partial<Tutorial>
-  ) => {
-    try {
-      const tutorialRef = doc(db, 'tutorials', id)
-      await updateDoc(tutorialRef, {
-        ...tutorialData,
-        updatedAt: new Date()
-      })
-    } catch (err) {
-      console.error('Erro ao atualizar o tutorial:', err)
-      throw err
-    }
-  }
+  const getTutorialById = useCallback(
+    (id: string) => {
+      return tutorials.find(tutorial => tutorial.id === id)
+    },
+    [tutorials]
+  )
 
-  const deleteTutorial = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, 'tutorials', id))
-    } catch (err) {
-      console.error('Erro ao excluir tutorial:', err)
-      throw err
-    }
-  }
+  const getTutorialsByCategory = useCallback(
+    (category: string) => {
+      return tutorials
+        .filter(tutorial => tutorial.category === category)
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+    },
+    [tutorials]
+  )
 
-  const incrementViews = async (id: string) => {
+  const getNextTutorial = useCallback(
+    (id: string) => {
+      const currentIndex = tutorials.findIndex(tutorial => tutorial.id === id)
+      if (currentIndex !== -1 && currentIndex < tutorials.length - 1) {
+        return tutorials[currentIndex + 1]
+      }
+      return undefined
+    },
+    [tutorials]
+  )
+
+  const getPreviousTutorial = useCallback(
+    (id: string) => {
+      const currentIndex = tutorials.findIndex(tutorial => tutorial.id === id)
+      if (currentIndex > 0) {
+        return tutorials[currentIndex - 1]
+      }
+      return undefined
+    },
+    [tutorials]
+  )
+
+  const createTutorial = useCallback(
+    async (
+      tutorialData: Omit<Tutorial, 'id' | 'createdAt' | 'updatedAt' | 'views'>
+    ) => {
+      try {
+        const docRef = await addDoc(collection(db, 'tutorials'), {
+          ...tutorialData,
+          difficulty: normalizeDifficulty(tutorialData.difficulty),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          views: 0
+        })
+        return docRef.id
+      } catch (err) {
+        console.error('Erro ao criar tutorial:', err)
+        throw new Error('Falha ao criar tutorial. Tente novamente.')
+      }
+    },
+    [normalizeDifficulty]
+  )
+
+  const updateTutorial = useCallback(
+    async (id: string, tutorialData: Partial<Tutorial>) => {
+      try {
+        const tutorialRef = doc(db, 'tutorials', id)
+        const updateData = {
+          ...tutorialData,
+          updatedAt: new Date()
+        }
+
+        if (tutorialData.difficulty) {
+          updateData.difficulty = normalizeDifficulty(tutorialData.difficulty)
+        }
+
+        await updateDoc(tutorialRef, updateData)
+      } catch (err) {
+        console.error('Erro ao atualizar tutorial:', err)
+        throw new Error('Falha ao atualizar tutorial. Tente novamente.')
+      }
+    },
+    [normalizeDifficulty]
+  )
+
+  const deleteTutorial = useCallback(
+    async (id: string) => {
+      try {
+        await deleteDoc(doc(db, 'tutorials', id))
+        // Remove from favorites if it exists
+        removeFromFavorites(id)
+      } catch (err) {
+        console.error('Erro ao excluir tutorial:', err)
+        throw new Error('Falha ao excluir tutorial. Tente novamente.')
+      }
+    },
+    [removeFromFavorites]
+  )
+
+  const incrementViews = useCallback(async (id: string) => {
     try {
       const tutorialRef = doc(db, 'tutorials', id)
       const tutorialSnap = await getDoc(tutorialRef)
@@ -252,8 +405,26 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
       }
     } catch (err) {
       console.error('Erro ao incrementar visualizações:', err)
+      // Don't throw error for view increment failures
     }
-  }
+  }, [])
+
+  const getDifficultyLabel = useCallback(
+    (difficulty: string): string => {
+      const normalized = normalizeDifficulty(difficulty)
+      return normalized
+    },
+    [normalizeDifficulty]
+  )
+
+  const formatCategoryName = useCallback((category: string): string => {
+    return category
+      .replace(/-/g, ' ')
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
+  }, [])
 
   const value: TutorialContextType = {
     tutorials,
@@ -272,7 +443,9 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     createTutorial,
     updateTutorial,
     deleteTutorial,
-    incrementViews
+    incrementViews,
+    getDifficultyLabel,
+    formatCategoryName
   }
 
   return (

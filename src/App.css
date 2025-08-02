@@ -2,6 +2,7 @@
 
 .App {
   text-align: center;
+  background-color: #cccdd4;
 }
 
 .App-logo {
@@ -16,7 +17,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #ffffff;
   padding: 20px;
   color: white;
 }
@@ -35,159 +36,321 @@
   }
 }
 
-/* Custom styles for the application */
+/* ===== MELHORIAS GERAIS ===== */
 .main-content {
   min-height: calc(100vh - 120px);
   padding-top: 0;
 }
 
 .hover-shadow {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .hover-shadow:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 8px 25px rgba(240, 237, 237, 0.15) !important;
+  transform: translateY(-2px);
 }
 
 .transition-all {
   transition: all 0.3s ease;
 }
 
-/* Search input styling */
-.search-input {
+/* ===== NAVBAR MELHORIAS ===== */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  border-radius: 0.375rem;
+  margin: 0 0.25rem;
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Search input melhorado */
+.search-input,
+.form-control.bg-white.bg-opacity-10 {
   min-width: 200px;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.search-input::placeholder,
+.placeholder-white-50::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.search-input:focus,
+.form-control.bg-white.bg-opacity-10:focus {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
 }
 
 @media (max-width: 768px) {
-  .search-input {
+
+  .search-input,
+  .form-control.bg-white.bg-opacity-10 {
     min-width: 150px;
   }
 }
 
-/* Sidebar sticky positioning */
-.sidebar-sticky {
-  position: sticky;
-  top: 2rem;
-  height: fit-content;
-}
-
-/* Tutorial content styling */
-.tutorial-content {
-  line-height: 1.6;
-}
-
-.tutorial-body h1,
-.tutorial-body h2,
-.tutorial-body h3,
-.tutorial-body h4,
-.tutorial-body h5,
-.tutorial-body h6 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.tutorial-body p {
-  margin-bottom: 1rem;
-}
-
-.tutorial-body ul,
-.tutorial-body ol {
-  margin-bottom: 1rem;
-  padding-left: 2rem;
-}
-
-.tutorial-body li {
-  margin-bottom: 0.5rem;
-}
-
-.tutorial-body code {
-  background-color: #f8f9fa;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.875em;
-}
-
-.tutorial-body pre {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin-bottom: 1rem;
-}
-
-.tutorial-body blockquote {
-  border-left: 4px solid #0d6efd;
-  padding-left: 1rem;
-  margin: 1rem 0;
-  color: #6c757d;
-  font-style: italic;
-}
-
-/* Card improvements */
+/* ===== CARDS MELHORADOS ===== */
 .card {
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(13, 110, 253, 0.25);
 }
 
 .card-header {
-  background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: rgba(248, 249, 250, 0.8);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 
-/* Button improvements */
-.btn {
-  border-radius: 0.375rem;
+.card.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ===== BADGES E BUTTONS ===== */
+.badge {
   font-weight: 500;
-  transition: all 0.15s ease-in-out;
+  font-size: 0.75em;
+  padding: 0.5em 0.75em;
+  border-radius: 0.5rem;
+}
+
+.badge.fs-6 {
+  font-size: 0.875rem !important;
+  padding: 0.5rem 0.75rem;
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-width: 1px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn:focus {
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-/* Badge improvements */
-.badge {
-  font-weight: 500;
-  font-size: 0.75em;
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  border-color: #0d6efd;
 }
 
-/* Form improvements */
+.btn-outline-primary:hover {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  border-color: #0d6efd;
+}
+
+/* ===== FORMS ===== */
 .form-control,
 .form-select {
-  border-radius: 0.375rem;
-  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease;
 }
 
 .form-control:focus,
 .form-select:focus {
   border-color: #86b7fe;
   box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  transform: translateY(-1px);
 }
 
-/* Navbar improvements */
-.navbar-brand {
-  font-weight: 700;
-  font-size: 1.5rem;
+/* ===== STICKY SIDEBAR ===== */
+.position-sticky-custom {
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+  z-index: 10;
 }
 
-.navbar-nav .nav-link {
-  font-weight: 500;
-  padding: 0.5rem 1rem;
+/* ===== TUTORIAL CONTENT ===== */
+.tutorial-content {
+  line-height: 1.8;
+  font-size: 1.1rem;
 }
 
-/* Footer styling */
-.footer {
+.tutorial-content h1,
+.tutorial-content h2,
+.tutorial-content h3,
+.tutorial-content h4,
+.tutorial-content h5,
+.tutorial-content h6 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+.tutorial-content h1 {
+  font-size: 2.5rem;
+  border-bottom: 3px solid #0d6efd;
+  padding-bottom: 0.5rem;
+}
+
+.tutorial-content h2 {
+  font-size: 2rem;
+  border-bottom: 2px solid #6c757d;
+  padding-bottom: 0.3rem;
+}
+
+.tutorial-content p {
+  margin-bottom: 1.2rem;
+  text-align: justify;
+}
+
+.tutorial-content ul,
+.tutorial-content ol {
+  margin-bottom: 1.2rem;
+  padding-left: 2rem;
+}
+
+.tutorial-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.tutorial-content code {
+  background-color: #f1f3f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.375rem;
+  font-size: 0.9em;
+  color: #e83e8c;
+  border: 1px solid #e9ecef;
+}
+
+.tutorial-content pre {
   background-color: #f8f9fa;
-  margin-top: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive typography */
-@media (max-width: 768px) {
-  .display-4 {
-    font-size: 2.5rem;
+.tutorial-content blockquote {
+  border-left: 4px solid #0d6efd;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background-color: rgba(13, 110, 253, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  position: relative;
+}
+
+.tutorial-content blockquote::before {
+  content: '"';
+  font-size: 3rem;
+  color: #0d6efd;
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+  opacity: 0.3;
+}
+
+.tutorial-content a {
+  color: #0d6efd;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.tutorial-content a:hover {
+  color: #0b5ed7;
+}
+
+.tutorial-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  background-color: rgba(248, 249, 250, 0.8);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  content: "›";
+  font-weight: bold;
+  color: #6c757d;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card,
+.alert {
+  animation: fadeInUp 0.5s ease;
+}
+
+/* ===== TOAST CUSTOM ===== */
+.toast-success {
+  z-index: 1055;
+}
+
+.toast.show {
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ===== RESPONSIVE IMPROVEMENTS ===== */
+@media (max-width: 768px) {
   .display-5 {
     font-size: 2rem;
   }
@@ -195,15 +358,65 @@
   .lead {
     font-size: 1.1rem;
   }
+
+  .tutorial-content {
+    font-size: 1rem;
+  }
+
+  .tutorial-content h1 {
+    font-size: 2rem;
+  }
+
+  .tutorial-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .btn {
+    font-size: 0.875rem;
+  }
 }
 
-/* Print styles */
+/* ===== UTILITY CLASSES ===== */
+.text-truncate-2 {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stretched-link-card {
+  position: relative;
+}
+
+.stretched-link-card .stretched-link::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: "";
+}
+
+/* ===== PRINT STYLES ===== */
 @media print {
 
   .navbar,
-  .footer,
   .btn,
-  .sidebar-sticky {
+  .badge,
+  .breadcrumb,
+  .d-print-none {
     display: none !important;
   }
 
@@ -216,6 +429,7 @@
   .tutorial-content {
     font-size: 12pt;
     line-height: 1.4;
+    color: #000;
   }
 
   .tutorial-content h1,
@@ -225,464 +439,181 @@
   .tutorial-content h5,
   .tutorial-content h6 {
     page-break-after: avoid;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+    color: #000;
+    border-color: #000;
   }
 
+  .tutorial-content blockquote {
+    border-left-color: #000;
+    background-color: #f5f5f5;
+  }
+
+  .tutorial-content pre {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+  }
+
+  .tutorial-content a {
+    color: #000;
+  }
 }
 
-/* Efeito hover para links no footer */
-.hover-text-white:hover {
-  color: white !important;
-  transition: color 0.2s ease;
+/* ===== ACCESSIBILITY ===== */
+.btn:focus-visible,
+.form-control:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
 }
 
-/* Melhoria para links no geral */
-.text-white-50 {
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+/* ===== LOADING STATES ===== */
+.loading-spinner {
+  animation: spin 1s linear infinite;
 }
 
-.text-white-50:hover {
-  opacity: 1;
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-
-/* markdown-styles.css */
-.markdown-content {
-  line-height: 1.8;
+/* ===== SELECTION STYLING ===== */
+::selection {
+  background-color: rgba(13, 110, 253, 0.2);
+  color: inherit;
 }
 
-.markdown-content img {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem 0;
+/* ===== SCROLLBAR CUSTOM ===== */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.markdown-content pre {
-  overflow-x: auto;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 0.25rem;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
-.sticky-top {
-  top: '2rem';
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
 }
 
-.description-tutorial-page {
-  font-size: 0.8rem;
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
-.loading-edit-tutorial {
-  min-width: 300px;
+/* ===== TUTORIAL PAGE SPECIFIC STYLES ===== */
+.tutorial-page-container {
+  max-width: 1600px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-.content-tutorial-page {
-  font-size: 1.1rem;
+.tutorial-article {
+  min-height: calc(100vh - 200px);
+  padding: 2rem;
 }
 
-.sidebar-tutorial-page {
-  top: 2rem;
-}
-
-.cover-image-tutorial-page {
+.tutorial-cover-image img {
   max-height: 400px;
   width: 100%;
   object-fit: cover;
 }
 
-.breadcrumb-tutorial-page {
-  max-width: 200px;
-}
-.shareSuccess-tutorial-page{
-  z-index: 1050;
-}
-
-/* TipTap Editor Styles - Add to your App.css */
-
-/* Editor container styling */
-
-.tiptap-editor-content {
-  min-height: 300px;
-  outline: none;
-}
-
-.ProseMirror {
-  outline: none !important;
-  padding: 1rem;
-  min-height: 300px;
-  line-height: 1.6;
-}
-
-.ProseMirror:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Content styling for both editor and display */
-.tutorial-content,
-.ProseMirror {
-  /* Typography */
+.tutorial-content {
+  line-height: 1.8;
   font-size: 1.1rem;
-  line-height: 1.7;
-  color: #333;
 }
 
 .tutorial-content h1,
-.ProseMirror h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 2rem 0 1rem 0;
+.tutorial-content h2,
+.tutorial-content h3,
+.tutorial-content h4,
+.tutorial-content h5,
+.tutorial-content h6 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
   color: #212529;
-  border-bottom: 3px solid #007bff;
+  font-weight: 600;
+}
+
+.tutorial-content h1 {
+  font-size: 2.5rem;
+  border-bottom: 3px solid #0d6efd;
   padding-bottom: 0.5rem;
 }
 
-.tutorial-content h2,
-.ProseMirror h2 {
+.tutorial-content h2 {
   font-size: 2rem;
-  font-weight: 600;
-  margin: 1.8rem 0 1rem 0;
-  color: #212529;
   border-bottom: 2px solid #6c757d;
   padding-bottom: 0.3rem;
 }
 
-.tutorial-content h3,
-.ProseMirror h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 1.5rem 0 0.8rem 0;
-  color: #212529;
-}
-
-.tutorial-content h4,
-.ProseMirror h4 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 1.3rem 0 0.8rem 0;
-  color: #212529;
-}
-
-.tutorial-content h5,
-.ProseMirror h5 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 1.2rem 0 0.8rem 0;
-  color: #212529;
-}
-
-.tutorial-content h6,
-.ProseMirror h6 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 1.1rem 0 0.8rem 0;
-  color: #212529;
-}
-
-.tutorial-content p,
-.ProseMirror p {
-  margin: 0 0 1.2rem 0;
+.tutorial-content p {
+  margin-bottom: 1.2rem;
   text-align: justify;
 }
 
-.tutorial-content p:last-child,
-.ProseMirror p:last-child {
-  margin-bottom: 0;
+.tutorial-navigation {
+  margin-bottom: 2rem;
 }
 
-/* Lists */
-.tutorial-content ul,
-.tutorial-content ol,
-.ProseMirror ul,
-.ProseMirror ol {
-  margin: 1rem 0;
-  padding-left: 2rem;
+.tutorial-nav-btn {
+  max-width: 45%;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
 }
 
-.tutorial-content ul li,
-.tutorial-content ol li,
-.ProseMirror ul li,
-.ProseMirror ol li {
-  margin-bottom: 0.5rem;
-  line-height: 1.6;
+.tutorial-nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.tutorial-content ul ul,
-.tutorial-content ol ol,
-.tutorial-content ul ol,
-.tutorial-content ol ul,
-.ProseMirror ul ul,
-.ProseMirror ol ol,
-.ProseMirror ul ol,
-.ProseMirror ol ul {
-  margin: 0.5rem 0;
-}
-
-/* Blockquotes */
-.tutorial-content blockquote,
-.ProseMirror blockquote {
-  border-left: 4px solid #007bff;
-  margin: 1.5rem 0;
-  padding: 1rem 1.5rem;
-  background-color: #f8f9fa;
-  border-radius: 0 0.375rem 0.375rem 0;
-  font-style: italic;
-  color: #6c757d;
-  position: relative;
-}
-
-.tutorial-content blockquote::before,
-.ProseMirror blockquote::before {
-  content: '"';
-  font-size: 3rem;
-  color: #007bff;
-  position: absolute;
-  top: -0.5rem;
-  left: 0.5rem;
-  opacity: 0.3;
-}
-
-.tutorial-content blockquote p,
-.ProseMirror blockquote p {
-  margin-bottom: 0;
-}
-
-/* Code */
-.tutorial-content code,
-.ProseMirror code {
-  background-color: #f1f3f4;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.9em;
-  font-family: 'SFMono-Regular', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  color: #e83e8c;
-  border: 1px solid #e9ecef;
-}
-
-.tutorial-content pre,
-.ProseMirror pre {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-  font-family: 'SFMono-Regular', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.tutorial-content pre code,
-.ProseMirror pre code {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: inherit;
-  color: inherit;
-}
-
-/* Links */
-.tutorial-content a,
-.ProseMirror a {
-  color: #007bff;
-  text-decoration: underline;
-  transition: color 0.2s ease;
-}
-
-.tutorial-content a:hover,
-.ProseMirror a:hover {
-  color: #0056b3;
-  text-decoration: underline;
-}
-
-/* Images */
-.tutorial-content img,
-.ProseMirror img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 1.5rem 0;
-  display: block;
-}
-
-/* Tables (if you add table extension later) */
-.tutorial-content table,
-.ProseMirror table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  font-size: 0.95rem;
-}
-
-.tutorial-content th,
-.tutorial-content td,
-.ProseMirror th,
-.ProseMirror td {
-  border: 1px solid #dee2e6;
-  padding: 0.75rem;
-  text-align: left;
-}
-
-.tutorial-content th,
-.ProseMirror th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  color: #495057;
-}
-
-/* Horizontal Rule */
-.tutorial-content hr,
-.ProseMirror hr {
-  border: none;
-  border-top: 2px solid #e9ecef;
-  margin: 2rem 0;
-}
-
-/* Strong and emphasis */
-.tutorial-content strong,
-.ProseMirror strong {
-  font-weight: 600;
-  color: #212529;
-}
-
-.tutorial-content em,
-.ProseMirror em {
-  font-style: italic;
-}
-
-.tutorial-content u,
-.ProseMirror u {
-  text-decoration: underline;
-}
-
-.tutorial-content s,
-.ProseMirror s {
-  text-decoration: line-through;
-  opacity: 0.7;
-}
-
-/* Placeholder styling */
-.ProseMirror .is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: #adb5bd;
-  pointer-events: none;
-  height: 0;
-}
-
-/* Print styles for tutorial content */
-@media print {
-
-  .tutorial-content,
-  .ProseMirror {
-    font-size: 12pt;
-    line-height: 1.4;
-    color: #000;
+@media (max-width: 992px) {
+  .tutorial-page-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  .tutorial-content h1,
-  .tutorial-content h2,
-  .tutorial-content h3,
-  .tutorial-content h4,
-  .tutorial-content h5,
-  .tutorial-content h6,
-  .ProseMirror h1,
-  .ProseMirror h2,
-  .ProseMirror h3,
-  .ProseMirror h4,
-  .ProseMirror h5,
-  .ProseMirror h6 {
-    page-break-after: avoid;
-    color: #000;
-    border-color: #000;
+  .tutorial-article {
+    padding: 1.5rem;
   }
 
-  .tutorial-content blockquote,
-  .ProseMirror blockquote {
-    border-left-color: #000;
-    background-color: #f5f5f5;
-  }
-
-  .tutorial-content pre,
-  .ProseMirror pre {
-    background-color: #f5f5f5;
-    border-color: #ccc;
-  }
-
-  .tutorial-content a,
-  .ProseMirror a {
-    color: #000;
-    text-decoration: underline;
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-
-  .tutorial-content,
-  .ProseMirror {
+  .tutorial-content {
     font-size: 1rem;
-    line-height: 1.6;
   }
 
-  .tutorial-content h1,
-  .ProseMirror h1 {
+  .tutorial-content h1 {
     font-size: 2rem;
   }
 
-  .tutorial-content h2,
-  .ProseMirror h2 {
+  .tutorial-content h2 {
     font-size: 1.5rem;
   }
+}
 
-  .tutorial-content h3,
-  .ProseMirror h3 {
-    font-size: 1.25rem;
+@media (max-width: 768px) {
+  .tutorial-page-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 
-  .tutorial-content ul,
-  .tutorial-content ol,
-  .ProseMirror ul,
-  .ProseMirror ol {
-    padding-left: 1.5rem;
-  }
-
-  .tutorial-content blockquote,
-  .ProseMirror blockquote {
-    padding: 0.75rem 1rem;
-    margin: 1rem 0;
-  }
-
-  .tutorial-content pre,
-  .ProseMirror pre {
+  .tutorial-article {
     padding: 1rem;
-    font-size: 0.8rem;
   }
-}
 
-/* Focus styles for better accessibility */
-.tutorial-content a:focus,
-.ProseMirror a:focus {
-  outline: 2px solid #007bff;
-  outline-offset: 2px;
-}
+  .tutorial-nav-btn {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 
-/* Selection styling */
-.tutorial-content ::selection,
-.ProseMirror ::selection {
-  background-color: rgba(0, 123, 255, 0.2);
-}
-
-/* Toolbar button active states */
-.btn.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.btn.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+  .tutorial-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
