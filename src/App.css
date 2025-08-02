@@ -688,3 +688,14 @@
   align-items: center;
   justify-content: center;
 }
+
+.description-category-section {
+  line-height: 1.3rem;
+  max-width: calc(100% - 20px);
+}
+
+.icon-category-section {
+  line-height: auto;
+  width: 24px;
+  text-align: center;
+}
