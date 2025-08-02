@@ -1,6 +1,7 @@
 // src/components/ui/TutorialCard.tsx
 import { Link } from 'react-router-dom'
 import { FaClock, FaEye, FaStar } from 'react-icons/fa'
+import { useTutorials } from '../../hooks/useTutorials'
 import type { Tutorial } from '../../types'
 
 interface TutorialCardProps {
@@ -9,6 +10,8 @@ interface TutorialCardProps {
 }
 
 const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
+  const { categories } = useTutorials()
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Iniciante':
@@ -35,9 +38,20 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
     }
   }
 
-  const formatCategoryName = (category: string) => {
-    return category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())
+  // Buscar o nome da categoria pelo ID
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId)
+    return category ? category.name : categoryId
   }
+
+  // Buscar o ícone da categoria pelo ID
+  const getCategoryIcon = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId)
+    return category ? category.icon : '📁'
+  }
+
+  const categoryName = getCategoryName(tutorial.category)
+  const categoryIcon = getCategoryIcon(tutorial.category)
 
   return (
     <div className='card h-100 shadow-sm hover-shadow border-0'>
@@ -45,8 +59,9 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
       <div className='card-header bg-white border-0 pb-2'>
         <div className='d-flex justify-content-between align-items-start'>
           {showCategory && (
-            <span className='badge bg-primary'>
-              {formatCategoryName(tutorial.category)}
+            <span className='badge bg-primary d-flex align-items-center gap-1'>
+              <span>{categoryIcon}</span>
+              <span>{categoryName}</span>
             </span>
           )}
         </div>
@@ -74,19 +89,21 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
         <div className='mt-auto'>
           {/* Information badges */}
           <div className='d-flex flex-wrap gap-2 mb-3'>
-            <span className='badge bg-light text-dark border'>
-              <FaClock className='me-1' size={12} />
-              {tutorial.estimatedTime} min
+            <span className='badge bg-light text-dark border d-flex align-items-center gap-1'>
+              <FaClock size={12} />
+              <span>{tutorial.estimatedTime} min</span>
             </span>
             <span
-              className={`badge bg-${getDifficultyColor(tutorial.difficulty)}`}
+              className={`badge bg-${getDifficultyColor(
+                tutorial.difficulty
+              )} d-flex align-items-center gap-1`}
             >
-              <FaStar className='me-1' size={12} />
-              {getDifficultyText(tutorial.difficulty)}
+              <FaStar size={12} />
+              <span>{getDifficultyText(tutorial.difficulty)}</span>
             </span>
-            <span className='badge bg-light text-dark border'>
-              <FaEye className='me-1' size={12} />
-              {tutorial.views.toLocaleString()}
+            <span className='badge bg-light text-dark border d-flex align-items-center gap-1'>
+              <FaEye size={12} />
+              <span>{tutorial.views.toLocaleString()}</span>
             </span>
           </div>
 

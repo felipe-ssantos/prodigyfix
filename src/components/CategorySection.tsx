@@ -10,26 +10,36 @@ const CategorySection: React.FC = () => {
   return (
     <div className='card shadow-sm'>
       <div className='card-header bg-light'>
-        <h5 className='mb-0 fw-bold text-primary'>📂 Categorias</h5>
+        <h5 className='mb-0 fw-bold text-primary d-flex align-items-center gap-2'>
+          <span>📂</span>
+          <span>Categorias</span>
+        </h5>
       </div>
       <div className='list-group list-group-flush'>
         {categories.map(category => (
           <Link
             key={category.id}
             to={`/?category=${category.id}`}
-            className='list-group-item list-group-item-action d-flex align-items-center'
-            aria-label={`Ver tutoriais da categoria ${category.name}`}
+            className='list-group-item list-group-item-action d-flex align-items-center text-decoration-none'
           >
             <span className='me-3 fs-5'>{category.icon}</span>
             <div className='flex-grow-1'>
-              <div className='fw-semibold'>{category.name}</div>
+              <div className='fw-semibold text-dark'>{category.name}</div>
               <small className='text-muted'>
-                {category.tutorialCount} tutorial(s)
+                {category.tutorialCount} tutorial
+                {category.tutorialCount !== 1 ? 's' : ''}
               </small>
             </div>
-            <FaChevronRight className='text-muted' />
+            <FaChevronRight className='text-muted' size={12} />
           </Link>
         ))}
+
+        {categories.length === 0 && (
+          <div className='list-group-item text-center text-muted py-4'>
+            <div className='mb-2'>📂</div>
+            <div>Nenhuma categoria disponível</div>
+          </div>
+        )}
       </div>
     </div>
   )

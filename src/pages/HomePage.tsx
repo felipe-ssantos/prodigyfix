@@ -45,25 +45,27 @@ const HomePage: React.FC = () => {
     ? filteredTutorials
     : recentTutorials
 
+  const selectedCategoryData = categories.find(c => c.id === selectedCategory)
+
   return (
     <div className='container-fluid py-4'>
       {/* Active Filter */}
-      {selectedCategory && (
+      {selectedCategory && selectedCategoryData && (
         <div className='row mb-4'>
           <div className='col-12'>
             <div className='alert alert-info d-flex align-items-center justify-content-between'>
-              <div>
-                <strong>Categoria selecionada:</strong>{' '}
-                {categories.find(c => c.id === selectedCategory)?.name}
-                <span className='badge bg-primary ms-2'>
-                  {filteredTutorials.length} tutorial(s)
-                </span>
+              <div className='d-flex align-items-center gap-2'>
+                <span>{selectedCategoryData.icon}</span>
+                <div>
+                  <strong>Categoria selecionada:</strong>{' '}
+                  {selectedCategoryData.name}
+                  <span className='badge bg-primary ms-2'>
+                    {filteredTutorials.length} tutorial
+                    {filteredTutorials.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
               </div>
-              <Link
-                to='/'
-                className='btn btn-outline-primary btn-sm'
-                aria-label='Limpar filtro de categoria'
-              >
+              <Link to='/' className='btn btn-outline-primary btn-sm'>
                 Limpar filtro
               </Link>
             </div>
@@ -74,7 +76,7 @@ const HomePage: React.FC = () => {
       <div className='row'>
         {/* Sidebar with Categories */}
         <aside className='col-lg-3 mb-4'>
-          <div className='position-sticky' style={{ top: '2rem' }}>
+          <div className='position-sticky top-0 pt-2'>
             <CategorySection />
           </div>
         </aside>
@@ -86,8 +88,9 @@ const HomePage: React.FC = () => {
             <section className='mb-5'>
               <div className='d-flex align-items-center justify-content-between mb-4'>
                 <div>
-                  <h2 className='fw-bold mb-1 text-start'>
-                    ⭐ Destaques por Categoria
+                  <h2 className='fw-bold mb-1 text-start d-flex align-items-center gap-2'>
+                    <span>⭐</span>
+                    <span>Destaques por Categoria</span>
                   </h2>
                   <p className='text-dark mb-0 text-start'>
                     Os tutoriais mais populares em cada categoria
@@ -97,12 +100,14 @@ const HomePage: React.FC = () => {
 
               {featuredTutorialsByCategory.map(category => (
                 <div key={category.id} className='mb-4'>
-                  <div className='d-flex align-items-center mb-3'>
-                    <h3 className='fw-bold mb-0 me-2'>
-                      {category.icon} {category.name}
+                  <div className='d-flex align-items-center mb-3 gap-2'>
+                    <h3 className='fw-bold mb-0 d-flex align-items-center gap-2'>
+                      <span>{category.icon}</span>
+                      <span>{category.name}</span>
                     </h3>
                     <span className='badge bg-primary'>
-                      {category.tutorialCount} tutoriais
+                      {category.tutorialCount} tutorial
+                      {category.tutorialCount !== 1 ? 's' : ''}
                     </span>
                   </div>
                   <div className='row g-4'>
@@ -132,12 +137,18 @@ const HomePage: React.FC = () => {
           <section>
             <div className='d-flex align-items-center justify-content-between mb-4'>
               <div>
-                <h2 className='fw-bold mb-1'>
-                  {selectedCategory
-                    ? `📁 ${
-                        categories.find(c => c.id === selectedCategory)?.name
-                      }`
-                    : '🕒 Tutoriais Recentes'}
+                <h2 className='fw-bold mb-1 d-flex align-items-center gap-2'>
+                  {selectedCategory && selectedCategoryData ? (
+                    <>
+                      <span>📁</span>
+                      <span>{selectedCategoryData.name}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>🕒</span>
+                      <span>Tutoriais Recentes</span>
+                    </>
+                  )}
                 </h2>
                 <p className='text-dark mb-0'>
                   {selectedCategory
@@ -146,7 +157,8 @@ const HomePage: React.FC = () => {
                 </p>
               </div>
               <span className='badge bg-primary fs-6'>
-                {displayTutorials.length} tutorial(s)
+                {displayTutorials.length} tutorial
+                {displayTutorials.length !== 1 ? 's' : ''}
               </span>
             </div>
 
