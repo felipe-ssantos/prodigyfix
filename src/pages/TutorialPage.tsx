@@ -46,7 +46,7 @@ const TutorialPage = () => {
 
   if (!tutorial) {
     return (
-      <div className='container py-5'>
+      <div className='container-fluid py-5'>
         <div className='row justify-content-center'>
           <div className='col-md-6 text-center'>
             <div className='mb-4'>
@@ -127,7 +127,7 @@ const TutorialPage = () => {
   const difficultyConfig = getDifficultyConfig(tutorial.difficulty)
 
   return (
-    <div className='container-fluid py-4 tutorial-page-container'>
+    <div className='w-100 py-4' style={{ minHeight: '100vh' }}>
       {/* Success Toast for Share */}
       {shareSuccess && (
         <div className='position-fixed top-0 end-0 p-3 toast-success'>
@@ -148,264 +148,281 @@ const TutorialPage = () => {
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <nav aria-label='breadcrumb' className='mb-4'>
-        <ol className='breadcrumb mb-0 bg-light px-3 py-2 rounded'>
-          <li className='breadcrumb-item'>
-            <Link to='/' className='text-decoration-none'>
-              <FaHome className='me-1' size={12} />
-              Home
-            </Link>
-          </li>
-          <li className='breadcrumb-item'>
-            <Link
-              to={`/?category=${encodeURIComponent(tutorial.category)}`}
-              className='text-decoration-none'
+      {/* Container que ocupa toda a largura */}
+      <div className='container-fluid px-4'>
+        {/* Breadcrumb */}
+        <nav aria-label='breadcrumb' className='mb-4'>
+          <ol className='breadcrumb mb-0 bg-light px-3 py-2 rounded'>
+            <li className='breadcrumb-item'>
+              <Link to='/' className='text-decoration-none'>
+                <FaHome className='me-1' size={12} />
+                Home
+              </Link>
+            </li>
+            <li className='breadcrumb-item'>
+              <Link
+                to={`/?category=${encodeURIComponent(tutorial.category)}`}
+                className='text-decoration-none'
+              >
+                {tutorial.category}
+              </Link>
+            </li>
+            <li
+              className='breadcrumb-item active text-truncate'
+              aria-current='page'
             >
-              {tutorial.category}
-            </Link>
-          </li>
-          <li
-            className='breadcrumb-item active text-truncate'
-            aria-current='page'
-          >
-            {tutorial.title}
-          </li>
-        </ol>
-      </nav>
+              {tutorial.title}
+            </li>
+          </ol>
+        </nav>
 
-      <div className='row gx-4'>
-        {/* Main Content */}
-        <div className='col-lg-9'>
-          <article className='bg-white rounded-3 shadow-sm p-4 tutorial-article'>
-            {/* Header */}
-            <header className='mb-5'>
-              <div className='d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2'>
-                <div className='d-flex gap-2 flex-wrap'>
-                  <span
-                    className={`badge bg-${difficultyConfig.color} d-flex align-items-center`}
-                  >
-                    <span className='me-1'>{difficultyConfig.icon}</span>
-                    {difficultyConfig.text}
-                  </span>
-                  <span className='badge bg-primary'>{tutorial.category}</span>
-                </div>
-              </div>
-
-              <h1 className='fw-bold mb-3 display-6'>{tutorial.title}</h1>
-              <p className='lead text-muted mb-4'>{tutorial.description}</p>
-
-              {/* Cover Image */}
-              {tutorial.imageUrl && (
-                <div className='mb-4 tutorial-cover-image'>
-                  <img
-                    src={tutorial.imageUrl}
-                    alt={tutorial.title}
-                    className='img-fluid rounded shadow-sm'
-                  />
-                </div>
-              )}
-
-              {/* Meta info */}
-              <div className='row g-3 text-muted small border-bottom pb-3 mb-4'>
-                <div className='col-sm-6 col-md-3'>
-                  <div className='d-flex align-items-center'>
-                    <FaClock className='me-2 text-primary' />
-                    <span>{tutorial.estimatedTime} min de leitura</span>
-                  </div>
-                </div>
-                <div className='col-sm-6 col-md-3'>
-                  <div className='d-flex align-items-center'>
-                    <FaEye className='me-2 text-primary' />
-                    <span>{tutorial.views.toLocaleString()} Vizualizações</span>
-                  </div>
-                </div>
-                <div className='col-sm-6 col-md-3'>
-                  <div className='d-flex align-items-center'>
-                    <FaStar className='me-2 text-primary' />
-                    <span>{tutorial.author}</span>
-                  </div>
-                </div>
-                <div className='col-sm-6 col-md-3'>
-                  <div className='d-flex align-items-center'>
-                    <FaCalendarAlt className='me-2 text-primary' />
-                    <span>
-                      {new Date(tutorial.createdAt).toLocaleDateString('pt-BR')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tags */}
-              {tutorial.tags.length > 0 && (
-                <div className='mb-4'>
-                  <h6 className='text-muted mb-2'>Tags:</h6>
-                  <div className='d-flex flex-wrap gap-2'>
-                    {tutorial.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className='badge bg-light text-dark border'
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </header>
-
-            {/* Content */}
-            <div className='tutorial-content mb-5'>
-              <div
-                dangerouslySetInnerHTML={{ __html: tutorial.content }}
-                className='lh-lg'
-              />
-            </div>
-
-            {/* Quick Actions - Footer */}
-            <div className='border-top pt-4 mb-4'>
-              <div className='row'>
-                <div className='col-md-6'>
-                  <h6 className='fw-semibold mb-3 d-flex align-items-center'>
-                    <i className='fas fa-lightning-bolt me-2 text-warning'></i>
-                    Ações Rápidas
-                  </h6>
+        <div className='row gx-2'>
+          {/* Main Content - Expandido para ocupar mais espaço */}
+          <div className='col-xl-12 col-lg-8'>
+            <article className='bg-white rounded-3 shadow-sm p-4 tutorial-article w-100'>
+              {/* Header */}
+              <header className='mb-5'>
+                <div className='d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2'>
                   <div className='d-flex gap-2 flex-wrap'>
-                    <button
-                      type='button'
-                      onClick={handleShare}
-                      className='btn btn-outline-primary btn-sm'
+                    <span
+                      className={`badge bg-${difficultyConfig.color} d-flex align-items-center`}
                     >
-                      <FaShare className='me-2' size={14} />
-                      Compartilhar
-                    </button>
-                    <button
-                      type='button'
-                      onClick={handlePrint}
-                      className='btn btn-outline-secondary btn-sm d-print-none'
-                    >
-                      <FaPrint className='me-2' size={14} />
-                      Imprimir
-                    </button>
+                      <span className='me-1'>{difficultyConfig.icon}</span>
+                      {difficultyConfig.text}
+                    </span>
+                    <span className='badge bg-primary'>
+                      {tutorial.category}
+                    </span>
+                  </div>
+                </div>
+
+                <h1 className='fw-bold mb-3 display-6'>{tutorial.title}</h1>
+                <p className='lead text-muted mb-4'>{tutorial.description}</p>
+
+                {/* Cover Image */}
+                {tutorial.imageUrl && (
+                  <div className='mb-4 tutorial-cover-image'>
+                    <img
+                      src={tutorial.imageUrl}
+                      alt={tutorial.title}
+                      className='img-fluid rounded shadow-sm w-100'
+                      style={{ maxHeight: '500px', objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
+
+                {/* Meta info */}
+                <div className='row g-3 text-muted small border-bottom pb-3 mb-4'>
+                  <div className='col-sm-6 col-md-3'>
+                    <div className='d-flex align-items-center'>
+                      <FaClock className='me-2 text-primary' />
+                      <span>{tutorial.estimatedTime} min de leitura</span>
+                    </div>
+                  </div>
+                  <div className='col-sm-6 col-md-3'>
+                    <div className='d-flex align-items-center'>
+                      <FaEye className='me-2 text-primary' />
+                      <span>
+                        {tutorial.views.toLocaleString()} Vizualizações
+                      </span>
+                    </div>
+                  </div>
+                  <div className='col-sm-6 col-md-3'>
+                    <div className='d-flex align-items-center'>
+                      <FaStar className='me-2 text-primary' />
+                      <span>{tutorial.author}</span>
+                    </div>
+                  </div>
+                  <div className='col-sm-6 col-md-3'>
+                    <div className='d-flex align-items-center'>
+                      <FaCalendarAlt className='me-2 text-primary' />
+                      <span>
+                        {new Date(tutorial.createdAt).toLocaleDateString(
+                          'pt-BR'
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tags */}
+                {tutorial.tags.length > 0 && (
+                  <div className='mb-4'>
+                    <h6 className='text-muted mb-2'>Tags:</h6>
+                    <div className='d-flex flex-wrap gap-2'>
+                      {tutorial.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className='badge bg-light text-dark border'
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </header>
+
+              {/* Content - Área principal expandida */}
+              <div className='tutorial-content mb-5 w-100'>
+                <div
+                  dangerouslySetInnerHTML={{ __html: tutorial.content }}
+                  className='lh-lg'
+                  style={{
+                    maxWidth: '100%',
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}
+                />
+              </div>
+
+              {/* Quick Actions - Footer */}
+              <div className='border-top pt-4 mb-4'>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <h6 className='fw-semibold mb-3 d-flex align-items-center'>
+                      <i className='fas fa-lightning-bolt me-2 text-warning'></i>
+                      Ações Rápidas
+                    </h6>
+                    <div className='d-flex gap-2 flex-wrap'>
+                      <button
+                        type='button'
+                        onClick={handleShare}
+                        className='btn btn-outline-primary btn-sm'
+                      >
+                        <FaShare className='me-2' size={14} />
+                        Compartilhar
+                      </button>
+                      <button
+                        type='button'
+                        onClick={handlePrint}
+                        className='btn btn-outline-secondary btn-sm d-print-none'
+                      >
+                        <FaPrint className='me-2' size={14} />
+                        Imprimir
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Navigation */}
-            <nav className='d-flex justify-content-between mt-5 pt-4 border-top tutorial-navigation'>
-              {prevTutorial ? (
-                <Link
-                  to={`/tutorial/${prevTutorial.id}`}
-                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
-                >
-                  <FaArrowLeft className='me-2 flex-shrink-0' />
-                  <div className='text-start'>
-                    <small className='d-block text-muted'>Anterior</small>
-                    <span className='text-truncate d-block'>
-                      {prevTutorial.title}
-                    </span>
+              {/* Navigation */}
+              <nav className='d-flex justify-content-between mt-5 pt-4 border-top tutorial-navigation'>
+                {prevTutorial ? (
+                  <Link
+                    to={`/tutorial/${prevTutorial.id}`}
+                    className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
+                  >
+                    <FaArrowLeft className='me-2 flex-shrink-0' />
+                    <div className='text-start'>
+                      <small className='d-block text-muted'>Anterior</small>
+                      <span className='text-truncate d-block'>
+                        {prevTutorial.title}
+                      </span>
+                    </div>
+                  </Link>
+                ) : (
+                  <div></div>
+                )}
+
+                {nextTutorial ? (
+                  <Link
+                    to={`/tutorial/${nextTutorial.id}`}
+                    className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
+                  >
+                    <div className='text-end'>
+                      <small className='d-block text-muted'>Próximo</small>
+                      <span className='text-truncate d-block'>
+                        {nextTutorial.title}
+                      </span>
+                    </div>
+                    <FaArrowRight className='ms-2 flex-shrink-0' />
+                  </Link>
+                ) : (
+                  <div></div>
+                )}
+              </nav>
+            </article>
+          </div>
+
+          {/* Sidebar - Reduzida para dar mais espaço ao conteúdo */}
+          <div className='col-xl-3 col-lg-4'>
+            <div className='position-sticky-custom'>
+              {/* Related Tutorials */}
+              {relatedTutorials.length > 0 && (
+                <div className='card border-0 shadow-sm mb-4'>
+                  <div className='card-header bg-white border-bottom-0'>
+                    <h6 className='mb-0 fw-semibold d-flex align-items-center'>
+                      <i className='fas fa-bookmark me-2 text-primary'></i>
+                      Tutoriais Relacionados
+                    </h6>
                   </div>
-                </Link>
-              ) : (
-                <div></div>
-              )}
-
-              {nextTutorial ? (
-                <Link
-                  to={`/tutorial/${nextTutorial.id}`}
-                  className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
-                >
-                  <div className='text-end'>
-                    <small className='d-block text-muted'>Próximo</small>
-                    <span className='text-truncate d-block'>
-                      {nextTutorial.title}
-                    </span>
-                  </div>
-                  <FaArrowRight className='ms-2 flex-shrink-0' />
-                </Link>
-              ) : (
-                <div></div>
-              )}
-            </nav>
-          </article>
-        </div>
-
-        {/* Sidebar */}
-        <div className='col-lg-3'>
-          <div className='position-sticky-custom'>
-            {/* Related Tutorials */}
-            {relatedTutorials.length > 0 && (
-              <div className='card border-0 shadow-sm mb-4'>
-                <div className='card-header bg-white border-bottom-0'>
-                  <h6 className='mb-0 fw-semibold d-flex align-items-center'>
-                    <i className='fas fa-bookmark me-2 text-primary'></i>
-                    Tutoriais Relacionados
-                  </h6>
-                </div>
-                <div className='card-body pt-0'>
-                  {relatedTutorials.map((relatedTutorial, index) => (
-                    <div
-                      key={relatedTutorial.id}
-                      className={`py-3 ${
-                        index < relatedTutorials.length - 1
-                          ? 'border-bottom border-light'
-                          : ''
-                      }`}
-                    >
-                      <Link
-                        to={`/tutorial/${relatedTutorial.id}`}
-                        className='text-decoration-none'
+                  <div className='card-body pt-0'>
+                    {relatedTutorials.map((relatedTutorial, index) => (
+                      <div
+                        key={relatedTutorial.id}
+                        className={`py-3 ${
+                          index < relatedTutorials.length - 1
+                            ? 'border-bottom border-light'
+                            : ''
+                        }`}
                       >
-                        <div className='d-flex'>
-                          <div className='flex-grow-1'>
-                            <h6 className='text-dark mb-1 small fw-semibold'>
-                              {relatedTutorial.title}
-                            </h6>
-                            <p className='text-muted mb-2 small'>
-                              {relatedTutorial.description.length > 80
-                                ? `${relatedTutorial.description.substring(
-                                    0,
-                                    80
-                                  )}...`
-                                : relatedTutorial.description}
-                            </p>
-                            <div className='d-flex gap-2'>
-                              <span
-                                className={`badge bg-${
-                                  getDifficultyConfig(
-                                    relatedTutorial.difficulty
-                                  ).color
-                                } badge-sm`}
-                              >
-                                {
-                                  getDifficultyConfig(
-                                    relatedTutorial.difficulty
-                                  ).text
-                                }
-                              </span>
-                              <small className='text-muted d-flex align-items-center'>
-                                <FaClock size={10} className='me-1' />
-                                {relatedTutorial.estimatedTime}min
-                              </small>
+                        <Link
+                          to={`/tutorial/${relatedTutorial.id}`}
+                          className='text-decoration-none'
+                        >
+                          <div className='d-flex'>
+                            <div className='flex-grow-1'>
+                              <h6 className='text-dark mb-1 small fw-semibold'>
+                                {relatedTutorial.title}
+                              </h6>
+                              <p className='text-muted mb-2 small'>
+                                {relatedTutorial.description.length > 80
+                                  ? `${relatedTutorial.description.substring(
+                                      0,
+                                      80
+                                    )}...`
+                                  : relatedTutorial.description}
+                              </p>
+                              <div className='d-flex gap-2'>
+                                <span
+                                  className={`badge bg-${
+                                    getDifficultyConfig(
+                                      relatedTutorial.difficulty
+                                    ).color
+                                  } badge-sm`}
+                                >
+                                  {
+                                    getDifficultyConfig(
+                                      relatedTutorial.difficulty
+                                    ).text
+                                  }
+                                </span>
+                                <small className='text-muted d-flex align-items-center'>
+                                  <FaClock size={10} className='me-1' />
+                                  {relatedTutorial.estimatedTime}min
+                                </small>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </Link>
+                      </div>
+                    ))}
+
+                    <div className='pt-3'>
+                      <Link
+                        to={`/?category=${encodeURIComponent(
+                          tutorial.category
+                        )}`}
+                        className='btn btn-outline-primary btn-sm w-100'
+                      >
+                        Ver Todos em {tutorial.category}
                       </Link>
                     </div>
-                  ))}
-
-                  <div className='pt-3'>
-                    <Link
-                      to={`/?category=${encodeURIComponent(tutorial.category)}`}
-                      className='btn btn-outline-primary btn-sm w-100'
-                    >
-                      Ver Todos em {tutorial.category}
-                    </Link>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

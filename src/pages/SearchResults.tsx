@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaSearch, FaFilter, FaTimes } from 'react-icons/fa'
-import { useTutorials } from '../contexts/TutorialContext' // Corrigido para usar o contexto correto
+import { useTutorials } from '../contexts/TutorialContext'
 import TutorialCard from '../components/ui/TutorialCard'
 import { SearchFilters, Tutorial, Category } from '../types'
 
