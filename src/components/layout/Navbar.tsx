@@ -1,14 +1,12 @@
 //src\components\layout\Navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaSearch, FaHeart, FaUser, FaSignOutAlt } from 'react-icons/fa'
+import { FaSearch, FaUser, FaSignOutAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTutorials } from '../../contexts/TutorialContext'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const { currentUser, logout, isAdmin } = useAuth()
-  const { favorites } = useTutorials()
   const navigate = useNavigate()
 
   const handleSearch = (e: React.FormEvent) => {
@@ -24,7 +22,7 @@ const Navbar = () => {
       await logout()
       navigate('/')
     } catch (error) {
-      console.error('Logout failed:', error)
+      console.error('Falha ao sair:', error)
     }
   }
 
@@ -34,6 +32,9 @@ const Navbar = () => {
         <Link className='navbar-brand fw-bold' to='/'>
           <span className='me-2'>🔧</span>
           Bootpedia
+          <p className='text-muted mb-0 small'>
+            Sistema de recuperação e ferramentas Hiren's Boot
+          </p>
         </Link>
 
         <button
@@ -43,7 +44,7 @@ const Navbar = () => {
           data-bs-target='#navbarNav'
           aria-controls='navbarNav'
           aria-expanded='false'
-          aria-label='Toggle navigation'
+          aria-label='Alternar navegação'
         >
           <span className='navbar-toggler-icon'></span>
         </button>
@@ -57,12 +58,12 @@ const Navbar = () => {
             </li>
             <li className='nav-item'>
               <Link className='nav-link' to='/about'>
-                About
+                Sobre
               </Link>
-            </li> 
+            </li>
             <li className='nav-item'>
               <Link className='nav-link' to='/useful-links'>
-                Useful Links
+                Links úteis
               </Link>
             </li>
           </ul>
@@ -75,36 +76,22 @@ const Navbar = () => {
                   <input
                     type='text'
                     className='form-control search-input'
-                    placeholder='Search tutorials...'
+                    placeholder='Pesquisar tutoriais...'
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    aria-label='Search tutorials'
+                    aria-label='Pesquisar tutoriais'
                   />
                   <button
                     className='btn btn-outline-light'
                     type='submit'
                     disabled={!searchQuery.trim()}
-                    aria-label='Search'
+                    aria-label='Procurar'
                   >
                     <FaSearch />
                   </button>
                 </div>
               </form>
             </div>
-
-            {/* Favorites */}
-            <Link
-              to='/favorites'
-              className='btn btn-outline-light me-2 position-relative'
-              title='Favorites'
-            >
-              <FaHeart />
-              {favorites.length > 0 && (
-                <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
-                  {favorites.length}
-                </span>
-              )}
-            </Link>
 
             {/* User Menu */}
             {currentUser ? (
@@ -128,7 +115,11 @@ const Navbar = () => {
                     </li>
                   )}
                   <li>
-                    <button className='dropdown-item' onClick={handleLogout}>
+                    <button
+                      type='button'
+                      className='dropdown-item'
+                      onClick={handleLogout}
+                    >
                       <FaSignOutAlt className='me-2' />
                       Logout
                     </button>

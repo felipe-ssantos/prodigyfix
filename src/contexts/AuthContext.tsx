@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
       setCurrentUser(user)
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('Erro de login:', error)
       throw error
     }
   }
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await signOut(auth)
       setCurrentUser(null)
     } catch (error) {
-      console.error('Logout error:', error)
+      console.error('Erro de logout:', error)
       throw error
     }
   }
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider')
   }
   return context
 }

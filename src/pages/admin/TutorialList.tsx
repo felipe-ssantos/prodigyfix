@@ -81,9 +81,9 @@ const TutorialList: React.FC = () => {
                   <td>
                     <span
                       className={`badge bg-${
-                        tutorial.difficulty === 'beginner'
+                        tutorial.difficulty === 'Iniciante'
                           ? 'success'
-                          : tutorial.difficulty === 'intermediate'
+                          : tutorial.difficulty === 'Intermediário'
                           ? 'warning'
                           : 'danger'
                       }`}

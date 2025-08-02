@@ -79,7 +79,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
             createdAt: data.createdAt?.toDate() || new Date(),
             updatedAt: data.updatedAt?.toDate() || new Date(),
             views: data.views || 0,
-            difficulty: data.difficulty || 'beginner',
+            difficulty: data.difficulty || 'Iniciante',
             estimatedTime: data.estimatedTime || 0,
             tags: data.tags || [],
             imageUrl: data.imageUrl || ''
@@ -89,8 +89,8 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         setLoading(false)
       },
       err => {
-        setError('Failed to load tutorials')
-        console.error('Error loading tutorials:', err)
+        setError('Falha ao carregar tutoriais')
+        console.error('Erro ao carregar tutoriais:', err)
         setLoading(false)
       }
     )
@@ -116,7 +116,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         })
         setCategories(categoriesData)
       } catch (err) {
-        console.error('Error loading categories:', err)
+        console.error('Erro ao carregar categorias:', err)
       }
     }
 
@@ -208,7 +208,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
       })
       return docRef.id
     } catch (err) {
-      console.error('Error creating tutorial:', err)
+      console.error('Erro ao criar tutorial:', err)
       throw err
     }
   }
@@ -224,7 +224,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         updatedAt: new Date()
       })
     } catch (err) {
-      console.error('Error updating tutorial:', err)
+      console.error('Erro ao atualizar o tutorial:', err)
       throw err
     }
   }
@@ -233,7 +233,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     try {
       await deleteDoc(doc(db, 'tutorials', id))
     } catch (err) {
-      console.error('Error deleting tutorial:', err)
+      console.error('Erro ao excluir tutorial:', err)
       throw err
     }
   }
@@ -251,7 +251,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         })
       }
     } catch (err) {
-      console.error('Error incrementing views:', err)
+      console.error('Erro ao incrementar visualizações:', err)
     }
   }
 
@@ -286,7 +286,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
 export const useTutorials = (): TutorialContextType => {
   const context = useContext(TutorialContext)
   if (context === undefined) {
-    throw new Error('useTutorials must be used within a TutorialProvider')
+    throw new Error('useTutorials deve ser usado dentro de um TutorialProvider')
   }
   return context
 }

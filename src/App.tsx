@@ -16,9 +16,9 @@ import SearchResults from './pages/SearchResults'
 import CreateTutorial from './pages/admin/CreateTutorial'
 import EditTutorial from './pages/admin/EditTutorial'
 import TutorialList from './pages/admin/TutorialList'
-import AdminCategories from './pages/admin/AdminCategories'
 import ProtectedRoute from './components/ProtectedRoute'
 import NotFoundPage from './pages/NotFoundPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 
 // Context
 import { AuthProvider } from './contexts/AuthContext'
@@ -40,6 +40,7 @@ function App () {
                 <Route path='/about' element={<AboutPage />} />                
                 <Route path='/useful-links' element={<UsefulLinksPage />} />
                 <Route path='/admin/login' element={<AdminLogin />} />
+                <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
 
                 {/* Rotas protegidas - Admin */}
                 <Route
@@ -76,16 +77,7 @@ function App () {
                       <TutorialList />
                     </ProtectedRoute>
                   }
-                />
-
-                <Route
-                  path='/admin/categories'
-                  element={
-                    <ProtectedRoute>
-                      <AdminCategories />
-                    </ProtectedRoute>
-                  }
-                />
+                />               
 
                 {/* Rota para página não encontrada */}
                 <Route path='*' element={<NotFoundPage />} />

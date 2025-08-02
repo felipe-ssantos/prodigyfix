@@ -1,3 +1,4 @@
+//src\pages\admin\AdminLogin.tsx
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
@@ -24,7 +25,7 @@ const AdminLogin: React.FC = () => {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : 'Failed to login. Please check your credentials.'
+          : 'Falha ao efetuar login. Verifique suas credenciais.'
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -42,7 +43,7 @@ const AdminLogin: React.FC = () => {
                   <span className='display-4'>🔧</span>
                 </div>
                 <h2 className='fw-bold'>Admin Login</h2>
-                <p className='text-muted'>Access the Bootpedia admin panel</p>
+                <p className='text-muted'>Acesse o painel de administração da Bootpedia</p>
               </div>
 
               {error && (
@@ -54,7 +55,7 @@ const AdminLogin: React.FC = () => {
               <form onSubmit={handleSubmit}>
                 <div className='mb-3'>
                   <label htmlFor='email' className='form-label'>
-                    Email Address
+                    E-mail
                   </label>
                   <input
                     type='email'
@@ -64,12 +65,13 @@ const AdminLogin: React.FC = () => {
                     onChange={e => setEmail(e.target.value)}
                     required
                     disabled={loading}
+                    placeholder='Digite seu e-mail'
                   />
                 </div>
 
                 <div className='mb-4'>
                   <label htmlFor='password' className='form-label'>
-                    Password
+                    Senha
                   </label>
                   <div className='input-group'>
                     <input
@@ -80,13 +82,14 @@ const AdminLogin: React.FC = () => {
                       onChange={e => setPassword(e.target.value)}
                       required
                       disabled={loading}
+                      placeholder='Digite sua senha'
                     />
                     <button
                       type='button'
                       className='btn btn-outline-secondary'
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={loading}
-                      title={showPassword ? 'Hide password' : 'Show password'}
+                      title={showPassword ? 'Esconder senha' : 'Mostrar senha'}
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
@@ -105,12 +108,12 @@ const AdminLogin: React.FC = () => {
                         role='status'
                         aria-hidden='true'
                       ></span>
-                      Logging in...
+                      Fazendo login...
                     </>
                   ) : (
                     <>
                       <FaLock className='me-2' />
-                      Login
+                      Entrar
                     </>
                   )}
                 </button>
@@ -118,28 +121,9 @@ const AdminLogin: React.FC = () => {
 
               <div className='text-center'>
                 <Link to='/' className='text-muted text-decoration-none'>
-                  ← Back to Home
+                  ← Voltar para Home
                 </Link>
               </div>
-            </div>
-          </div>
-
-          {/* Demo Credentials */}
-          <div className='card mt-3'>
-            <div className='card-body'>
-              <h6 className='card-title'>Demo Credentials</h6>
-              <p className='card-text small text-muted'>
-                For testing purposes, you can use these demo credentials:
-              </p>
-              <div className='small'>
-                <strong>Email:</strong> admin@bootpedia.com
-                <br />
-                <strong>Password:</strong> admin123
-              </div>
-              <small className='text-muted'>
-                Note: In a real application, you would need to set up Firebase
-                Authentication with these credentials.
-              </small>
             </div>
           </div>
         </div>

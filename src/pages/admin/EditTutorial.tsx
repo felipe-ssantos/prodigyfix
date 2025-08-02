@@ -10,7 +10,9 @@ import {
 } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 import { useAuth } from '../../contexts/AuthContext'
+import TiptapEditor from '../../components/TiptapEditor'
 import type { Tutorial } from '../../types'
+import { Modal, Button } from 'react-bootstrap'
 
 const EditTutorial: React.FC = () => {
   const { id } = useParams()
@@ -22,15 +24,26 @@ const EditTutorial: React.FC = () => {
     description: '',
     content: '',
     category: '',
-    difficulty: 'beginner',
+    difficulty: 'Iniciante',
     tags: [],
     keywords: [],
     estimatedTime: 0,
     imageUrl: ''
   })
+  const [originalImageUrl, setOriginalImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [newCategory, setNewCategory] = useState('')
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [categories, setCategories] = useState<string[]>([
+    'BCD/MBR Tools',
+    'Data Recovery',
+    'Disk Defrag',
+    'Partition Tools',
+    'Password Recovery',
+    'System Repair'
+  ])
 
   useEffect(() => {
     const fetchTutorial = async () => {
@@ -47,11 +60,12 @@ const EditTutorial: React.FC = () => {
             tags: data.tags || [],
             keywords: data.keywords || []
           })
+          setOriginalImageUrl(data.imageUrl || '')
         } else {
           setError('Tutorial não encontrado')
         }
       } catch (err) {
-        setError('Erro ao carregar tutorial')
+        setError('Erro ao carregar o tutorial')
         console.error(err)
       } finally {
         setLoading(false)
@@ -70,25 +84,88 @@ const EditTutorial: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleContentChange = (content: string) => {
+    setFormData(prev => ({ ...prev, content }))
+  }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0])
+      const file = e.target.files[0]
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('O tamanho do arquivo de imagem deve ser inferior a 5 MB')
+        return
+      }
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Selecione um arquivo de imagem válido')
+        return
+      }
+      setImageFile(file)
+      setError('')
     }
   }
 
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const tags = e.target.value.split(',').map(tag => tag.trim())
+    const tags = e.target.value
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag)
     setFormData(prev => ({ ...prev, tags }))
   }
 
   const handleKeywordsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const keywords = e.target.value.split(',').map(keyword => keyword.trim())
+    const keywords = e.target.value
+      .split(',')
+      .map(keyword => keyword.trim())
+      .filter(keyword => keyword)
     setFormData(prev => ({ ...prev, keywords }))
+  }
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      const newCat = newCategory.trim()
+      setCategories([...categories, newCat])
+      setFormData(prev => ({
+        ...prev,
+        category: newCat
+      }))
+      setNewCategory('')
+      setShowCategoryModal(false)
+    }
+  }
+
+  const validateForm = () => {
+    if (!formData.title?.trim()) {
+      setError('Título é obrigatório')
+      return false
+    }
+    if (!formData.description?.trim()) {
+      setError('Descrição é necessária')
+      return false
+    }
+    if (!formData.content?.trim() || formData.content === '<p></p>') {
+      setError('O conteúdo é obrigatório')
+      return false
+    }
+    if (!formData.category) {
+      setError('A categoria é obrigatória')
+      return false
+    }
+    if ((formData.estimatedTime || 0) < 0) {
+      setError('O tempo estimado deve ser um número positivo')
+      return false
+    }
+    return true
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData || !id) return
+
+    if (!validateForm()) {
+      return
+    }
 
     setIsSubmitting(true)
     setError('')
@@ -96,18 +173,18 @@ const EditTutorial: React.FC = () => {
     try {
       let imageUrl = formData.imageUrl
 
-      // Upload da nova imagem se existir
       if (imageFile) {
-        // Remove a imagem antiga se existir
-        if (formData.imageUrl) {
+        // Delete old image if exists and is different
+        if (originalImageUrl && originalImageUrl !== formData.imageUrl) {
           try {
-            const oldImageRef = storageRef(storage, formData.imageUrl)
+            const oldImageRef = storageRef(storage, originalImageUrl)
             await deleteObject(oldImageRef)
           } catch (err) {
             console.warn('Erro ao remover imagem antiga:', err)
           }
         }
 
+        // Upload new image
         const newImageRef = storageRef(
           storage,
           `tutorials/${Date.now()}_${imageFile.name}`
@@ -116,7 +193,6 @@ const EditTutorial: React.FC = () => {
         imageUrl = await getDownloadURL(snapshot.ref)
       }
 
-      // Atualizar documento no Firestore
       const tutorialRef = doc(db, 'tutorials', id)
       await updateDoc(tutorialRef, {
         ...formData,
@@ -127,7 +203,7 @@ const EditTutorial: React.FC = () => {
       alert('Tutorial atualizado com sucesso!')
       navigate('/admin/dashboard')
     } catch (err) {
-      setError('Erro ao atualizar tutorial. Por favor, tente novamente.')
+      setError('Erro ao atualizar o tutorial. Tente novamente.')
       console.error(err)
     } finally {
       setIsSubmitting(false)
@@ -138,123 +214,210 @@ const EditTutorial: React.FC = () => {
     return (
       <div className='container py-5'>
         <div className='alert alert-danger'>
-          Você precisa estar logado para acessar esta página.
+          <h4 className='alert-heading'>Acesso negado</h4>
+          <p className='mb-0'>Você precisa estar logado para acessar esta página.</p>
         </div>
       </div>
     )
   }
 
-  if (loading)
-    return <div className='container py-5 text-center'>Carregando...</div>
-  if (error || !formData.title)
+  if (loading) {
     return (
       <div className='container py-5 text-center'>
-        {error || 'Tutorial não encontrado'}
+        <div className='d-flex justify-content-center align-items-center loading-edit-tutoral'>
+          <div>
+            <div className='spinner-border text-primary mb-3' role='status'>
+              <span className='visually-hidden'>Carregando...</span>
+            </div>
+            <p className='text-muted'>Carregando tutorial...</p>
+          </div>
+        </div>
       </div>
     )
+  }
+
+  if (error && !formData.title) {
+    return (
+      <div className='container py-5 text-center'>
+        <div className='alert alert-danger'>
+          <h4 className='alert-heading'>Error</h4>
+          <p className='mb-0'>{error || 'Tutorial não encontrado'}</p>
+          <hr />
+          <button
+            type='button'
+            className='btn btn-primary'
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            Voltar ao painel
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='container py-4'>
       <div className='row justify-content-center'>
-        <div className='col-lg-8'>
-          <div className='card'>
+        <div className='col-lg-12'>
+          <div className='card shadow-sm'>
             <div className='card-header bg-primary text-white'>
-              <h2 className='mb-0'>Editar Tutorial</h2>
+              <h2 className='mb-0 fw-bold'>
+                <i className='fas fa-edit me-2'></i>
+                Editar Tutorial
+              </h2>
             </div>
-            <div className='card-body'>
-              {error && <div className='alert alert-danger'>{error}</div>}
+            <div className='card-body p-4'>
+              {error && (
+                <div
+                  className='alert alert-danger alert-dismissible'
+                  role='alert'
+                >
+                  <strong>Erro:</strong> {error}
+                  <button
+                    type='button'
+                    className='btn-close'
+                    onClick={() => setError('')}
+                    aria-label='Close'
+                  ></button>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
-                <div className='mb-3'>
-                  <label htmlFor='title' className='form-label'>
-                    Título
-                  </label>
-                  <input
-                    type='text'
-                    className='form-control'
-                    id='title'
-                    name='title'
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                {/* Basic Information */}
+                <div className='row mb-4'>
+                  <div className='col-12'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      Informações Básicas
+                    </h5>
+                  </div>
 
-                <div className='mb-3'>
-                  <label htmlFor='description' className='form-label'>
-                    Descrição
-                  </label>
-                  <textarea
-                    className='form-control'
-                    id='description'
-                    name='description'
-                    rows={3}
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className='mb-3'>
-                  <label htmlFor='content' className='form-label'>
-                    Conteúdo (Markdown suportado)
-                  </label>
-                  <textarea
-                    className='form-control'
-                    id='content'
-                    name='content'
-                    rows={10}
-                    value={formData.content}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className='row'>
-                  <div className='col-md-6 mb-3'>
-                    <label htmlFor='category' className='form-label'>
-                      Categoria
+                  <div className='col-12 mb-3'>
+                    <label htmlFor='title' className='form-label fw-semibold'>
+                      Título <span className='text-danger'>*</span>
                     </label>
-                    <select
-                      className='form-select'
-                      id='category'
-                      name='category'
-                      value={formData.category}
+                    <input
+                      type='text'
+                      className='form-control'
+                      id='title'
+                      name='title'
+                      value={formData.title || ''}
                       onChange={handleChange}
+                      placeholder='Enter tutorial title'
                       required
+                    />
+                  </div>
+
+                  <div className='col-12 mb-3'>
+                    <label
+                      htmlFor='description'
+                      className='form-label fw-semibold'
                     >
-                      <option value=''>Selecione uma categoria</option>
-                      <option value='html-css'>HTML & CSS</option>
-                      <option value='javascript'>JavaScript</option>
-                      <option value='react'>React</option>
-                      <option value='nodejs'>Node.js</option>
-                      <option value='database'>Banco de Dados</option>
-                    </select>
+                      Resumo <span className='text-danger'>*</span>
+                    </label>
+                    <textarea
+                      className='form-control'
+                      id='description'
+                      name='description'
+                      rows={3}
+                      value={formData.description || ''}
+                      onChange={handleChange}
+                      placeholder='Brief description of the tutorial'
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className='row mb-4'>
+                  <div className='col-12'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      Conteúdo
+                    </h5>
+                  </div>
+
+                  <div className='col-12 mb-3'>
+                    <label
+                      htmlFor='content'
+                      className='form-label fw-semibold mb-2'
+                    >
+                      Conteúdo do tutorial{' '}
+                      <span className='text-danger'>*</span>
+                    </label>
+                    <TiptapEditor
+                      content={formData.content || ''}
+                      onChange={handleContentChange}
+                      placeholder='Write your detailed tutorial content here...'
+                    />
+                  </div>
+                </div>
+
+                {/* Categorization */}
+                <div className='row mb-4'>
+                  <div className='col-12'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      Categorização
+                    </h5>
                   </div>
 
                   <div className='col-md-6 mb-3'>
-                    <label htmlFor='difficulty' className='form-label'>
-                      Dificuldade
+                    <label
+                      htmlFor='category'
+                      className='form-label fw-semibold'
+                    >
+                      Categoria <span className='text-danger'>*</span>
+                    </label>
+                    <div className='input-group'>
+                      <select
+                        className='form-select'
+                        id='category'
+                        name='category'
+                        value={formData.category || ''}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value=''>Select a category</option>
+                        {categories.map(cat => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type='button'
+                        className='btn btn-outline-secondary'
+                        onClick={() => setShowCategoryModal(true)}
+                        title='Adicionar nova categoria'
+                      >
+                        <i className='fas fa-plus'></i> Novo(a)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className='col-md-6 mb-3'>
+                    <label
+                      htmlFor='difficulty'
+                      className='form-label fw-semibold'
+                    >
+                      Nível de dificuldade{' '}
+                      <span className='text-danger'>*</span>
                     </label>
                     <select
                       className='form-select'
                       id='difficulty'
                       name='difficulty'
-                      value={formData.difficulty}
+                      value={formData.difficulty || 'beginner'}
                       onChange={handleChange}
                       required
                     >
-                      <option value='beginner'>Iniciante</option>
-                      <option value='intermediate'>Intermediário</option>
-                      <option value='advanced'>Avançado</option>
+                      <option value='Iniciante'>Iniciante</option>
+                      <option value='Intermediário'>Intermediário</option>
+                      <option value='Avançado'>Avançado</option>
                     </select>
                   </div>
-                </div>
 
-                <div className='row'>
                   <div className='col-md-6 mb-3'>
-                    <label htmlFor='tags' className='form-label'>
-                      Tags (separadas por vírgula)
+                    <label htmlFor='tags' className='form-label fw-semibold'>
+                      Tags
                     </label>
                     <input
                       type='text'
@@ -263,12 +426,17 @@ const EditTutorial: React.FC = () => {
                       name='tags'
                       value={formData.tags?.join(', ') || ''}
                       onChange={handleTagsChange}
+                      placeholder='tag1, tag2, tag3'
                     />
+                    <div className='form-text'>Separe as tags com vírgulas</div>
                   </div>
 
                   <div className='col-md-6 mb-3'>
-                    <label htmlFor='keywords' className='form-label'>
-                      Palavras-chave (separadas por vírgula)
+                    <label
+                      htmlFor='keywords'
+                      className='form-label fw-semibold'
+                    >
+                      Palavras-chave
                     </label>
                     <input
                       type='text'
@@ -277,14 +445,26 @@ const EditTutorial: React.FC = () => {
                       name='keywords'
                       value={formData.keywords?.join(', ') || ''}
                       onChange={handleKeywordsChange}
+                      placeholder='keyword1, keyword2, keyword3'
                     />
+                    <div className='form-text'>Para otimização de pesquisa</div>
                   </div>
                 </div>
 
-                <div className='row'>
+                {/* Additional Settings */}
+                <div className='row mb-4'>
+                  <div className='col-12'>
+                    <h5 className='text-muted border-bottom pb-2 mb-3'>
+                      Configurações adicionais
+                    </h5>
+                  </div>
+
                   <div className='col-md-6 mb-3'>
-                    <label htmlFor='estimatedTime' className='form-label'>
-                      Tempo estimado (minutos)
+                    <label
+                      htmlFor='estimatedTime'
+                      className='form-label fw-semibold'
+                    >
+                      Tempo estimado de leitura (em minutos)
                     </label>
                     <input
                       type='number'
@@ -292,14 +472,16 @@ const EditTutorial: React.FC = () => {
                       id='estimatedTime'
                       name='estimatedTime'
                       min='0'
+                      max='999'
                       value={formData.estimatedTime || 0}
                       onChange={handleChange}
+                      placeholder='0'
                     />
                   </div>
 
                   <div className='col-md-6 mb-3'>
-                    <label htmlFor='image' className='form-label'>
-                      Imagem de capa
+                    <label htmlFor='image' className='form-label fw-semibold'>
+                      Imagem da capa
                     </label>
                     <input
                       type='file'
@@ -309,36 +491,70 @@ const EditTutorial: React.FC = () => {
                       accept='image/*'
                       onChange={handleImageChange}
                     />
+                    <div className='form-text'>
+                      Max 5MB. Suportado: JPG, PNG, GIF, WebP
+                    </div>
+
                     {formData.imageUrl && !imageFile && (
-                      <small className='text-muted'>
-                        Imagem atual:{' '}
-                        <a
-                          href={formData.imageUrl}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          Visualizar
-                        </a>
-                      </small>
+                      <div className='mt-2'>
+                        <small className='text-muted d-block'>
+                          Imagem atual:
+                          <a
+                            href={formData.imageUrl}
+                            target='_blank'
+                            rel='noreferrer'
+                            className='text-decoration-none ms-1'
+                          >
+                            <i className='fas fa-external-link-alt me-1'></i>
+                            Visualizar
+                          </a>
+                        </small>
+                      </div>
+                    )}
+
+                    {imageFile && (
+                      <div className='mt-2'>
+                        <small className='text-success'>
+                          <i className='fas fa-check-circle me-1'></i>
+                          Nova imagem selecionada: {imageFile.name}
+                        </small>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                <div className='d-flex justify-content-between'>
+                {/* Actions */}
+                <div className='d-flex justify-content-between pt-3 border-top'>
                   <button
                     type='button'
-                    className='btn btn-secondary'
+                    className='btn btn-secondary px-4'
                     onClick={() => navigate('/admin/dashboard')}
                     disabled={isSubmitting}
                   >
+                    <i className='fas fa-times me-1'></i>
                     Cancelar
                   </button>
                   <button
                     type='submit'
-                    className='btn btn-primary'
+                    className='btn btn-primary px-4'
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+                    {isSubmitting ? (
+                      <>
+                        <div
+                          className='spinner-border spinner-border-sm me-2'
+                          role='status'
+                        >
+                          <span className='visually-hidden'>Loading...</span>
+                        </div>
+                        Salvando alterações...
+                      </>
+                    ) : (
+                      <>
+                        <i className='fas fa-save me-2'></i>
+                        Salvar alterações
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
@@ -346,6 +562,51 @@ const EditTutorial: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* New Category Modal */}
+      <Modal
+        show={showCategoryModal}
+        onHide={() => setShowCategoryModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <i className='fas fa-folder-plus me-2'></i>
+            Adicionar nova categoria
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='mb-3'>
+            <label htmlFor='newCategory' className='form-label fw-semibold'>
+              Nome da categoria
+            </label>
+            <input
+              type='text'
+              className='form-control'
+              id='newCategory'
+              value={newCategory}
+              onChange={e => setNewCategory(e.target.value)}
+              placeholder='Ex: Diagnostic Tools'
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant='secondary'
+            onClick={() => setShowCategoryModal(false)}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant='primary'
+            onClick={handleAddCategory}
+            disabled={!newCategory.trim()}
+          >
+            <i className='fas fa-plus me-1'></i>
+            Adicionar categoria
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }

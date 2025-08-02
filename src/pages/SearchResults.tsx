@@ -61,7 +61,7 @@ const SearchResults: React.FC = () => {
               <input
                 type='text'
                 className='form-control'
-                placeholder='Search tutorials...'
+                placeholder='Pesquisar tutoriais...'
                 value={query}
                 onChange={e => setQuery(e.target.value)}
               />

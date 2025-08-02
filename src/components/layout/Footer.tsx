@@ -1,3 +1,4 @@
+// src/components/layout/Footer.tsx
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaGithub } from 'react-icons/fa'
@@ -11,10 +12,7 @@ const Footer: React.FC = () => {
         <div className='row'>
           {/* Quick Links Section - Simplificada */}
           <div className='col-md-8 mb-4 mx-auto text-center'>
-            <h6 className='text-white mb-3 pb-2 border-bottom border-secondary border-opacity-25'>
-              Navigation
-            </h6>
-            <ul className='list-unstyled mb-0 d-flex justify-content-center gap-4'>
+            <ul className='list-unstyled mb-0 d-flex justify-content-center gap-4 flex-wrap'>
               <li>
                 <Link
                   to='/'
@@ -28,7 +26,7 @@ const Footer: React.FC = () => {
                   to='/about'
                   className='text-white-50 text-decoration-none hover-text-white'
                 >
-                  About
+                  Sobre
                 </Link>
               </li>
               <li>
@@ -36,7 +34,15 @@ const Footer: React.FC = () => {
                   to='/useful-links'
                   className='text-white-50 text-decoration-none hover-text-white'
                 >
-                  Useful Links
+                  Links úteis
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to='/privacy-policy'
+                  className='text-white-50 text-decoration-none hover-text-white'
+                >
+                  Políticas de Privacidade / LGPD
                 </Link>
               </li>
             </ul>
@@ -48,7 +54,7 @@ const Footer: React.FC = () => {
         <div className='row align-items-center'>
           <div className='col-md-6'>
             <p className='mb-0 text-white-50 small'>
-              © {currentYear} Bootpedia. All rights reserved.
+              © {currentYear} Bootpedia. Todos os direitos reservados.
             </p>
           </div>
           <div className='col-md-6 text-md-end'>
@@ -56,13 +62,11 @@ const Footer: React.FC = () => {
               href='https://github.com/felipe-ssantos'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-white-50 text-decoration-none hover-text-white'
+              className='text-white-50 text-decoration-none hover-text-white d-inline-flex align-items-center gap-2'
               title='GitHub'
             >
-              <p className='mb-0 text-white-50 small'>
-                Developed by
-                <FaGithub size={20} className='ml-2' />
-              </p>
+              <span className='small'>Developed by </span>
+              <FaGithub size={16} />
             </a>
           </div>
         </div>

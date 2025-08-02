@@ -231,10 +231,6 @@
 
 }
 
-.modal-delete {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
 /* Efeito hover para links no footer */
 .hover-text-white:hover {
   color: white !important;
@@ -249,4 +245,444 @@
 
 .text-white-50:hover {
   opacity: 1;
+}
+
+
+/* markdown-styles.css */
+.markdown-content {
+  line-height: 1.8;
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+.markdown-content pre {
+  overflow-x: auto;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.sticky-top {
+  top: '2rem';
+}
+
+.description-tutorial-page {
+  font-size: 0.8rem;
+}
+
+.loading-edit-tutorial {
+  min-width: 300px;
+}
+
+.content-tutorial-page {
+  font-size: 1.1rem;
+}
+
+.sidebar-tutorial-page {
+  top: 2rem;
+}
+
+.cover-image-tutorial-page {
+  max-height: 400px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.breadcrumb-tutorial-page {
+  max-width: 200px;
+}
+.shareSuccess-tutorial-page{
+  z-index: 1050;
+}
+
+/* TipTap Editor Styles - Add to your App.css */
+
+/* Editor container styling */
+
+.tiptap-editor-content {
+  min-height: 300px;
+  outline: none;
+}
+
+.ProseMirror {
+  outline: none !important;
+  padding: 1rem;
+  min-height: 300px;
+  line-height: 1.6;
+}
+
+.ProseMirror:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Content styling for both editor and display */
+.tutorial-content,
+.ProseMirror {
+  /* Typography */
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+.tutorial-content h1,
+.ProseMirror h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem 0;
+  color: #212529;
+  border-bottom: 3px solid #007bff;
+  padding-bottom: 0.5rem;
+}
+
+.tutorial-content h2,
+.ProseMirror h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 1.8rem 0 1rem 0;
+  color: #212529;
+  border-bottom: 2px solid #6c757d;
+  padding-bottom: 0.3rem;
+}
+
+.tutorial-content h3,
+.ProseMirror h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.8rem 0;
+  color: #212529;
+}
+
+.tutorial-content h4,
+.ProseMirror h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.3rem 0 0.8rem 0;
+  color: #212529;
+}
+
+.tutorial-content h5,
+.ProseMirror h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 1.2rem 0 0.8rem 0;
+  color: #212529;
+}
+
+.tutorial-content h6,
+.ProseMirror h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.1rem 0 0.8rem 0;
+  color: #212529;
+}
+
+.tutorial-content p,
+.ProseMirror p {
+  margin: 0 0 1.2rem 0;
+  text-align: justify;
+}
+
+.tutorial-content p:last-child,
+.ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+/* Lists */
+.tutorial-content ul,
+.tutorial-content ol,
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.tutorial-content ul li,
+.tutorial-content ol li,
+.ProseMirror ul li,
+.ProseMirror ol li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.tutorial-content ul ul,
+.tutorial-content ol ol,
+.tutorial-content ul ol,
+.tutorial-content ol ul,
+.ProseMirror ul ul,
+.ProseMirror ol ol,
+.ProseMirror ul ol,
+.ProseMirror ol ul {
+  margin: 0.5rem 0;
+}
+
+/* Blockquotes */
+.tutorial-content blockquote,
+.ProseMirror blockquote {
+  border-left: 4px solid #007bff;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 0 0.375rem 0.375rem 0;
+  font-style: italic;
+  color: #6c757d;
+  position: relative;
+}
+
+.tutorial-content blockquote::before,
+.ProseMirror blockquote::before {
+  content: '"';
+  font-size: 3rem;
+  color: #007bff;
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+  opacity: 0.3;
+}
+
+.tutorial-content blockquote p,
+.ProseMirror blockquote p {
+  margin-bottom: 0;
+}
+
+/* Code */
+.tutorial-content code,
+.ProseMirror code {
+  background-color: #f1f3f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  font-family: 'SFMono-Regular', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  color: #e83e8c;
+  border: 1px solid #e9ecef;
+}
+
+.tutorial-content pre,
+.ProseMirror pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'SFMono-Regular', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.tutorial-content pre code,
+.ProseMirror pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Links */
+.tutorial-content a,
+.ProseMirror a {
+  color: #007bff;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.tutorial-content a:hover,
+.ProseMirror a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Images */
+.tutorial-content img,
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+  display: block;
+}
+
+/* Tables (if you add table extension later) */
+.tutorial-content table,
+.ProseMirror table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.tutorial-content th,
+.tutorial-content td,
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.tutorial-content th,
+.ProseMirror th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Horizontal Rule */
+.tutorial-content hr,
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid #e9ecef;
+  margin: 2rem 0;
+}
+
+/* Strong and emphasis */
+.tutorial-content strong,
+.ProseMirror strong {
+  font-weight: 600;
+  color: #212529;
+}
+
+.tutorial-content em,
+.ProseMirror em {
+  font-style: italic;
+}
+
+.tutorial-content u,
+.ProseMirror u {
+  text-decoration: underline;
+}
+
+.tutorial-content s,
+.ProseMirror s {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Placeholder styling */
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Print styles for tutorial content */
+@media print {
+
+  .tutorial-content,
+  .ProseMirror {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #000;
+  }
+
+  .tutorial-content h1,
+  .tutorial-content h2,
+  .tutorial-content h3,
+  .tutorial-content h4,
+  .tutorial-content h5,
+  .tutorial-content h6,
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror h4,
+  .ProseMirror h5,
+  .ProseMirror h6 {
+    page-break-after: avoid;
+    color: #000;
+    border-color: #000;
+  }
+
+  .tutorial-content blockquote,
+  .ProseMirror blockquote {
+    border-left-color: #000;
+    background-color: #f5f5f5;
+  }
+
+  .tutorial-content pre,
+  .ProseMirror pre {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+  }
+
+  .tutorial-content a,
+  .ProseMirror a {
+    color: #000;
+    text-decoration: underline;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+  .tutorial-content,
+  .ProseMirror {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .tutorial-content h1,
+  .ProseMirror h1 {
+    font-size: 2rem;
+  }
+
+  .tutorial-content h2,
+  .ProseMirror h2 {
+    font-size: 1.5rem;
+  }
+
+  .tutorial-content h3,
+  .ProseMirror h3 {
+    font-size: 1.25rem;
+  }
+
+  .tutorial-content ul,
+  .tutorial-content ol,
+  .ProseMirror ul,
+  .ProseMirror ol {
+    padding-left: 1.5rem;
+  }
+
+  .tutorial-content blockquote,
+  .ProseMirror blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .tutorial-content pre,
+  .ProseMirror pre {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Focus styles for better accessibility */
+.tutorial-content a:focus,
+.ProseMirror a:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Selection styling */
+.tutorial-content ::selection,
+.ProseMirror ::selection {
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+/* Toolbar button active states */
+.btn.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
 }

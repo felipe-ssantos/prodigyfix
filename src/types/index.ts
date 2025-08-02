@@ -11,9 +11,11 @@ export interface Tutorial {
   createdAt: Date;
   updatedAt: Date;
   views: number;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: 'Iniciante' | 'Intermediário' | 'Avançado';
   estimatedTime: number; // in minutes
   tags: string[];
+  version?: string; 
+  osCompatibility?: string[];
 }
 
 export interface Category {
@@ -22,6 +24,7 @@ export interface Category {
   description: string;
   icon: string;
   tutorialCount: number;
+  isFeatured?: boolean; 
 }
 
 export interface User {

@@ -25,7 +25,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner':
+      case 'Iniciante':
         return 'success'
       case 'intermediate':
         return 'warning'
@@ -81,7 +81,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
             <div className='d-flex gap-2'>
               <span className='badge bg-secondary'>
                 <FaClock className='me-1' />
-                {tutorial.estimatedTime} min
+                {tutorial.estimatedTime} min de leitura
               </span>
               <span
                 className={`badge bg-${getDifficultyColor(
@@ -106,7 +106,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
             ))}
             {tutorial.tags.length > 3 && (
               <span className='badge bg-light text-dark'>
-                +{tutorial.tags.length - 3} more
+                +{tutorial.tags.length - 3} mais
               </span>
             )}
           </div>
@@ -115,9 +115,9 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
 
       <div className='card-footer bg-transparent'>
         <div className='d-flex justify-content-between align-items-center'>
-          <small className='text-muted'>By {tutorial.author}</small>
+          <small className='text-muted'>{tutorial.author}</small>
           <small className='text-muted'>
-            {new Date(tutorial.createdAt).toLocaleDateString()}
+            Publicado em: {new Date(tutorial.createdAt).toLocaleDateString()}
           </small>
         </div>
       </div>
