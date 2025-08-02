@@ -1,18 +1,33 @@
 // src/pages/admin/AdminDashboard.tsx
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaPlus, FaEdit, FaEye, FaTrash, FaFileAlt } from 'react-icons/fa'
+import {
+  FaPlus,
+  FaEdit,
+  FaEye,
+  FaTrash,
+  FaFileAlt,
+  FaCog,
+  FaDatabase
+} from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTutorials } from '../../hooks/useTutorials'
+import {
+  createCategoriesInFirestore,
+  checkCategoriesStatus
+} from '../../utils/createCategories'
 import type { Tutorial } from '../../types'
 
 const AdminDashboard: React.FC = () => {
   const { currentUser, logout } = useAuth()
-  const { tutorials, deleteTutorial } = useTutorials()
+  const { tutorials, categories, deleteTutorial, refreshCategories } =
+    useTutorials()
   const [selectedTutorial, setSelectedTutorial] = useState<Tutorial | null>(
     null
   )
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [initializingCategories, setInitializingCategories] = useState(false)
+  const [showInitMessage, setShowInitMessage] = useState('')
 
   const stats = {
     totalTutorials: tutorials.length,
@@ -24,7 +39,8 @@ const AdminDashboard: React.FC = () => {
       const daysAgo =
         (Date.now() - new Date(t.createdAt).getTime()) / (1000 * 60 * 60 * 24)
       return daysAgo <= 7
-    }).length
+    }).length,
+    totalCategories: categories.length
   }
 
   const handleDeleteTutorial = (tutorial: Tutorial) => {
@@ -44,9 +60,56 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  const handleInitializeCategories = async () => {
+    try {
+      setInitializingCategories(true)
+      setShowInitMessage('')
+
+      console.log('🔄 Iniciando criação de categorias...')
+      await createCategoriesInFirestore()
+
+      // Aguarda um pouco e atualiza as categorias
+      setTimeout(async () => {
+        await refreshCategories()
+        setShowInitMessage('✅ Categorias inicializadas com sucesso!')
+        console.log('✅ Categorias criadas e contexto atualizado!')
+      }, 1000)
+    } catch (error) {
+      console.error('❌ Erro ao inicializar categorias:', error)
+      setShowInitMessage(
+        '❌ Erro ao inicializar categorias. Verifique o console.'
+      )
+    } finally {
+      setInitializingCategories(false)
+      // Remove a mensagem após 5 segundos
+      setTimeout(() => setShowInitMessage(''), 5000)
+    }
+  }
+
+  const handleCheckCategoriesStatus = async () => {
+    try {
+      await checkCategoriesStatus()
+      console.log('📊 Status das categorias exibido no console')
+    } catch (error) {
+      console.error('❌ Erro ao verificar status das categorias:', error)
+    }
+  }
+
+  // Função para buscar nome da categoria
+  const getCategoryName = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId)
+    return category ? category.name : categoryId
+  }
+
+  // Função para buscar ícone da categoria
+  const getCategoryIcon = (categoryId: string) => {
+    const category = categories.find(cat => cat.id === categoryId)
+    return category ? category.icon : '📁'
+  }
+
   if (!currentUser) {
     return (
-      <div className='w-100 py-5' style={{ minHeight: '100vh' }}>
+      <div className='w-100 py-5 min-vh-100'>
         <div className='container-fluid px-4'>
           <div className='text-center'>
             <h1>Acesso Negado</h1>
@@ -63,7 +126,7 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <div className='w-100 py-4' style={{ minHeight: '100vh' }}>
+    <div className='w-100 py-4 min-vh-100'>
       <div className='container-fluid px-4'>
         <div className='d-flex justify-content-between align-items-center mb-4'>
           <div>
@@ -81,8 +144,25 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Mensagem de inicialização */}
+        {showInitMessage && (
+          <div
+            className={`alert ${
+              showInitMessage.includes('✅') ? 'alert-success' : 'alert-danger'
+            } alert-dismissible fade show mb-4`}
+          >
+            {showInitMessage}
+            <button
+              type='button'
+              className='btn-close'
+              onClick={() => setShowInitMessage('')}
+              aria-label='Close'
+            ></button>
+          </div>
+        )}
+
         <div className='row mb-4'>
-          <div className='col-md-4 mb-3'>
+          <div className='col-md-3 mb-3'>
             <div className='card bg-primary text-white'>
               <div className='card-body'>
                 <div className='d-flex justify-content-between'>
@@ -97,7 +177,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className='col-md-4 mb-3'>
+          <div className='col-md-3 mb-3'>
             <div className='card bg-info text-white'>
               <div className='card-body'>
                 <div className='d-flex justify-content-between'>
@@ -114,7 +194,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className='col-md-4 mb-3'>
+          <div className='col-md-3 mb-3'>
             <div className='card bg-success text-white'>
               <div className='card-body'>
                 <div className='d-flex justify-content-between'>
@@ -125,6 +205,72 @@ const AdminDashboard: React.FC = () => {
                   <div className='align-self-center'>
                     <FaPlus size={24} />
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='col-md-3 mb-3'>
+            <div className='card bg-warning text-white'>
+              <div className='card-body'>
+                <div className='d-flex justify-content-between'>
+                  <div>
+                    <h4 className='mb-1'>{stats.totalCategories}</h4>
+                    <small>Categorias</small>
+                  </div>
+                  <div className='align-self-center'>
+                    <FaDatabase size={24} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Seção de Configuração de Categorias */}
+        <div className='card mb-4'>
+          <div className='card-header d-flex justify-content-between align-items-center'>
+            <h5 className='mb-0 d-flex align-items-center gap-2'>
+              <FaCog />
+              Configuração do Sistema
+            </h5>
+          </div>
+          <div className='card-body'>
+            <div className='row'>
+              <div className='col-md-8'>
+                <h6 className='fw-bold mb-2'>Inicialização de Categorias</h6>
+                <p className='text-muted mb-0'>
+                  {categories.length === 0
+                    ? 'Nenhuma categoria encontrada. Execute a inicialização para criar as categorias padrão.'
+                    : `${categories.length} categoria(s) ativa(s). Você pode reinicializar para adicionar categorias faltantes.`}
+                </p>
+              </div>
+              <div className='col-md-4 text-end'>
+                <div className='btn-group'>
+                  <button
+                    onClick={handleInitializeCategories}
+                    disabled={initializingCategories}
+                    className='btn btn-outline-primary'
+                    title='Criar categorias padrão no Firestore'
+                  >
+                    {initializingCategories ? (
+                      <>
+                        <span className='spinner-border spinner-border-sm me-2'></span>
+                        Criando...
+                      </>
+                    ) : (
+                      <>
+                        <FaDatabase className='me-2' />
+                        Inicializar Categorias
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCheckCategoriesStatus}
+                    className='btn btn-outline-secondary'
+                    title='Verificar status das categorias (console)'
+                  >
+                    <FaEye />
+                  </button>
                 </div>
               </div>
             </div>
@@ -142,92 +288,104 @@ const AdminDashboard: React.FC = () => {
             </Link>
           </div>
           <div className='card-body'>
-            <div className='table-responsive'>
-              <table className='table table-hover'>
-                <thead>
-                  <tr>
-                    <th>Título</th>
-                    <th>Software</th>
-                    <th>Dificuldade</th>
-                    <th>Visualizações</th>
-                    <th>Criado em</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tutorials.slice(0, 10).map((tutorial: Tutorial) => (
-                    <tr key={tutorial.id}>
-                      <td>
-                        <Link
-                          to={`/tutorial/${tutorial.id}`}
-                          className='text-decoration-none'
-                        >
-                          {tutorial.title}
-                        </Link>
-                      </td>
-                      <td>
-                        <span className='badge bg-secondary'>
-                          {tutorial.category}
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          className={`badge bg-${
-                            tutorial.difficulty === 'Iniciante'
-                              ? 'success'
-                              : tutorial.difficulty === 'Intermediário'
-                              ? 'warning'
-                              : 'danger'
-                          }`}
-                        >
-                          {tutorial.difficulty === 'Iniciante'
-                            ? 'Iniciante'
-                            : tutorial.difficulty === 'Intermediário'
-                            ? 'Intermediário'
-                            : 'Avançado'}
-                        </span>
-                      </td>
-                      <td>{tutorial.views.toLocaleString()}</td>
-                      <td>
-                        {new Date(tutorial.createdAt).toLocaleDateString(
-                          'pt-BR'
-                        )}
-                      </td>
-                      <td>
-                        <div className='btn-group btn-group-sm'>
+            {tutorials.length === 0 ? (
+              <div className='text-center py-4'>
+                <FaFileAlt className='display-4 text-muted mb-3' />
+                <h6 className='text-muted'>Nenhum tutorial encontrado</h6>
+                <p className='text-muted mb-3'>
+                  Comece criando seu primeiro tutorial!
+                </p>
+                <Link to='/admin/tutorials/new' className='btn btn-primary'>
+                  <FaPlus className='me-2' />
+                  Criar Primeiro Tutorial
+                </Link>
+              </div>
+            ) : (
+              <div className='table-responsive'>
+                <table className='table table-hover'>
+                  <thead>
+                    <tr>
+                      <th>Título</th>
+                      <th>Categoria</th>
+                      <th>Dificuldade</th>
+                      <th>Visualizações</th>
+                      <th>Criado em</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tutorials.slice(0, 10).map((tutorial: Tutorial) => (
+                      <tr key={tutorial.id}>
+                        <td>
                           <Link
                             to={`/tutorial/${tutorial.id}`}
-                            className='btn btn-outline-primary'
-                            title='Visualizar'
+                            className='text-decoration-none'
                           >
-                            <FaEye />
+                            {tutorial.title}
                           </Link>
-                          <Link
-                            to={`/admin/tutorials/${tutorial.id}/edit`}
-                            className='btn btn-outline-warning'
-                            title='Editar'
+                        </td>
+                        <td>
+                          <span className='badge bg-secondary d-flex align-items-center gap-1 w-fit-content'>
+                            <span>{getCategoryIcon(tutorial.category)}</span>
+                            <span>{getCategoryName(tutorial.category)}</span>
+                          </span>
+                        </td>
+                        <td>
+                          <span
+                            className={`badge bg-${
+                              tutorial.difficulty === 'Iniciante'
+                                ? 'success'
+                                : tutorial.difficulty === 'Intermediário'
+                                ? 'warning'
+                                : 'danger'
+                            }`}
                           >
-                            <FaEdit />
-                          </Link>
-                          <button
-                            onClick={() => handleDeleteTutorial(tutorial)}
-                            className='btn btn-outline-danger'
-                            title='Excluir'
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                            {tutorial.difficulty}
+                          </span>
+                        </td>
+                        <td>{tutorial.views.toLocaleString()}</td>
+                        <td>
+                          {new Date(tutorial.createdAt).toLocaleDateString(
+                            'pt-BR'
+                          )}
+                        </td>
+                        <td>
+                          <div className='btn-group btn-group-sm'>
+                            <Link
+                              to={`/tutorial/${tutorial.id}`}
+                              className='btn btn-outline-primary'
+                              title='Visualizar'
+                            >
+                              <FaEye />
+                            </Link>
+                            <Link
+                              to={`/admin/tutorials/${tutorial.id}/edit`}
+                              className='btn btn-outline-warning'
+                              title='Editar'
+                            >
+                              <FaEdit />
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteTutorial(tutorial)}
+                              className='btn btn-outline-danger'
+                              title='Excluir'
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 
+        {/* Modal de Confirmação de Exclusão */}
         {showDeleteModal && selectedTutorial && (
-          <div className='modal fade show d-block'>
+          <div className='modal fade show d-block' tabIndex={-1}>
             <div className='modal-dialog modal-dialog-centered'>
               <div className='modal-content'>
                 <div className='modal-header'>
@@ -236,7 +394,7 @@ const AdminDashboard: React.FC = () => {
                     type='button'
                     className='btn-close'
                     onClick={() => setShowDeleteModal(false)}
-                    aria-label='Fechar'
+                    aria-label='Confirmar Exclusao'
                   />
                 </div>
                 <div className='modal-body'>

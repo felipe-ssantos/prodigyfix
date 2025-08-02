@@ -2,16 +2,17 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import { useTutorials } from '../../hooks/useTutorials'
 import { db, storage } from '../../services/firebase'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import type { Tutorial } from '../../types'
 import TiptapEditor from '../../components/TiptapEditor'
-import { Modal, Button } from 'react-bootstrap'
 
 const CreateTutorial: React.FC = () => {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
+  const { categories } = useTutorials()
   const [formData, setFormData] = useState<
     Omit<Tutorial, 'id' | 'createdAt' | 'updatedAt' | 'views'>
   >({
@@ -29,16 +30,6 @@ const CreateTutorial: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [newCategory, setNewCategory] = useState('')
-  const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [categories, setCategories] = useState<string[]>([
-    'BCD/MBR Tools',
-    'Data Recovery',
-    'Disk Defrag',
-    'Partition Tools',
-    'Password Recovery',
-    'System Repair'
-  ])
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -92,19 +83,6 @@ const CreateTutorial: React.FC = () => {
       ...prev,
       keywords
     }))
-  }
-
-  const handleAddCategory = () => {
-    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
-      const newCat = newCategory.trim()
-      setCategories([...categories, newCat])
-      setFormData(prev => ({
-        ...prev,
-        category: newCat
-      }))
-      setNewCategory('')
-      setShowCategoryModal(false)
-    }
   }
 
   const validateForm = () => {
@@ -261,31 +239,29 @@ const CreateTutorial: React.FC = () => {
                       >
                         Categoria <span className='text-danger'>*</span>
                       </label>
-                      <div className='input-group'>
-                        <select
-                          className='form-select'
-                          id='category'
-                          name='category'
-                          value={formData.category}
-                          onChange={handleChange}
-                          required
-                        >
-                          <option value=''>Selecione uma categoria</option>
-                          {categories.map(cat => (
-                            <option key={cat} value={cat}>
-                              {cat}
-                            </option>
-                          ))}
-                        </select>
-                        <button
-                          type='button'
-                          className='btn btn-outline-secondary'
-                          onClick={() => setShowCategoryModal(true)}
-                          aria-label='categoria'
-                        >
-                          <i className='fas fa-plus'>Adicionar nova categoria?</i>
-                        </button>
-                      </div>
+                      <select
+                        className='form-select'
+                        id='category'
+                        name='category'
+                        value={formData.category}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value=''>Selecione uma categoria</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.icon} {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                      <small className='form-text text-muted'>
+                        {categories.length === 0 && (
+                          <span className='text-warning'>
+                            ⚠️ Nenhuma categoria encontrada. Vá ao painel e
+                            clique em "Inicializar Categorias".
+                          </span>
+                        )}
+                      </small>
                     </div>
 
                     <div className='mb-3'>
@@ -448,48 +424,6 @@ const CreateTutorial: React.FC = () => {
           </article>
         </div>
       </div>
-
-      <Modal
-        show={showCategoryModal}
-        onHide={() => setShowCategoryModal(false)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <i className='fas fa-folder-plus me-2'></i>
-            Nova Categoria
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className='mb-3'>
-            <label htmlFor='newCategory' className='form-label'>
-              Nome da Categoria
-            </label>
-            <input
-              type='text'
-              className='form-control'
-              id='newCategory'
-              value={newCategory}
-              onChange={e => setNewCategory(e.target.value)}
-            />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant='secondary'
-            onClick={() => setShowCategoryModal(false)}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant='primary'
-            onClick={handleAddCategory}
-            disabled={!newCategory.trim()}
-          >
-            Adicionar
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   )
 }
