@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaPlus, FaEdit, FaEye, FaTrash, FaFileAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTutorials } from '../../contexts/TutorialContext'
+import { useTutorials } from '../../hooks/useTutorials'
 import type { Tutorial } from '../../types'
 
 const AdminDashboard: React.FC = () => {

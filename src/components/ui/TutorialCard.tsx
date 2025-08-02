@@ -1,4 +1,4 @@
-//src\components\ui\TutorialCard.tsx
+// src/components/ui/TutorialCard.tsx
 import { Link } from 'react-router-dom'
 import { FaClock, FaEye, FaStar } from 'react-icons/fa'
 import type { Tutorial } from '../../types'
@@ -41,7 +41,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
 
   return (
     <div className='card h-100 shadow-sm hover-shadow border-0'>
-      {/* Header do Card */}
+      {/* Card Header */}
       <div className='card-header bg-white border-0 pb-2'>
         <div className='d-flex justify-content-between align-items-start'>
           {showCategory && (
@@ -53,7 +53,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
       </div>
 
       <div className='card-body d-flex flex-column'>
-        {/* Título */}
+        {/* Title */}
         <h5 className='card-title mb-3'>
           <Link
             to={`/tutorial/${tutorial.id}`}
@@ -63,7 +63,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
           </Link>
         </h5>
 
-        {/* Descrição */}
+        {/* Description */}
         <p className='card-text text-muted flex-grow-1 mb-3'>
           {tutorial.description.length > 120
             ? `${tutorial.description.substring(0, 120)}...`
@@ -72,7 +72,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
 
         {/* Metadata */}
         <div className='mt-auto'>
-          {/* Badges de informação */}
+          {/* Information badges */}
           <div className='d-flex flex-wrap gap-2 mb-3'>
             <span className='badge bg-light text-dark border'>
               <FaClock className='me-1' size={12} />

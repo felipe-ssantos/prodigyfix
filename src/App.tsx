@@ -22,7 +22,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 
 // Context
 import { AuthProvider } from './contexts/AuthContext'
-import { TutorialProvider } from './contexts/TutorialContext'
+import { TutorialProvider } from './providers/TutorialProvider'
 
 function App () {
   return (

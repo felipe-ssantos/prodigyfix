@@ -11,10 +11,10 @@ export interface Tutorial {
   createdAt: Date;
   updatedAt: Date;
   views: number;
-  difficulty: 'Iniciante' | 'Intermediário' | 'Avançado';
-  estimatedTime: number; // in minutes
+  difficulty: "Iniciante" | "Intermediário" | "Avançado";
+  estimatedTime: number;
   tags: string[];
-  version?: string; 
+  version?: string;
   osCompatibility?: string[];
 }
 
@@ -24,14 +24,14 @@ export interface Category {
   description: string;
   icon: string;
   tutorialCount: number;
-  isFeatured?: boolean; 
+  isFeatured?: boolean;
 }
 
 export interface User {
   uid: string;
   email: string;
   displayName?: string;
-  role: 'admin' | 'user';
+  role: "admin" | "user";
   createdAt: Date;
 }
 
@@ -48,7 +48,7 @@ export interface Ad {
   description: string;
   imageUrl: string;
   linkUrl: string;
-  position: 'sidebar' | 'header' | 'footer';
+  position: "sidebar" | "header" | "footer";
   isActive: boolean;
   startDate: Date;
   endDate: Date;
@@ -67,4 +67,4 @@ export interface SearchResult {
   tutorials: Tutorial[];
   total: number;
   filters: SearchFilters;
-} 
+}

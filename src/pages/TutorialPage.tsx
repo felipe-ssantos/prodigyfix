@@ -13,7 +13,7 @@ import {
   FaCalendarAlt,
   FaCheck
 } from 'react-icons/fa'
-import { useTutorials } from '../contexts/TutorialContext'
+import { useTutorials } from '../hooks/useTutorials'
 import type { Tutorial } from '../types'
 
 const TutorialPage = () => {

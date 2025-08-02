@@ -1,9 +1,10 @@
-//src\pages\HomePage.tsx
+// src/pages/HomePage.tsx
 import React, { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { FaTerminal, FaChevronRight } from 'react-icons/fa'
-import { useTutorials } from '../contexts/TutorialContext'
+import { FaTerminal } from 'react-icons/fa'
+import { useTutorials } from '../hooks/useTutorials'
 import TutorialCard from '../components/ui/TutorialCard'
+import CategorySection from '../components/CategorySection'
 
 const HomePage: React.FC = () => {
   const { categories, tutorials, getTutorialsByCategory } = useTutorials()
@@ -22,10 +23,16 @@ const HomePage: React.FC = () => {
     }
   }, [searchParams, tutorials, getTutorialsByCategory])
 
-  // Get featured tutorials (most viewed)
-  const featuredTutorials = tutorials
-    .sort((a, b) => b.views - a.views)
-    .slice(0, 6)
+  // Get featured tutorials grouped by category
+  const featuredTutorialsByCategory = categories
+    .map(category => ({
+      ...category,
+      tutorials: tutorials
+        .filter(t => t.category === category.id)
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 3)
+    }))
+    .filter(category => category.tutorials.length > 0)
 
   const recentTutorials = tutorials
     .sort(
@@ -40,7 +47,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className='container-fluid py-4'>
-      {/* Filtro Ativo */}
+      {/* Active Filter */}
       {selectedCategory && (
         <div className='row mb-4'>
           <div className='col-12'>
@@ -52,82 +59,76 @@ const HomePage: React.FC = () => {
                   {filteredTutorials.length} tutorial(s)
                 </span>
               </div>
-              <button
+              <Link
+                to='/'
                 className='btn btn-outline-primary btn-sm'
-                onClick={() => {
-                  setSelectedCategory(null)
-                  setFilteredTutorials(tutorials)
-                }}
                 aria-label='Limpar filtro de categoria'
               >
                 Limpar filtro
-              </button>
+              </Link>
             </div>
           </div>
         </div>
       )}
 
       <div className='row'>
-        {/* Sidebar com Categorias */}
+        {/* Sidebar with Categories */}
         <aside className='col-lg-3 mb-4'>
           <div className='position-sticky' style={{ top: '2rem' }}>
-            <div className='card shadow-sm'>
-              <div className='card-header bg-light'>
-                <h5 className='mb-0 fw-bold text-primary'>📂 Categorias</h5>
-              </div>
-              <div className='list-group list-group-flush'>
-                {categories.map(category => (
-                  <Link
-                    key={category.id}
-                    to={`/?category=${category.id}`}
-                    className={`list-group-item list-group-item-action d-flex align-items-center ${
-                      selectedCategory === category.id ? 'active' : ''
-                    }`}
-                    aria-label={`Ver tutoriais da categoria ${category.name}`}
-                  >
-                    <span className='me-3 fs-5'>{category.icon}</span>
-                    <div className='flex-grow-1'>
-                      <div className='fw-semibold'>{category.name}</div>
-                      <small className='text-muted'>
-                        {category.tutorialCount} tutorial(s)
-                      </small>
-                    </div>
-                    <FaChevronRight className='text-muted' />
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <CategorySection />
           </div>
         </aside>
 
-        {/* Conteúdo Principal */}
+        {/* Main Content */}
         <main className='col-lg-9'>
-          {/* Tutoriais em Destaque */}
-          {!selectedCategory && featuredTutorials.length > 0 && (
+          {/* Featured Tutorials by Category */}
+          {!selectedCategory && featuredTutorialsByCategory.length > 0 && (
             <section className='mb-5'>
               <div className='d-flex align-items-center justify-content-between mb-4'>
                 <div>
-                  <h2 className='fw-bold mb-1 text-start'>⭐ Mais Acessados</h2>
+                  <h2 className='fw-bold mb-1 text-start'>
+                    ⭐ Destaques por Categoria
+                  </h2>
                   <p className='text-dark mb-0 text-start'>
-                    Os tutoriais mais populares da nossa comunidade
+                    Os tutoriais mais populares em cada categoria
                   </p>
                 </div>
-                <span className='badge bg-success fs-6'>
-                  {featuredTutorials.length} tutoriais
-                </span>
               </div>
 
-              <div className='row g-4'>
-                {featuredTutorials.map(tutorial => (
-                  <div key={tutorial.id} className='col-md-6 col-xl-4'>
-                    <TutorialCard tutorial={tutorial} />
+              {featuredTutorialsByCategory.map(category => (
+                <div key={category.id} className='mb-4'>
+                  <div className='d-flex align-items-center mb-3'>
+                    <h3 className='fw-bold mb-0 me-2'>
+                      {category.icon} {category.name}
+                    </h3>
+                    <span className='badge bg-primary'>
+                      {category.tutorialCount} tutoriais
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <div className='row g-4'>
+                    {category.tutorials.map(tutorial => (
+                      <div key={tutorial.id} className='col-md-6 col-xl-4'>
+                        <TutorialCard
+                          tutorial={tutorial}
+                          showCategory={false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className='text-end mt-2'>
+                    <Link
+                      to={`/?category=${category.id}`}
+                      className='btn btn-sm btn-outline-primary'
+                    >
+                      Ver todos em {category.name} →
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </section>
           )}
 
-          {/* Lista Principal de Tutoriais */}
+          {/* Main Tutorial List */}
           <section>
             <div className='d-flex align-items-center justify-content-between mb-4'>
               <div>
@@ -169,15 +170,9 @@ const HomePage: React.FC = () => {
                     : 'Nenhum tutorial disponível no momento. Volte em breve!'}
                 </p>
                 {selectedCategory && (
-                  <button
-                    className='btn btn-primary'
-                    onClick={() => {
-                      setSelectedCategory(null)
-                      setFilteredTutorials(tutorials)
-                    }}
-                  >
+                  <Link to='/' className='btn btn-primary'>
                     Ver todos os tutoriais
-                  </button>
+                  </Link>
                 )}
               </div>
             )}
