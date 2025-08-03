@@ -17,6 +17,9 @@ import {
   checkCategoriesStatus
 } from '../../utils/createCategories'
 import type { Tutorial } from '../../types'
+import { deleteDoc, doc } from 'firebase/firestore'
+import { ref as storageRef, deleteObject } from 'firebase/storage'
+import { db, storage } from '../../services/firebase'
 
 const AdminDashboard: React.FC = () => {
   const { currentUser, logout } = useAuth()
@@ -49,14 +52,25 @@ const AdminDashboard: React.FC = () => {
   }
 
   const confirmDelete = async () => {
-    if (selectedTutorial) {
-      try {
-        await deleteTutorial(selectedTutorial.id)
-        setShowDeleteModal(false)
-        setSelectedTutorial(null)
-      } catch (err) {
-        console.error('Erro ao excluir tutorial:', err)
+    if (!selectedTutorial) return
+
+    try {
+      if (selectedTutorial.imageUrl) {
+        try {
+          const imageRef = storageRef(storage, `tutorials/${selectedTutorial.id}`)
+          await deleteObject(imageRef)
+        } catch (err) {
+          console.warn('Erro ao remover imagem:', err)
+        }
       }
+
+      await deleteDoc(doc(db, 'tutorials', selectedTutorial.id))
+      await deleteTutorial(selectedTutorial.id)
+      setShowDeleteModal(false)
+      setSelectedTutorial(null)
+    } catch (err) {
+      console.error('Erro ao excluir:', err)
+      alert('Erro ao excluir tutorial')
     }
   }
 
@@ -430,3 +444,4 @@ const AdminDashboard: React.FC = () => {
 }
 
 export default AdminDashboard
+

@@ -26,7 +26,8 @@ export interface TutorialContextType {
   incrementViews: (id: string) => Promise<void>
   getDifficultyLabel: (difficulty: string) => string
   formatCategoryName: (category: string) => string
-  refreshCategories: () => Promise<void>
+  refreshCategories: () => Promise<void>  
+  addCategory: (categoryName: string) => Promise<void>
 }
 
 export const TutorialContext = createContext<TutorialContextType | undefined>(

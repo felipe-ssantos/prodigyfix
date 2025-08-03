@@ -2,12 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
-} from 'firebase/storage'
+import { ref as storageRef, uploadBytes, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import TiptapEditor from '../../components/TiptapEditor'
@@ -166,30 +161,34 @@ const EditTutorial: React.FC = () => {
     setError('')
 
     try {
-      let imageUrl = formData.imageUrl
+      let imageName = formData.imageUrl
 
       if (imageFile) {
-        if (originalImageUrl && originalImageUrl !== formData.imageUrl) {
+        // Remove a imagem antiga se existir
+        if (originalImageUrl) {
           try {
-            const oldImageRef = storageRef(storage, originalImageUrl)
+            const oldImageRef = storageRef(
+              storage,
+              `tutorials/${originalImageUrl}`
+            )
             await deleteObject(oldImageRef)
           } catch (err) {
             console.warn('Erro ao remover imagem antiga:', err)
           }
         }
 
-        const newImageRef = storageRef(
-          storage,
-          `tutorials/${Date.now()}_${imageFile.name}`
-        )
-        const snapshot = await uploadBytes(newImageRef, imageFile)
-        imageUrl = await getDownloadURL(snapshot.ref)
+        // Upload da nova imagem (armazena apenas o nome do arquivo)
+        const fileName = `${Date.now()}_${imageFile.name.replace(/\s+/g, '_')}`
+        const newImageRef = storageRef(storage, `tutorials/${fileName}`)
+        await uploadBytes(newImageRef, imageFile)
+        imageName = fileName
       }
 
+      // Atualiza no Firestore (armazenando apenas o nome do arquivo)
       const tutorialRef = doc(db, 'tutorials', id)
       await updateDoc(tutorialRef, {
         ...formData,
-        imageUrl,
+        imageUrl: imageName, // Armazena apenas o nome do arquivo
         updatedAt: new Date()
       })
 
@@ -354,7 +353,7 @@ const EditTutorial: React.FC = () => {
                           onClick={() => setShowCategoryModal(true)}
                           aria-label='categoria'
                         >
-                          <i className='fas fa-plus'>Adicionar nova categoria?</i>
+                          <i className='fas fa-plus'>Cadastrar nova categoria ?</i>
                         </button>
                       </div>
                     </div>
@@ -393,9 +392,6 @@ const EditTutorial: React.FC = () => {
                         onChange={handleTagsChange}
                         placeholder='tag1, tag2, tag3'
                       />
-                      <small className='form-text text-muted'>
-                        Separe as tags com vírgulas
-                      </small>
                     </div>
 
                     <div className='mb-3'>
@@ -414,9 +410,6 @@ const EditTutorial: React.FC = () => {
                         onChange={handleKeywordsChange}
                         placeholder='keyword1, keyword2, keyword3'
                       />
-                      <small className='form-text text-muted'>
-                        Para otimização de pesquisa
-                      </small>
                     </div>
                   </div>
                 </div>
@@ -439,7 +432,11 @@ const EditTutorial: React.FC = () => {
                       <i className='fas fa-image me-2'></i>
                       Imagem de Capa
                     </h5>
+
                     <div className='mb-3'>
+                      <label htmlFor='image' className='form-label'>
+                        Selecione uma imagem
+                      </label>
                       <input
                         type='file'
                         className='form-control'
@@ -447,28 +444,17 @@ const EditTutorial: React.FC = () => {
                         name='image'
                         accept='image/*'
                         onChange={handleImageChange}
-                        aria-label='imagem'
                       />
-                      <small className='form-text text-muted'>
-                        Máx. 5MB (JPG, PNG, GIF, WebP)
-                      </small>
+
                       {formData.imageUrl && !imageFile && (
                         <div className='mt-2'>
                           <span className='badge bg-info text-dark'>
                             <i className='fas fa-image me-1'></i>
-                            Imagem atual
+                            Imagem atual: {formData.imageUrl}
                           </span>
-                          <a
-                            href={formData.imageUrl}
-                            target='_blank'
-                            rel='noreferrer'
-                            className='ms-2 text-decoration-none'
-                          >
-                            <i className='fas fa-external-link-alt me-1'></i>
-                            Visualizar
-                          </a>
                         </div>
                       )}
+
                       {imageFile && (
                         <div className='mt-2'>
                           <span className='badge bg-success'>
@@ -543,22 +529,16 @@ const EditTutorial: React.FC = () => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            <i className='fas fa-folder-plus me-2'></i>
-            Nova Categoria
-          </Modal.Title>
+          <Modal.Title>Nova Categoria</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='mb-3'>
-            <label htmlFor='newCategory' className='form-label'>
-              Nome da Categoria
-            </label>
             <input
               type='text'
               className='form-control'
-              id='newCategory'
               value={newCategory}
               onChange={e => setNewCategory(e.target.value)}
+              placeholder='Nome da categoria'
             />
           </div>
         </Modal.Body>
@@ -569,11 +549,7 @@ const EditTutorial: React.FC = () => {
           >
             Cancelar
           </Button>
-          <Button
-            variant='primary'
-            onClick={handleAddCategory}
-            disabled={!newCategory.trim()}
-          >
+          <Button variant='primary' onClick={handleAddCategory}>
             Adicionar
           </Button>
         </Modal.Footer>

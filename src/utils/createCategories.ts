@@ -1,5 +1,4 @@
 // src/utils/createCategories.ts
-// Execute este script uma vez para criar as categorias no Firestore
 
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../services/firebase";
