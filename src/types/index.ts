@@ -68,3 +68,4 @@ export interface SearchResult {
   total: number;
   filters: SearchFilters;
 }
+

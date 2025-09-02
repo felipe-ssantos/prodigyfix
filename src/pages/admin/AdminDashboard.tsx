@@ -145,7 +145,7 @@ const AdminDashboard: React.FC = () => {
         <div className='d-flex justify-content-between align-items-center mb-4'>
           <div>
             <h1 className='mb-1'>Painel Administrativo</h1>
-            <p className='text-muted mb-0'>Hiren's Boot Tutorials</p>
+            <p className='text-muted mb-0'>Prodigy Informática Tutorials</p>
           </div>
           <div className='d-flex gap-2'>
             <Link to='/admin/tutorials/new' className='btn btn-primary'>

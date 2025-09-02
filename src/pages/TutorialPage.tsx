@@ -124,7 +124,7 @@ const TutorialPage = () => {
     <>
       {/* Meta Tags para SEO e Compartilhamento */}
       <Helmet>
-        <title>{tutorial.title} - Bootpedia</title>
+        <title>{tutorial.title} - Prodigy Informática</title>
         <meta name='description' content={tutorial.description} />
         <meta property='og:title' content={tutorial.title} />
         <meta property='og:description' content={tutorial.description} />

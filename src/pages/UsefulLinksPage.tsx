@@ -70,7 +70,7 @@ const UsefulLinksPage = () => {
         url: 'https://social.technet.microsoft.com/wiki/',
         icon: '📚',
         category: 'Base de Conhecimento'
-      }      
+      }
     ],
     communities: [
       {
@@ -121,7 +121,7 @@ const UsefulLinksPage = () => {
       {
         name: 'Canais de Tecnologia no YouTube',
         description: 'Canais populares de educação tecnológica',
-        url: 'https://www.youtube.com/results?search_query=computer+repair+tutorial',
+        url: 'https://www.youtube.com/results?search_query=tutorial+de+reparo+de+computador',
         icon: '📺',
         category: 'Aprendizado em Vídeo'
       },
@@ -172,7 +172,7 @@ const UsefulLinksPage = () => {
           <p className='lead text-muted'>
             Coleção cuidadosamente selecionada de ferramentas, recursos e
             comunidades essenciais para manutenção de computadores e recuperação
-            de sistemas. Esses links irão ajudá-lo a expandir seu conhecimento e
+            de sistemas. Esses links irão ajudar a expandir o conhecimento e
             encontrar suporte adicional.
           </p>
         </div>
