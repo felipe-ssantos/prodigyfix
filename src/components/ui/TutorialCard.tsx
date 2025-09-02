@@ -127,7 +127,7 @@ const TutorialCard = ({ tutorial, showCategory = true }: TutorialCardProps) => {
       <div className='card-footer bg-light border-0'>
         <div className='d-flex justify-content-between align-items-center text-muted small'>
           <div>
-            <strong>Por:</strong> {tutorial.author}
+            <strong>Por:</strong> Prodigy Informática
           </div>
           <div>{new Date(tutorial.createdAt).toLocaleDateString('pt-BR')}</div>
         </div>

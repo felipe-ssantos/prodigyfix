@@ -1,6 +1,6 @@
 // src/pages/AboutPage.tsx
 import React from 'react'
-import { FaTools, FaLaptop, FaShieldAlt, FaHome } from 'react-icons/fa'
+import { FaTools, FaLaptop, FaShieldAlt, FaLightbulb } from 'react-icons/fa'
 
 const AboutPage: React.FC = () => {
   return (
@@ -127,11 +127,11 @@ const AboutPage: React.FC = () => {
               <div className='card h-100 text-center'>
                 <div className='card-body'>
                   <div className='mb-3'>
-                    <FaHome size={48} className='text-danger' />
+                    <FaLightbulb size={48} className='text-danger' />
                   </div>
-                  <h5 className='card-title'>Visita ao Cliente</h5>
+                  <h5 className='card-title'>Consultoria Especializada</h5>
                   <p className='card-text text-muted'>
-                    Atendimento em domicílio, trazendo comodidade para você.
+                    Orientação e soluções personalizadas para o seu equipamento.
                   </p>
                 </div>
               </div>
@@ -147,8 +147,8 @@ const AboutPage: React.FC = () => {
             <div className='card-body p-5'>
               <h3 className='mb-3'>Pronto para Começar?</h3>
               <p className='mb-4'>
-                Explore nossos tutoriais e a aprenda boas práticas hoje mesmo e as
-                principais técnicas de recuperação de sistemas.
+                Explore nossos tutoriais e a aprenda boas práticas hoje mesmo e
+                as principais técnicas de recuperação de sistemas.
               </p>
               <div className='d-flex justify-content-center gap-3'>
                 <a href='/' className='btn btn-light btn-lg'>
