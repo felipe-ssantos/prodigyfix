@@ -29,10 +29,11 @@ const AboutPage: React.FC = () => {
             peças e configurações de rede.
           </p>
           <p className='mb-3 text-start'>
-            Nossa meta é proporcionar tranquilidade para que você use sua
-            tecnologia sem preocupações. Entendemos que seu computador é
-            essencial no dia a dia, por isso trabalhamos com agilidade e
-            transparência em cada atendimento.
+            Nossa meta é proporcionar <strong>tranquilidade</strong> para que
+            você use seu computador, notebook ou impressora sem{' '}
+            <strong>preocupações</strong>. Entendemos que seu equipamento é{' '}
+            <strong>essencial</strong> no dia a dia, por isso trabalhamos com{' '}
+            <u>agilidade e transparência</u> em cada atendimento.
           </p>
         </div>
         <div className='col-lg-6'>

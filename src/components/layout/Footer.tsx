@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
               <span className='small'>
                 Developed by <FaGithub size={16} /> Felipe Silveira
               </span>
-              <span className='small'>• v.1.0 • 2025 </span>
+              <span className='small'>• v.1.0 • Since 2021 </span>
             </a>
           </div>
         </div>
