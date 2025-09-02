@@ -1,4 +1,4 @@
-//src\components\layout\Navbar.tsx
+// src/components/layout/Navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -9,6 +9,10 @@ import {
   FaTachometerAlt
 } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+
+// Verifica se está em ambiente de desenvolvimento
+const isDevelopment = import.meta.env.DEV
+const isVSCode = import.meta.env.MODE === 'vscode'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -67,9 +71,7 @@ const Navbar = () => {
                 to='/'
               >
                 🏠 Home
-                <span
-                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'
-                ></span>
+                <span className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'></span>
               </Link>
             </li>
             <li className='nav-item'>
@@ -78,9 +80,7 @@ const Navbar = () => {
                 to='/about'
               >
                 ℹ️ Sobre
-                <span
-                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'                  
-                ></span>
+                <span className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'></span>
               </Link>
             </li>
             <li className='nav-item'>
@@ -89,9 +89,7 @@ const Navbar = () => {
                 to='/useful-links'
               >
                 🔗 Links Úteis
-                <span
-                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'                 
-                ></span>
+                <span className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'></span>
               </Link>
             </li>
           </ul>
@@ -120,74 +118,84 @@ const Navbar = () => {
               </div>
             </form>
 
-            {/* User Menu */}
-            {currentUser ? (
-              <div className='dropdown'>
-                <button
-                  className='btn btn-outline-light dropdown-toggle d-flex align-items-center'
-                  type='button'
-                  data-bs-toggle='dropdown'
-                  aria-expanded='false'
-                  title='Menu do usuário'
-                  aria-label='Abrir menu do usuário'
-                >
-                  <FaUser className='me-2' />
-                  <span className='d-none d-md-inline'>
-                    {currentUser.displayName ||
-                      currentUser.email?.split('@')[0] ||
-                      'Usuário'}
-                  </span>
-                </button>
-                <ul className='dropdown-menu dropdown-menu-end'>
-                  <li>
-                    <h6 className='dropdown-header'>
+            {/* User Menu - Só mostra em desenvolvimento/VSCode */}
+            {(isDevelopment || isVSCode) && (
+              <>
+                {currentUser ? (
+                  <div className='dropdown'>
+                    <button
+                      className='btn btn-outline-light dropdown-toggle d-flex align-items-center'
+                      type='button'
+                      data-bs-toggle='dropdown'
+                      aria-expanded='false'
+                      title='Menu do usuário'
+                      aria-label='Abrir menu do usuário'
+                    >
                       <FaUser className='me-2' />
-                      {currentUser.displayName || currentUser.email}
-                    </h6>
-                  </li>
-                  <li>
-                    <hr className='dropdown-divider' />
-                  </li>
-                  {isAdmin && (
-                    <>
+                      <span className='d-none d-md-inline'>
+                        {currentUser.displayName ||
+                          currentUser.email?.split('@')[0] ||
+                          'Usuário'}
+                      </span>
+                    </button>
+                    <ul className='dropdown-menu dropdown-menu-end'>
                       <li>
-                        <Link className='dropdown-item' to='/admin/dashboard'>
-                          <FaTachometerAlt className='me-2' />
-                          Painel Admin
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className='dropdown-item' to='/admin/settings'>
-                          <FaCog className='me-2' />
-                          Configurações
-                        </Link>
+                        <h6 className='dropdown-header'>
+                          <FaUser className='me-2' />
+                          {currentUser.displayName || currentUser.email}
+                        </h6>
                       </li>
                       <li>
                         <hr className='dropdown-divider' />
                       </li>
-                    </>
-                  )}
-                  <li>
-                    <button
-                      type='button'
-                      className='dropdown-item text-danger'
-                      onClick={handleLogout}
-                    >
-                      <FaSignOutAlt className='me-2' />
-                      Sair
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            ) : (
-              <Link
-                to='/admin/login'
-                className='btn btn-outline-light'
-                title='Fazer login como administrador'
-              >
-                <FaUser className='me-2' />
-                <span className='d-none d-md-inline'>Admin Login</span>
-              </Link>
+                      {isAdmin && (
+                        <>
+                          <li>
+                            <Link
+                              className='dropdown-item'
+                              to='/admin/dashboard'
+                            >
+                              <FaTachometerAlt className='me-2' />
+                              Painel Admin
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              className='dropdown-item'
+                              to='/admin/settings'
+                            >
+                              <FaCog className='me-2' />
+                              Configurações
+                            </Link>
+                          </li>
+                          <li>
+                            <hr className='dropdown-divider' />
+                          </li>
+                        </>
+                      )}
+                      <li>
+                        <button
+                          type='button'
+                          className='dropdown-item text-danger'
+                          onClick={handleLogout}
+                        >
+                          <FaSignOutAlt className='me-2' />
+                          Sair
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <Link
+                    to='/admin/login'
+                    className='btn btn-outline-light'
+                    title='Fazer login como administrador'
+                  >
+                    <FaUser className='me-2' />
+                    <span className='d-none d-md-inline'>Admin Login</span>
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>

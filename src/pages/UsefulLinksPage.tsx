@@ -327,16 +327,18 @@ const UsefulLinksPage = () => {
                 <h5>Segurança em Primeiro Lugar</h5>
                 <ul className='list-unstyled text-start'>
                   <li className='mb-2'>
-                    <strong>Sempre faça backup dos seus dados</strong> antes de
-                    tentar qualquer reparo no sistema
+                    <strong>
+                      Sempre faça backup (se possível) dos seus dados
+                    </strong>{' '}
+                    antes de tentar qualquer reparo no sistema
                   </li>
                   <li className='mb-2'>
-                    <strong>Use fontes oficiais</strong> para baixar ferramentas
-                    e softwares
+                    <strong>Use ferramentas confiáveis</strong> para garantir
+                    segurança e desempenho.
                   </li>
                   <li className='mb-2'>
-                    <strong>Teste em sistemas não críticos</strong> ao aprender
-                    novas técnicas
+                    <strong>Teste sempre o equipamento após o reparo</strong>{' '}
+                    para validar a solução aplicada.
                   </li>
                   <li>
                     <strong>Mantenha as ferramentas atualizadas</strong> para
@@ -348,20 +350,20 @@ const UsefulLinksPage = () => {
                 <h5>Boas Práticas</h5>
                 <ul className='list-unstyled text-start'>
                   <li className='mb-2'>
-                    <strong>Documente seus passos</strong> ao solucionar
-                    problemas complexos
+                    <strong>Documente seus passos</strong> para facilitar
+                    futuras intervenções.
                   </li>
                   <li className='mb-2'>
-                    <strong>Participe de comunidades</strong> para aprender com
-                    a experiência dos outros
+                    <strong>Teste sempre o equipamento após o reparo</strong>{' '}
+                    para validar a solução aplicada.
                   </li>
                   <li className='mb-2'>
                     <strong>Mantenha-se atualizado</strong> com as últimas
                     ferramentas e técnicas
                   </li>
-                  <li>
-                    <strong>Compartilhe conhecimento</strong> para ajudar outras
-                    pessoas na comunidade
+                  <li className='mb-2'>
+                    <strong>Respeite a privacidade</strong> mantendo sigilo
+                    profissional.
                   </li>
                 </ul>
               </div>

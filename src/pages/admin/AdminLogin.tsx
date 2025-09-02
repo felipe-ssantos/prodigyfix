@@ -1,8 +1,12 @@
-//src\pages\admin\AdminLogin.tsx
-import React, { useState } from 'react'
+// src/pages/admin/AdminLogin.tsx
+import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+
+// Verifica se está em ambiente de desenvolvimento
+const isDevelopment = import.meta.env.DEV
+const isVSCode = import.meta.env.MODE === 'vscode'
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -12,6 +16,13 @@ const AdminLogin: React.FC = () => {
   const [error, setError] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
+
+  // Redireciona se não estiver em desenvolvimento/VSCode
+  useEffect(() => {
+    if (!isDevelopment && !isVSCode) {
+      navigate('/')
+    }
+  }, [navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,6 +43,11 @@ const AdminLogin: React.FC = () => {
     }
   }
 
+  // Se não for desenvolvimento, não renderiza nada
+  if (!isDevelopment && !isVSCode) {
+    return null
+  }
+
   return (
     <div className='container py-5'>
       <div className='row justify-content-center'>
@@ -43,7 +59,9 @@ const AdminLogin: React.FC = () => {
                   <span className='display-4'>🔧</span>
                 </div>
                 <h2 className='fw-bold'>Admin Login</h2>
-                <p className='text-muted'>Acesse o painel de administração da Bootpedia</p>
+                <p className='text-muted'>
+                  Acesse o painel de administração da Bootpedia
+                </p>
               </div>
 
               {error && (
