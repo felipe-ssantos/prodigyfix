@@ -242,7 +242,7 @@ const TutorialPage = () => {
                     <div className='col-sm-6 col-md-3'>
                       <div className='d-flex align-items-center'>
                         <FaStar className='me-2 text-primary' />
-                        <span>{tutorial.author}</span>
+                        <span>Prodigy Informática</span>
                       </div>
                     </div>
                     <div className='col-sm-6 col-md-3'>
