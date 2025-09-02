@@ -34,6 +34,33 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
 
+  const addCategory = useCallback(async (categoryName: string) => {
+    try {
+      const docRef = await addDoc(collection(db, 'categories'), {
+        name: categoryName,
+        description: 'Sem descrição',
+        icon: '📁',
+        tutorialCount: 0,
+        isFeatured: false
+      })
+
+      setCategories(prev => [
+        ...prev,
+        {
+          id: docRef.id,
+          name: categoryName,
+          description: 'Sem descrição',
+          icon: '📁',
+          tutorialCount: 0,
+          isFeatured: false
+        }
+      ])
+    } catch (err) {
+      console.error('Erro ao adicionar categoria:', err)
+      throw new Error('Falha ao adicionar categoria. Tente novamente.')
+    }
+  }, [])
+
   const normalizeDifficulty = useCallback(
     (difficulty: string): 'Iniciante' | 'Intermediário' | 'Avançado' => {
       const normalized = difficulty.toLowerCase().trim()
@@ -410,7 +437,8 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     incrementViews,
     getDifficultyLabel,
     formatCategoryName,
-    refreshCategories
+    refreshCategories,
+    addCategory
   }
 
   return (

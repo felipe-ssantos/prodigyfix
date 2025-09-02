@@ -96,8 +96,8 @@ const HomePage: React.FC = () => {
                     <span>⭐</span>
                     <span>Destaques por Categoria</span>
                   </h2>
-                  <p className='text-dark mb-0 text-start'>
-                    Os tutoriais mais populares em cada categoria
+                  <p className='ml-3 text-dark mb-0 text-start'>
+                    Os tutoriais mais populares por categoria
                   </p>
                 </div>
               </div>

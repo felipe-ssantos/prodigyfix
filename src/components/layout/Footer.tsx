@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
         <div className='row align-items-center'>
           <div className='col-md-6'>
             <p className='mb-0 text-white-50 small'>
-              © {currentYear} Bootpedia. Todos os direitos reservados.
+              © {currentYear} Prodigy Informática. Todos os direitos reservados.
             </p>
           </div>
           <div className='col-md-6 text-md-end'>
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
               title='GitHub'
             >
               <span className='small'>Developed by </span>
-              <FaGithub size={16} />
+              <FaGithub size={16} /> Felipe Silveira
             </a>
           </div>
         </div>

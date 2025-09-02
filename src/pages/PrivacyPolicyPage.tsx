@@ -34,12 +34,11 @@ const PrivacyPolicyPage: React.FC = () => {
                   Informações que Coletamos
                 </h2>
                 <p className='mb-3'>
-                  A Bootpedia coleta informações mínimas para oferecer nossos
+                  A Prodigy Informática coleta informações mínimas para oferecer nossos
                   serviços:
                 </p>
                 <ul className='list-group list-group-flush mb-3 text-start'>
-                  <li className='list-group-item bg-transparent d-flex align-items-center'>
-                    <i className='bi bi-check-circle-fill text-success me-2'></i>
+                  <li className='list-group-item bg-transparent d-flex align-items-center'>                    
                   </li>
                   <li className='list-group-item bg-transparent d-flex align-items-center'>
                     <i className='bi bi-check-circle-fill text-success me-2'></i>
@@ -70,7 +69,7 @@ const PrivacyPolicyPage: React.FC = () => {
                   </li>
                   <li className='list-group-item bg-transparent d-flex align-items-center'>
                     <i className='bi bi-arrow-right-circle-fill text-primary me-2'></i>
-                    Enviar atualizações importantes (apenas para
+                    Enviar atualizações importantes (somente para
                     administradores)
                   </li>
                 </ul>
@@ -84,7 +83,7 @@ const PrivacyPolicyPage: React.FC = () => {
                 <div className='alert alert-warning text-start'>
                   <i className='bi bi-exclamation-triangle-fill me-2'></i>
                   <p>
-                    A Bootpedia utiliza o Firebase (Google) para armazenamento
+                    A Prodigy Informática utiliza os servidores do Google para armazenamento
                     de dados. Consulte a Política de Privacidade do Google para
                     mais informações sobre como eles tratam seus dados.
                   </p>

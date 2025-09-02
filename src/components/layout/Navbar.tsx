@@ -38,9 +38,9 @@ const Navbar = () => {
         {/* Brand */}
         <Link className='navbar-brand d-flex align-items-center' to='/'>          
           <div>
-            <div className='fw-bold fs-4'>🔧 Bootpedia</div>
+            <div className='fw-bold fs-4'>🔧 Prodigy Informática</div>
             <div className='fs-6 small opacity-75 d-none d-lg-block'>
-              Sistema de recuperação Hiren's Boot
+              Assistência confiável, soluções rápidas
             </div>
           </div>
         </Link>
@@ -84,12 +84,11 @@ const Navbar = () => {
               <div className='input-group'>
                 <input
                   type='text'
-                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50'
+                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 w-25'
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  aria-label='Pesquisar tutoriais'
-                  style={{ minWidth: '100px' }}
+                  aria-label='Pesquisar tutoriais'                  
                 />
                 <button
                   className='btn btn-light'
