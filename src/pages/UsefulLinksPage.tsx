@@ -1,5 +1,6 @@
 // src/pages/UsefulLinksPage.tsx
-import { FaExternalLinkAlt } from 'react-icons/fa'
+import { useState, useMemo } from 'react'
+import { FaExternalLinkAlt, FaSearch, FaTimes } from 'react-icons/fa'
 import { useUsefulLinks } from '../hooks/useUsefulLinks'
 import { UsefulLink } from '../types/usefulLinks'
 
@@ -30,6 +31,66 @@ const themeTitles: Record<string, string> = {
 
 const UsefulLinksPage = () => {
   const { links, loading, error } = useUsefulLinks()
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedTheme, setSelectedTheme] = useState('')
+
+  // Extrair categorias únicas
+  const categories = useMemo(() => {
+    const allCategories = new Set<string>()
+    Object.values(links)
+      .flat()
+      .forEach(link => {
+        if (link.category) {
+          allCategories.add(link.category)
+        }
+      })
+    return Array.from(allCategories).sort()
+  }, [links])
+
+  // Função para filtrar os links
+  const filteredLinks = useMemo(() => {
+    const result: Record<string, UsefulLink[]> = {}
+
+    Object.entries(links).forEach(([theme, themeLinks]) => {
+      const filtered = themeLinks.filter(link => {
+        // Filtro por tema
+        if (selectedTheme && link.theme !== selectedTheme) return false
+
+        // Filtro por categoria
+        if (selectedCategory && link.category !== selectedCategory) return false
+
+        // Filtro por busca
+        if (searchTerm) {
+          const searchLower = searchTerm.toLowerCase()
+          return (
+            link.name.toLowerCase().includes(searchLower) ||
+            link.description.toLowerCase().includes(searchLower) ||
+            link.category.toLowerCase().includes(searchLower) ||
+            link.url.toLowerCase().includes(searchLower)
+          )
+        }
+
+        return true
+      })
+
+      if (filtered.length > 0) {
+        result[theme] = filtered
+      }
+    })
+
+    return result
+  }, [links, searchTerm, selectedCategory, selectedTheme])
+
+  // Função para limpar todos os filtros
+  const clearFilters = () => {
+    setSearchTerm('')
+    setSelectedCategory('')
+    setSelectedTheme('')
+  }
+
+  // Verificar se há filtros ativos
+  const hasActiveFilters = searchTerm || selectedCategory || selectedTheme
 
   // Função para renderizar ícones (emoji ou imagem)
   const renderIcon = (icon: string) => {
@@ -39,7 +100,7 @@ const UsefulLinksPage = () => {
         <img
           src={icon}
           alt='Ícone'
-          className='me-3 img-32'
+          className='me-3 img-32 object-fit-contain'
           onError={e => {
             const target = e.target as HTMLImageElement
             target.style.display = 'none'
@@ -71,7 +132,7 @@ const UsefulLinksPage = () => {
           <a
             href={link.url}
             target='_blank'
-            // rel='noopener noreferrer'
+            rel='noopener noreferrer'
             className='btn btn-outline-primary btn-sm'
           >
             <FaExternalLinkAlt className='me-1' />
@@ -108,7 +169,7 @@ const UsefulLinksPage = () => {
   return (
     <div className='container py-4'>
       {/* Seção Principal */}
-      <div className='row mb-5'>
+      <div className='row mb-4'>
         <div className='col-lg-8 mx-auto text-center'>
           <h1 className='display-4 fw-bold mb-3'>
             <span className='text-primary'>Links</span> Úteis
@@ -122,18 +183,139 @@ const UsefulLinksPage = () => {
         </div>
       </div>
 
-      {/* Renderizar cada tema de links */}
-      {Object.entries(links).map(([theme, themeLinks]) => (
-        <section key={theme} className='mb-5'>
-          <div className='d-flex align-items-center mb-4'>
-            <span className={`me-2 fs-4 ${themeIconClasses[theme] || ''}`}>
-              {themeIcons[theme] || '📁'}
-            </span>
-            <h2 className='mb-0'>{themeTitles[theme] || theme}</h2>
+      {/* Barra de Busca e Filtros */}
+      <div className='card mb-5'>
+        <div className='card-body'>
+          <div className='row g-3'>
+            <div className='col-md-6'>
+              <label htmlFor='search' className='form-label'>
+                <FaSearch className='me-2' />
+                Buscar por nome, descrição ou URL
+              </label>
+              <div className='input-group'>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='search'
+                  placeholder='Digite para buscar...'
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button
+                    className='btn btn-outline-secondary'
+                    type='button'
+                    onClick={() => setSearchTerm('')}
+                    title='Limpar busca'
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className='col-md-3'>
+              <label htmlFor='category' className='form-label'>
+                Filtrar por categoria
+              </label>
+              <select
+                className='form-select'
+                id='category'
+                value={selectedCategory}
+                onChange={e => setSelectedCategory(e.target.value)}
+              >
+                <option value=''>Todas as categorias</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className='col-md-3'>
+              <label htmlFor='theme' className='form-label'>
+                Filtrar por tema
+              </label>
+              <select
+                className='form-select'
+                id='theme'
+                value={selectedTheme}
+                onChange={e => setSelectedTheme(e.target.value)}
+              >
+                <option value=''>Todos os temas</option>
+                {Object.entries(themeTitles).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {hasActiveFilters && (
+              <div className='col-12'>
+                <button
+                  className='btn btn-outline-secondary btn-sm'
+                  onClick={clearFilters}
+                >
+                  <FaTimes className='me-1' />
+                  Limpar todos os filtros
+                </button>
+              </div>
+            )}
           </div>
-          <div className='row'>{themeLinks.map(renderLinkCard)}</div>
-        </section>
-      ))}
+        </div>
+      </div>
+
+      {/* Resultados da Busca */}
+      {Object.keys(filteredLinks).length === 0 ? (
+        <div className='text-center py-5'>
+          <div className='mb-4'>
+            <span className='display-1 text-muted'>🔍</span>
+          </div>
+          <h3 className='text-muted'>Nenhum resultado encontrado</h3>
+          <p className='text-muted mb-4'>
+            Tente ajustar os termos de busca ou filtrar por outra categoria.
+          </p>
+          {hasActiveFilters && (
+            <button className='btn btn-primary' onClick={clearFilters}>
+              Limpar filtros
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          {/* Contador de resultados */}
+          {hasActiveFilters && (
+            <div className='alert alert-info mb-4'>
+              <strong>
+                {Object.values(filteredLinks).flat().length} resultado(s)
+                encontrado(s)
+              </strong>
+              {searchTerm && ` para "${searchTerm}"`}
+              {selectedCategory && ` na categoria "${selectedCategory}"`}
+              {selectedTheme &&
+                ` no tema "${themeTitles[selectedTheme] || selectedTheme}"`}
+            </div>
+          )}
+
+          {/* Renderizar cada tema de links filtrados */}
+          {Object.entries(filteredLinks).map(([theme, themeLinks]) => (
+            <section key={theme} className='mb-5'>
+              <div className='d-flex align-items-center mb-4'>
+                <span className={`me-2 fs-4 ${themeIconClasses[theme] || ''}`}>
+                  {themeIcons[theme] || '📁'}
+                </span>
+                <h2 className='mb-0'>{themeTitles[theme] || theme}</h2>
+                <span className='badge bg-primary ms-3'>
+                  {themeLinks.length} link(s)
+                </span>
+              </div>
+              <div className='row'>{themeLinks.map(renderLinkCard)}</div>
+            </section>
+          ))}
+        </>
+      )}
 
       {/* Recursos Adicionais */}
       <section className='mb-5'>
