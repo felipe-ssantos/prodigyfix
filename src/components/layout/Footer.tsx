@@ -65,8 +65,10 @@ const Footer: React.FC = () => {
               className='text-white-50 text-decoration-none hover-text-white d-inline-flex align-items-center gap-2'
               title='GitHub'
             >
-              <span className='small'>Developed by </span>
-              <FaGithub size={16} /> Felipe Silveira
+              <span className='small'>
+                Developed by <FaGithub size={16} /> Felipe Silveira
+              </span>
+              <span className='small'>• v.1.0 • 2025 </span>
             </a>
           </div>
         </div>
