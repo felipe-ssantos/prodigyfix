@@ -1,18 +1,16 @@
 // src/pages/UsefulLinksPage.tsx
 import { FaExternalLinkAlt } from 'react-icons/fa'
 import { useUsefulLinks } from '../hooks/useUsefulLinks'
-import { UsefulLink } from '../types/usefulLinks' // Importação corrigida
+import { UsefulLink } from '../types/usefulLinks'
 
-// Mapeamento de ícones para temas (usando string em vez de JSX.Element)
 const themeIcons: Record<string, string> = {
-  tools: '🔧',
+  tools: '🛠️',
   resources: '📚',
   communities: '👥',
   learning: '🎓',
   security: '🛡️'
 }
 
-// Classes CSS para cores dos temas
 const themeIconClasses: Record<string, string> = {
   tools: 'text-primary',
   resources: 'text-success',
@@ -33,12 +31,37 @@ const themeTitles: Record<string, string> = {
 const UsefulLinksPage = () => {
   const { links, loading, error } = useUsefulLinks()
 
+  // Função para renderizar ícones (emoji ou imagem)
+  const renderIcon = (icon: string) => {
+    // Se for uma URL de imagem
+    if (icon.startsWith('http')) {
+      return (
+        <img
+          src={icon}
+          alt='Ícone'
+          className='me-3 img-32'
+          onError={e => {
+            const target = e.target as HTMLImageElement
+            target.style.display = 'none'
+            // Criar fallback visual
+            const fallback = document.createElement('span')
+            fallback.className = 'fs-4 me-3'
+            fallback.textContent = '🖼️'
+            target.parentNode?.insertBefore(fallback, target.nextSibling)
+          }}
+        />
+      )
+    }
+    // Se for emoji ou texto
+    return <span className='fs-4 me-3'>{icon}</span>
+  }
+
   const renderLinkCard = (link: UsefulLink) => (
     <div key={link.id} className='col-md-6 col-lg-4 mb-3'>
       <div className='card h-100'>
         <div className='card-body'>
           <div className='d-flex align-items-start mb-3'>
-            <span className='display-6 me-3'>{link.icon}</span>
+            {renderIcon(link.icon)}
             <div className='flex-grow-1'>
               <h6 className='card-title mb-1'>{link.name}</h6>
               <span className='badge bg-secondary small'>{link.category}</span>
@@ -48,7 +71,7 @@ const UsefulLinksPage = () => {
           <a
             href={link.url}
             target='_blank'
-            rel='noopener noreferrer'
+            // rel='noopener noreferrer'
             className='btn btn-outline-primary btn-sm'
           >
             <FaExternalLinkAlt className='me-1' />

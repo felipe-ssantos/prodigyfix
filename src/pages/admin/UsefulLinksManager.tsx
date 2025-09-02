@@ -8,8 +8,8 @@ import {
   FaTimes,
   FaExternalLinkAlt
 } from 'react-icons/fa'
-import { collection, query, orderBy, getDocs } from 'firebase/firestore' // Importações do Firestore adicionadas
-import { db } from '../../services/firebase' // Importação do db adicionada
+import { collection, query, getDocs } from 'firebase/firestore'
+import { db } from '../../services/firebase'
 import {
   addUsefulLink,
   updateUsefulLink,
@@ -26,7 +26,7 @@ const UsefulLinksManager: React.FC = () => {
     name: '',
     description: '',
     url: '',
-    icon: '🔗',
+    icon: '',
     category: '',
     theme: 'tools',
     order: 0,
@@ -40,9 +40,8 @@ const UsefulLinksManager: React.FC = () => {
   const loadLinks = async () => {
     try {
       setLoading(true)
-      // Buscar todos os links sem agrupar
       const linksRef = collection(db, 'usefulLinks')
-      const q = query(linksRef, orderBy('theme'), orderBy('order'))
+      const q = query(linksRef)
       const querySnapshot = await getDocs(q)
 
       const allLinks: UsefulLink[] = []
@@ -50,7 +49,15 @@ const UsefulLinksManager: React.FC = () => {
         allLinks.push({ id: doc.id, ...doc.data() } as UsefulLink)
       })
 
-      setLinks(allLinks)
+      // Ordenar localmente por tema e ordem
+      const sortedLinks = allLinks.sort((a, b) => {
+        if (a.theme !== b.theme) {
+          return a.theme.localeCompare(b.theme)
+        }
+        return (a.order || 0) - (b.order || 0)
+      })
+
+      setLinks(sortedLinks)
     } catch (error) {
       console.error('Erro ao carregar links:', error)
     } finally {
@@ -68,7 +75,7 @@ const UsefulLinksManager: React.FC = () => {
         name: '',
         description: '',
         url: '',
-        icon: '🔗',
+        icon: '', // Removido o valor padrão
         category: '',
         theme: 'tools',
         order: 0,
@@ -101,6 +108,28 @@ const UsefulLinksManager: React.FC = () => {
     } catch (error) {
       console.error('Erro ao excluir link:', error)
     }
+  }
+
+  // Função para renderizar ícones (emoji ou imagem)
+  const renderIcon = (icon: string) => {
+    if (!icon) return <span className='text-muted'>Sem ícone</span>
+
+    // Se for uma URL de imagem
+    if (icon.startsWith('http')) {
+      return (
+        <img
+          className='img-24 object-fit-contain'
+          src={icon}
+          alt='Ícone'
+          onError={e => {
+            const target = e.target as HTMLImageElement
+            target.style.display = 'none'
+          }}
+        />
+      )
+    }
+    // Se for emoji ou texto
+    return <span>{icon}</span>
   }
 
   if (loading) {
@@ -141,9 +170,9 @@ const UsefulLinksManager: React.FC = () => {
               <div className='col-md-6 mb-3'>
                 <label className='form-label'>Nome</label>
                 <input
+                  aria-label='Nome do link'
                   type='text'
                   className='form-control'
-                  aria-label='Nome do link'
                   value={newLink.name}
                   onChange={e =>
                     setNewLink({ ...newLink, name: e.target.value })
@@ -153,9 +182,9 @@ const UsefulLinksManager: React.FC = () => {
               <div className='col-md-6 mb-3'>
                 <label className='form-label'>URL</label>
                 <input
+                  aria-label='URL do link'
                   type='url'
                   className='form-control'
-                  aria-label='URL do link'
                   value={newLink.url}
                   onChange={e =>
                     setNewLink({ ...newLink, url: e.target.value })
@@ -175,7 +204,9 @@ const UsefulLinksManager: React.FC = () => {
                 />
               </div>
               <div className='col-md-3 mb-3'>
-                <label className='form-label'>Ícone</label>
+                <label className='form-label'>
+                  Ícone (emoji ou URL de imagem)
+                </label>
                 <input
                   type='text'
                   className='form-control'
@@ -183,8 +214,24 @@ const UsefulLinksManager: React.FC = () => {
                   onChange={e =>
                     setNewLink({ ...newLink, icon: e.target.value })
                   }
-                  placeholder='🔗'
+                  placeholder='https://...'
                 />
+                {newLink.icon?.startsWith('http') && (
+                  <div className='mt-2'>
+                    <small className='text-muted'>Preview:</small>
+                    <div className='mt-1'>
+                      <img
+                        className='img-24 object-fit-contain'
+                        src={newLink.icon}
+                        alt='Preview'
+                        onError={e => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
               <div className='col-md-3 mb-3'>
                 <label className='form-label'>Categoria</label>
@@ -232,7 +279,11 @@ const UsefulLinksManager: React.FC = () => {
               </div>
             </div>
             <div className='d-flex gap-2'>
-              <button className='btn btn-primary' onClick={handleAddLink}>
+              <button
+                type='button'
+                className='btn btn-primary'
+                onClick={handleAddLink}
+              >
                 <FaSave className='me-2' />
                 Salvar
               </button>
@@ -279,7 +330,26 @@ const UsefulLinksManager: React.FC = () => {
                 <tbody>
                   {links.map(link => (
                     <tr key={link.id}>
-                      <td>{link.icon}</td>
+                      <td>
+                        <div className='d-flex align-items-center justify-content-center size-40'>
+                          {renderIcon(link.icon)}
+                        </div>
+                        {editingLink?.id === link.id && (
+                          <input
+                            aria-label='Ícone do link'
+                            type='text'
+                            className='form-control form-control-sm mt-1'
+                            value={editingLink.icon}
+                            onChange={e =>
+                              setEditingLink({
+                                ...editingLink,
+                                icon: e.target.value
+                              })
+                            }
+                            placeholder='🔗 ou https://...'
+                          />
+                        )}
+                      </td>
                       <td>
                         {editingLink?.id === link.id ? (
                           <input
@@ -361,7 +431,7 @@ const UsefulLinksManager: React.FC = () => {
                                 ...editingLink,
                                 order: parseInt(e.target.value) || 0
                               })
-                            }                            
+                            }
                           />
                         ) : (
                           link.order
@@ -390,10 +460,10 @@ const UsefulLinksManager: React.FC = () => {
                         ) : (
                           <div className='btn-group btn-group-sm'>
                             <button
-                              type='button'
                               aria-label='Editar link'
+                              type='button'
                               className='btn btn-primary'
-                              onClick={() => setEditingLink(link)}
+                              onClick={() => setEditingLink({ ...link })}
                             >
                               <FaEdit />
                             </button>

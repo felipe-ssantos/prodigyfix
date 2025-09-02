@@ -1,7 +1,7 @@
 // src/hooks/useUsefulLinks.ts
 import { useState, useEffect } from "react";
 import { getUsefulLinks } from "../services/usefulLinks";
-import { UsefulLink } from "../types/usefulLinks"; // Importação adicionada
+import { UsefulLink } from "../types/usefulLinks";
 
 export const useUsefulLinks = (theme?: string) => {
   const [links, setLinks] = useState<Record<string, UsefulLink[]>>({});
