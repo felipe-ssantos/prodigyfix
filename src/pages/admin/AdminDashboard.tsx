@@ -8,7 +8,8 @@ import {
   FaTrash,
   FaFileAlt,
   FaCog,
-  FaDatabase
+  FaDatabase,
+  FaLink
 } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTutorials } from '../../hooks/useTutorials'
@@ -57,7 +58,10 @@ const AdminDashboard: React.FC = () => {
     try {
       if (selectedTutorial.imageUrl) {
         try {
-          const imageRef = storageRef(storage, `tutorials/${selectedTutorial.id}`)
+          const imageRef = storageRef(
+            storage,
+            `tutorials/${selectedTutorial.id}`
+          )
           await deleteObject(imageRef)
         } catch (err) {
           console.warn('Erro ao remover imagem:', err)
@@ -148,16 +152,26 @@ const AdminDashboard: React.FC = () => {
             <p className='text-muted mb-0'>Prodigy Informática Tutorials</p>
           </div>
           <div className='d-flex gap-2'>
-            <Link to='/admin/tutorials/new' className='btn btn-primary'>
-              <FaPlus className='me-2' />
+            <Link to='/admin/tutorials/new' className='btn btn-primary h-50'>
+              <FaPlus className='me-2 h-100' />
               Novo Tutorial
             </Link>
-            <button onClick={logout} className='btn btn-outline-secondary'>
+            <Link
+              to='/admin/useful-links'
+              className='btn btn-outline-primary mb-3'
+            >
+              <FaLink className='me-2' />
+              Gerenciar Links Úteis
+            </Link>
+            <button
+              type='button'
+              onClick={logout}
+              className='btn btn-outline-secondary h-50'
+            >
               Sair
             </button>
           </div>
         </div>
-
         {/* Mensagem de inicialização */}
         {showInitMessage && (
           <div
@@ -174,7 +188,6 @@ const AdminDashboard: React.FC = () => {
             ></button>
           </div>
         )}
-
         <div className='row mb-4'>
           <div className='col-md-3 mb-3'>
             <div className='card bg-primary text-white'>
@@ -239,7 +252,6 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-
         {/* Seção de Configuração de Categorias */}
         <div className='card mb-4'>
           <div className='card-header d-flex justify-content-between align-items-center'>
@@ -290,7 +302,6 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-
         <div className='card'>
           <div className='card-header d-flex justify-content-between align-items-center'>
             <h5 className='mb-0'>Tutoriais Recentes</h5>
@@ -396,7 +407,6 @@ const AdminDashboard: React.FC = () => {
             )}
           </div>
         </div>
-
         {/* Modal de Confirmação de Exclusão */}
         {showDeleteModal && selectedTutorial && (
           <div className='modal fade show d-block' tabIndex={-1}>
@@ -444,4 +454,3 @@ const AdminDashboard: React.FC = () => {
 }
 
 export default AdminDashboard
-

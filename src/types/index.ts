@@ -69,3 +69,16 @@ export interface SearchResult {
   filters: SearchFilters;
 }
 
+export interface UsefulLink {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  icon: string;
+  category: string;
+  theme: string; // Nova propriedade para agrupar por temas
+  order: number; // Para ordenação personalizada
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

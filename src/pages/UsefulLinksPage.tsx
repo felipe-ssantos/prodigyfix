@@ -1,142 +1,40 @@
 // src/pages/UsefulLinksPage.tsx
-import {
-  FaExternalLinkAlt,
-  FaBook,
-  FaTools,
-  FaShieldAlt,
-  FaUsers
-} from 'react-icons/fa'
+import { FaExternalLinkAlt } from 'react-icons/fa'
+import { useUsefulLinks } from '../hooks/useUsefulLinks'
+import { UsefulLink } from '../types/usefulLinks' // Importação corrigida
 
-interface LinkItem {
-  name: string
-  description: string
-  url: string
-  icon: string
-  category: string
+// Mapeamento de ícones para temas (usando string em vez de JSX.Element)
+const themeIcons: Record<string, string> = {
+  tools: '🔧',
+  resources: '📚',
+  communities: '👥',
+  learning: '🎓',
+  security: '🛡️'
+}
+
+// Classes CSS para cores dos temas
+const themeIconClasses: Record<string, string> = {
+  tools: 'text-primary',
+  resources: 'text-success',
+  communities: 'text-info',
+  learning: 'text-warning',
+  security: 'text-danger'
+}
+
+// Títulos para os temas
+const themeTitles: Record<string, string> = {
+  tools: 'Ferramentas Essenciais',
+  resources: 'Recursos de Aprendizado',
+  communities: 'Comunidades e Fóruns',
+  learning: 'Aprendizado e Certificação',
+  security: 'Segurança e Proteção'
 }
 
 const UsefulLinksPage = () => {
-  const links = {
-    tools: [
-      {
-        name: "Hiren's BootCD",
-        description: "Download oficial e informações do Hiren's BootCD",
-        url: 'https://www.hirensbootcd.org/',
-        icon: '💿',
-        category: 'Ferramenta Principal'
-      },
-      {
-        name: 'Recuva',
-        description: 'Software profissional de recuperação de arquivos',
-        url: 'https://www.ccleaner.com/recuva',
-        icon: '🔄',
-        category: 'Recuperação de Dados'
-      },
-      {
-        name: 'GParted',
-        description:
-          'Editor de partições gratuito para gerenciar discos graficamente',
-        url: 'https://gparted.org/',
-        icon: '💾',
-        category: 'Gerenciamento de Disco'
-      },
-      {
-        name: 'TestDisk',
-        description: 'Software poderoso de recuperação de dados',
-        url: 'https://www.cgsecurity.org/wiki/TestDisk',
-        icon: '🔍',
-        category: 'Recuperação de Dados'
-      }
-    ],
-    resources: [
-      {
-        name: 'Suporte Microsoft',
-        description:
-          'Suporte oficial do Windows e guias de solução de problemas',
-        url: 'https://support.microsoft.com/',
-        icon: '🪟',
-        category: 'Suporte Oficial'
-      },
-      {
-        name: 'Documentação Ubuntu',
-        description: 'Documentação e tutoriais completos sobre Linux',
-        url: 'https://ubuntu.com/tutorials',
-        icon: '🐧',
-        category: 'Recursos Linux'
-      },
-      {
-        name: 'TechNet Wiki',
-        description: 'Base de conhecimento da comunidade Microsoft TechNet',
-        url: 'https://social.technet.microsoft.com/wiki/',
-        icon: '📚',
-        category: 'Base de Conhecimento'
-      }
-    ],
-    communities: [
-      {
-        name: 'Reddit r/techsupport',
-        description: 'Comunidade para suporte técnico e solução de problemas',
-        url: 'https://www.reddit.com/r/techsupport/',
-        icon: '🤝',
-        category: 'Suporte Comunitário'
-      },
-      {
-        name: 'SuperUser',
-        description:
-          'Site de perguntas e respostas para entusiastas e usuários avançados',
-        url: 'https://superuser.com/',
-        icon: '👥',
-        category: 'Comunidade de Q&A'
-      },
-      {
-        name: "Tom's Hardware",
-        description: 'Análises de hardware, notícias e fóruns da comunidade',
-        url: 'https://www.tomshardware.com/',
-        icon: '🔧',
-        category: 'Hardware'
-      },
-      {
-        name: 'BleepingComputer',
-        description: 'Notícias de segurança e guias de remoção de malware',
-        url: 'https://www.bleepingcomputer.com/',
-        icon: '🛡️',
-        category: 'Segurança'
-      }
-    ],
-    learning: [
-      {
-        name: 'CompTIA A+',
-        description: 'Certificação profissional de TI para hardware e software',
-        url: 'https://www.comptia.org/certifications/a',
-        icon: '🎓',
-        category: 'Certificação'
-      },
-      {
-        name: 'Cursos de TI - Coursera',
-        description: 'Cursos online de TI e ciência da computação',
-        url: 'https://www.coursera.org/browse/business/it',
-        icon: '📖',
-        category: 'Aprendizado Online'
-      },
-      {
-        name: 'Canais de Tecnologia no YouTube',
-        description: 'Canais populares de educação tecnológica',
-        url: 'https://www.youtube.com/results?search_query=tutorial+de+reparo+de+computador',
-        icon: '📺',
-        category: 'Aprendizado em Vídeo'
-      },
-      {
-        name: 'GitHub',
-        description: 'Projetos de código aberto e repositórios de código',
-        url: 'https://github.com/',
-        icon: '🐙',
-        category: 'Código Aberto'
-      }
-    ]
-  }
+  const { links, loading, error } = useUsefulLinks()
 
-  const renderLinkCard = (link: LinkItem) => (
-    <div key={link.name} className='col-md-6 col-lg-4 mb-3'>
+  const renderLinkCard = (link: UsefulLink) => (
+    <div key={link.id} className='col-md-6 col-lg-4 mb-3'>
       <div className='card h-100'>
         <div className='card-body'>
           <div className='d-flex align-items-start mb-3'>
@@ -161,6 +59,29 @@ const UsefulLinksPage = () => {
     </div>
   )
 
+  if (loading) {
+    return (
+      <div className='container py-5'>
+        <div className='text-center'>
+          <div className='spinner-border text-primary' role='status'>
+            <span className='visually-hidden'>Carregando...</span>
+          </div>
+          <p className='mt-3'>Carregando links úteis...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='container py-5'>
+        <div className='alert alert-danger' role='alert'>
+          {error}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className='container py-4'>
       {/* Seção Principal */}
@@ -178,41 +99,18 @@ const UsefulLinksPage = () => {
         </div>
       </div>
 
-      {/* Ferramentas Essenciais */}
-      <section className='mb-5'>
-        <div className='d-flex align-items-center mb-4'>
-          <FaTools className='text-primary me-2' size={24} />
-          <h2 className='mb-0'>Ferramentas Essenciais</h2>
-        </div>
-        <div className='row'>{links.tools.map(renderLinkCard)}</div>
-      </section>
-
-      {/* Recursos de Aprendizado */}
-      <section className='mb-5'>
-        <div className='d-flex align-items-center mb-4'>
-          <FaBook className='text-success me-2' size={24} />
-          <h2 className='mb-0'>Recursos de Aprendizado</h2>
-        </div>
-        <div className='row'>{links.resources.map(renderLinkCard)}</div>
-      </section>
-
-      {/* Comunidades e Fóruns */}
-      <section className='mb-5'>
-        <div className='d-flex align-items-center mb-4'>
-          <FaUsers className='text-info me-2' size={24} />
-          <h2 className='mb-0'>Comunidades e Fóruns</h2>
-        </div>
-        <div className='row'>{links.communities.map(renderLinkCard)}</div>
-      </section>
-
-      {/* Aprendizado e Certificação */}
-      <section className='mb-5'>
-        <div className='d-flex align-items-center mb-4'>
-          <FaShieldAlt className='text-warning me-2' size={24} />
-          <h2 className='mb-0'>Aprendizado e Certificação</h2>
-        </div>
-        <div className='row'>{links.learning.map(renderLinkCard)}</div>
-      </section>
+      {/* Renderizar cada tema de links */}
+      {Object.entries(links).map(([theme, themeLinks]) => (
+        <section key={theme} className='mb-5'>
+          <div className='d-flex align-items-center mb-4'>
+            <span className={`me-2 fs-4 ${themeIconClasses[theme] || ''}`}>
+              {themeIcons[theme] || '📁'}
+            </span>
+            <h2 className='mb-0'>{themeTitles[theme] || theme}</h2>
+          </div>
+          <div className='row'>{themeLinks.map(renderLinkCard)}</div>
+        </section>
+      ))}
 
       {/* Recursos Adicionais */}
       <section className='mb-5'>
