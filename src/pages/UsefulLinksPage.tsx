@@ -236,9 +236,10 @@ const UsefulLinksPage = () => {
             Recursos Técnicos
           </h1>
           <p className='lead text-muted mb-4'>
-            Biblioteca técnica especializada em ferramentas, documentação e
-            recursos para administração de sistemas, desenvolvimento e segurança
-            computacional.
+            Coleção cuidadosamente selecionada de ferramentas, recursos e
+            comunidades essenciais para manutenção de computadores e recuperação
+            de sistemas. Esses links irão ajudar a expandir o conhecimento e
+            encontrar suporte adicional.
           </p>
 
           {/* Estatísticas */}
