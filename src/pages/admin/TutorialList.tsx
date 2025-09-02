@@ -40,7 +40,7 @@ const TutorialList: React.FC = () => {
 
   if (!currentUser) {
     return (
-      <div className='w-100 py-5' style={{ minHeight: '100vh' }}>
+      <div className='w-100 py-5 min-vh-100'>
         <div className='container-fluid px-4'>
           <div className='alert alert-danger'>
             Você precisa estar logado para acessar esta página.
@@ -51,7 +51,7 @@ const TutorialList: React.FC = () => {
   }
 
   return (
-    <div className='w-100 py-4' style={{ minHeight: '100vh' }}>
+    <div className='w-100 py-4 min-vh-100'>
       <div className='container-fluid px-4'>
         <div className='d-flex justify-content-between align-items-center mb-4'>
           <h1>Todos os Tutoriais</h1>

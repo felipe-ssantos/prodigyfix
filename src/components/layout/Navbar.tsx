@@ -36,7 +36,7 @@ const Navbar = () => {
     <nav className='navbar navbar-expand-lg navbar-dark bg-primary shadow-sm'>
       <div className='container'>
         {/* Brand */}
-        <Link className='navbar-brand d-flex align-items-center' to='/'>          
+        <Link className='navbar-brand d-flex align-items-center' to='/'>
           <div>
             <div className='fw-bold fs-4'>🔧 Prodigy Informática</div>
             <div className='fs-6 small opacity-75 d-none d-lg-block'>
@@ -62,18 +62,36 @@ const Navbar = () => {
           {/* Navigation Links */}
           <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
             <li className='nav-item'>
-              <Link className='nav-link fw-semibold px-3' to='/'>
+              <Link
+                className='nav-link fw-bold text-white px-3 fs-6 position-relative'
+                to='/'
+              >
                 🏠 Home
+                <span
+                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'
+                ></span>
               </Link>
             </li>
             <li className='nav-item'>
-              <Link className='nav-link fw-semibold px-2' to='/about'>
+              <Link
+                className='nav-link fw-bold text-white px-3 fs-6 position-relative'
+                to='/about'
+              >
                 ℹ️ Sobre
+                <span
+                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'                  
+                ></span>
               </Link>
             </li>
             <li className='nav-item'>
-              <Link className='nav-link fw-semibold px-3' to='/useful-links'>
+              <Link
+                className='nav-link fw-bold text-white px-3 fs-6 position-relative'
+                to='/useful-links'
+              >
                 🔗 Links Úteis
+                <span
+                  className='position-absolute bottom-0 start-0 w-100 rounded hr-3px'                 
+                ></span>
               </Link>
             </li>
           </ul>
@@ -88,7 +106,7 @@ const Navbar = () => {
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  aria-label='Pesquisar tutoriais'                  
+                  aria-label='Pesquisar tutoriais'
                 />
                 <button
                   className='btn btn-light'

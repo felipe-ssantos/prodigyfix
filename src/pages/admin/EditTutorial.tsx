@@ -217,8 +217,7 @@ const EditTutorial: React.FC = () => {
     return (
       <div className='container-fluid py-5 text-center'>
         <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ minHeight: '300px' }}
+          className='d-flex justify-content-center align-items-center min-vh-300'          
         >
           <div>
             <div className='spinner-border text-primary mb-3' role='status'>
