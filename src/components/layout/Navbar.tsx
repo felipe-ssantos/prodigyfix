@@ -37,7 +37,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className='navbar navbar-expand-lg navbar-dark bg-primary shadow-sm'>
+    <nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow-sm'>
       <div className='container'>
         {/* Brand */}
         <Link className='navbar-brand d-flex align-items-center' to='/'>

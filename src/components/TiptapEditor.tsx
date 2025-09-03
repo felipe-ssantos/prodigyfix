@@ -123,7 +123,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
     },
     editorProps: {
       attributes: {
-        class: 'form-control border-0 p-3 h-auto',        
+        class: 'form-control border-0 p-3 h-auto'
       }
     }
   })
@@ -334,7 +334,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
             aria-label='Estilos de cabeçalho'
           >
             <select
-              className='form-select form-select-sm min-w-20'              
+              className='form-select form-select-sm min-w-20'
               aria-label='Selecionar estilo de texto'
               onChange={e => {
                 const level = parseInt(e.target.value)
@@ -540,7 +540,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       {/* Image Upload Modal */}
       {imageModal.show && (
         <div
-          className='modal fade show d-block bg-black-50'          
+          className='modal fade show d-block bg-black-50'
           role='dialog'
           aria-modal='true'
         >
