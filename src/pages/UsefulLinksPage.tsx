@@ -194,7 +194,7 @@ const UsefulLinksPage = () => {
               aria-label={`Visitar ${link.name} - abre em nova aba`}
             >
               <FaExternalLinkAlt className='me-2' aria-hidden='true' />
-              Acessar Recurso
+              Acessar Link
             </a>
           </footer>
         </div>
