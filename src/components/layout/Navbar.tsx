@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+import logo from '../../assets/logo_fundo_branco.png'
 
 // Verifica se está em ambiente de desenvolvimento
 const isDevelopment = import.meta.env.DEV
@@ -38,8 +39,15 @@ const Navbar = () => {
       <div className='container'>
         {/* Brand */}
         <Link className='navbar-brand d-flex align-items-center' to='/'>
+          <img
+            src={logo}
+            alt='Prodigy Informática Logo'
+            height='70'
+            width={70}
+            className='me-2'
+          />
           <div>
-            <div className='fw-bold fs-5'>🔧 Prodigy Informática</div>
+            <div className='fw-bold fs-5'>Prodigy Informática</div>
             <div className='fs-6 small opacity-75 d-none d-lg-block'>
               Assistência confiável, soluções rápidas
             </div>
@@ -149,7 +157,7 @@ const Navbar = () => {
                       <li>
                         <hr className='dropdown-divider' />
                       </li>
-                       {isAdmin && (
+                      {isAdmin && (
                         <>
                           <li>
                             <Link

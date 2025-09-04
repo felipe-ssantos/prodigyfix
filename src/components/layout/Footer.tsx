@@ -1,8 +1,9 @@
 // src/components/layout/Footer.tsx
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaGithub, FaArrowUp  } from 'react-icons/fa'
+import { FaGithub, FaArrowUp } from 'react-icons/fa'
 import '../../styles/Footer.css'
+import logo from '../../assets/logo_fundo_branco.png'
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -90,10 +91,18 @@ const Footer: React.FC = () => {
 
           <div className='row align-items-center'>
             <div className='col-md-6'>
-              <p className='mb-0 text-white-50 small'>
-                © {currentYear} Prodigy Informática. Todos os direitos
-                reservados.
-              </p>
+              <div className='d-flex align-items-center gap-2'>
+                <img
+                  src={logo}
+                  alt='Prodigy Informática Logo'
+                  height='50'
+                  className='d-inline-block'
+                />
+                <p className='mb-0 text-white-50 small'>
+                  © {currentYear} Prodigy Informática. Todos os direitos
+                  reservados.
+                </p>
+              </div>
             </div>
             <div className='col-md-6 text-md-end'>
               <a
