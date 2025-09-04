@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+import './Navbar.css'
 
 // Verifica se está em ambiente de desenvolvimento
 const isDevelopment = import.meta.env.DEV
@@ -61,7 +62,7 @@ const Navbar = () => {
 
         <div className='collapse navbar-collapse' id='navbarNav'>
           {/* Navigation Links */}
-          <ul className='navbar-nav ms-auto mb-2 mb-lg-0 min-w-200'>
+          <ul className='navbar-nav ms-5 me-auto mb-2 mb-lg-0 espacamento-menu'>
             <li className='nav-item'>
               <Link
                 className='nav-link fw-bold text-white px-3 fs-6 position-relative'
