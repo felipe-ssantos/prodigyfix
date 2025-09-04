@@ -67,7 +67,7 @@ const TagInput: React.FC<TagInputProps> = ({
           disabled={!inputValue.trim() || tags.includes(inputValue.trim())}
           aria-label='Adicionar tag'
         >
-          <i className='fas fa-plus'></i>
+          <i className='fas fa-plus'>Adicionar Tag/Key</i>
         </button>
       </div>
 
@@ -429,7 +429,7 @@ const EditTutorial: React.FC = () => {
                           aria-label='Adicionar nova categoria'
                         >
                           <i className='fas fa-plus me-1'></i>
-                          Nova
+                          Criar nova categoria ?
                         </button>
                       </div>
                     </div>
