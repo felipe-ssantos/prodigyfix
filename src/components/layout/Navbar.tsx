@@ -1,7 +1,7 @@
 // src/components/layout/Navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaSearch, FaUser, FaSignOutAlt } from 'react-icons/fa'
+import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 
 // Verifica se está em ambiente de desenvolvimento
@@ -10,7 +10,7 @@ const isVSCode = import.meta.env.MODE === 'vscode'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const { currentUser, logout } = useAuth()
+  const { currentUser, logout, isAdmin } = useAuth()
   const navigate = useNavigate()
 
   const handleSearch = (e: React.FormEvent) => {
@@ -149,6 +149,22 @@ const Navbar = () => {
                       <li>
                         <hr className='dropdown-divider' />
                       </li>
+                       {isAdmin && (
+                        <>
+                          <li>
+                            <Link
+                              className='dropdown-item'
+                              to='/admin/dashboard'
+                            >
+                              <FaTachometerAlt className='me-2' />
+                              Painel Admin
+                            </Link>
+                          </li>
+                          <li>
+                            <hr className='dropdown-divider' />
+                          </li>
+                        </>
+                      )}
                       <li>
                         <button
                           type='button'
