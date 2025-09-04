@@ -1,0 +1,101 @@
+/* src/styles/TutorialImage.css */
+
+/* Skeleton loader */
+.skeleton-loader {
+    min-height: 200px;
+    background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+    background-size: 400% 100%;
+    animation: skeleton 1.5s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes skeleton {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Placeholder image */
+.placeholder-image {
+    min-height: 200px;
+    border: 2px dashed #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #6c757d;
+    /* text-muted */
+}
+
+/* Image before loaded */
+.image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Image after loaded */
+.image-loaded {
+    opacity: 1;
+    position: relative;
+    /* ou absolute dependendo do layout */
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Variantes específicas */
+.tutorial-card-image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.tutorial-detail-image {
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    /* rounded */
+}
+
+.tutorial-thumbnail-sm {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+.tutorial-thumbnail-md {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+.tutorial-thumbnail-lg {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+.tutorial-hero-image {
+    width: 100%;
+    min-height: 300px;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    /* shadow-lg */
+}
