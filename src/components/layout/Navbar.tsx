@@ -1,9 +1,8 @@
 // src/components/layout/Navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
+import { FaSearch, FaUser, FaSignOutAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
-import './Navbar.css'
 
 // Verifica se está em ambiente de desenvolvimento
 const isDevelopment = import.meta.env.DEV
@@ -11,7 +10,7 @@ const isVSCode = import.meta.env.MODE === 'vscode'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const { currentUser, logout, isAdmin } = useAuth()
+  const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleSearch = (e: React.FormEvent) => {
@@ -62,7 +61,7 @@ const Navbar = () => {
 
         <div className='collapse navbar-collapse' id='navbarNav'>
           {/* Navigation Links */}
-          <ul className='navbar-nav mb-2 mb-lg-0'>
+          <ul className='navbar-nav mb-2 mb-lg-0 mr-auto ml-48'>
             <li className='nav-item'>
               <Link
                 className='nav-link fw-bold text-white px-3 fs-6 position-relative'
@@ -93,7 +92,7 @@ const Navbar = () => {
           </ul>
 
           <div
-            className={`d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center mt-3 mt-lg-0 ${
+            className={`d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center mt-3 mt-lg-0 ml-48 ${
               shouldShowUserMenu ? 'gap-3' : ''
             }`}
           >
@@ -102,7 +101,7 @@ const Navbar = () => {
               <div className='input-group'>
                 <input
                   type='text'
-                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 search-input'
+                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 min-w-200'
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
@@ -150,22 +149,6 @@ const Navbar = () => {
                       <li>
                         <hr className='dropdown-divider' />
                       </li>
-                      {isAdmin && (
-                        <>
-                          <li>
-                            <Link
-                              className='dropdown-item'
-                              to='/admin/dashboard'
-                            >
-                              <FaTachometerAlt className='me-2' />
-                              Painel Admin
-                            </Link>
-                          </li>
-                          <li>
-                            <hr className='dropdown-divider' />
-                          </li>
-                        </>
-                      )}
                       <li>
                         <button
                           type='button'
