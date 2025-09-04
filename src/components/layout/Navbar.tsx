@@ -61,7 +61,7 @@ const Navbar = () => {
 
         <div className='collapse navbar-collapse' id='navbarNav'>
           {/* Navigation Links */}
-          <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
+          <ul className='navbar-nav ms-5 me-auto mb-2 mb-lg-0'>
             <li className='nav-item'>
               <Link
                 className='nav-link fw-bold text-white px-3 fs-6 position-relative'
