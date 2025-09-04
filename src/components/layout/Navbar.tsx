@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+import './Navbar.css'
 
 // Verifica se está em ambiente de desenvolvimento
 const isDevelopment = import.meta.env.DEV
@@ -61,7 +62,7 @@ const Navbar = () => {
 
         <div className='collapse navbar-collapse' id='navbarNav'>
           {/* Navigation Links */}
-          <ul className='navbar-nav ms-auto me-auto mb-2 mb-lg-0'>
+          <ul className='navbar-nav mb-2 mb-lg-0'>
             <li className='nav-item'>
               <Link
                 className='nav-link fw-bold text-white px-3 fs-6 position-relative'
@@ -101,7 +102,7 @@ const Navbar = () => {
               <div className='input-group'>
                 <input
                   type='text'
-                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 min-w-200'
+                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 search-input'
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
