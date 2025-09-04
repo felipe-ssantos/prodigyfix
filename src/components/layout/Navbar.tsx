@@ -1,13 +1,7 @@
 // src/components/layout/Navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {
-  FaSearch,
-  FaUser,
-  FaSignOutAlt,
-  FaCog,
-  FaTachometerAlt
-} from 'react-icons/fa'
+import { FaSearch, FaUser, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 
 // Verifica se está em ambiente de desenvolvimento
@@ -36,13 +30,16 @@ const Navbar = () => {
     }
   }
 
+  // Define se deve mostrar o menu do usuário
+  const shouldShowUserMenu = isDevelopment || isVSCode
+
   return (
     <nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow-sm'>
       <div className='container'>
         {/* Brand */}
         <Link className='navbar-brand d-flex align-items-center' to='/'>
           <div>
-            <div className='fw-bold fs-4'>🔧 Prodigy Informática</div>
+            <div className='fw-bold fs-5'>🔧 Prodigy Informática</div>
             <div className='fs-6 small opacity-75 d-none d-lg-block'>
               Assistência confiável, soluções rápidas
             </div>
@@ -94,17 +91,21 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <div className='d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3 mt-3 mt-lg-0'>
+          <div
+            className={`d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center mt-3 mt-lg-0 ${
+              shouldShowUserMenu ? 'gap-3' : ''
+            }`}
+          >
             {/* Search Bar */}
             <form onSubmit={handleSearch} className='d-flex'>
               <div className='input-group'>
                 <input
                   type='text'
-                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 w-25'
+                  className='form-control border-0 bg-white bg-opacity-10 text-white placeholder-white-50 min-w-200'
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  aria-label='Pesquisar tutoriais'
+                  aria-label='Pesquisar tutoriais'                  
                 />
                 <button
                   className='btn btn-light'
@@ -119,8 +120,8 @@ const Navbar = () => {
             </form>
 
             {/* User Menu - Só mostra em desenvolvimento/VSCode */}
-            {(isDevelopment || isVSCode) && (
-              <>
+            {shouldShowUserMenu && (
+              <div className='ms-lg-3'>
                 {currentUser ? (
                   <div className='dropdown'>
                     <button
@@ -160,15 +161,6 @@ const Navbar = () => {
                             </Link>
                           </li>
                           <li>
-                            <Link
-                              className='dropdown-item'
-                              to='/admin/settings'
-                            >
-                              <FaCog className='me-2' />
-                              Configurações
-                            </Link>
-                          </li>
-                          <li>
                             <hr className='dropdown-divider' />
                           </li>
                         </>
@@ -192,10 +184,10 @@ const Navbar = () => {
                     title='Fazer login como administrador'
                   >
                     <FaUser className='me-2' />
-                    <span className='d-none d-md-inline'>Admin Login</span>
+                    <span className='d-none d-md-inline'>Login</span>
                   </Link>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>

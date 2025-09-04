@@ -58,7 +58,7 @@ const AdminLogin: React.FC = () => {
                 <div className='mb-3'>
                   <span className='display-4'>🔧</span>
                 </div>
-                <h2 className='fw-bold'>Admin Login</h2>
+                <h2 className='fw-bold'>Login</h2>
                 <p className='text-muted'>
                   Acesse o painel de administração da Bootpedia
                 </p>
