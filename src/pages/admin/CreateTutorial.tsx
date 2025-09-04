@@ -301,7 +301,9 @@ const CreateTutorial: React.FC = () => {
                           onClick={() => setShowCategoryModal(true)}
                           aria-label='Adicionar nova categoria'
                         >
-                          <i className='fas fa-plus' aria-hidden='true'>Criar nova catergoria ?</i>
+                          <i className='fas fa-plus' aria-hidden='true'>
+                            Criar nova catergoria ?
+                          </i>
                         </button>
                       </div>
                     </div>

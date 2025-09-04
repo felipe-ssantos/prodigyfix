@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { ref as storageRef, uploadBytes, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 import { useAuth } from '../../contexts/AuthContext'
+import { useTutorials } from '../../hooks/useTutorials'
 import TiptapEditor from '../../components/TiptapEditor'
 import type { Tutorial } from '../../types'
 import { Modal, Button } from 'react-bootstrap'
@@ -13,6 +14,7 @@ const EditTutorial: React.FC = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { currentUser } = useAuth()
+  const { categories, addCategory } = useTutorials()
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState<Partial<Tutorial>>({
     title: '',
@@ -31,14 +33,6 @@ const EditTutorial: React.FC = () => {
   const [error, setError] = useState('')
   const [newCategory, setNewCategory] = useState('')
   const [showCategoryModal, setShowCategoryModal] = useState(false)
-  const [categories, setCategories] = useState<string[]>([
-    'BCD/MBR Tools',
-    'Data Recovery',
-    'Disk Defrag',
-    'Partition Tools',
-    'Password Recovery',
-    'System Repair'
-  ])
 
   useEffect(() => {
     const fetchTutorial = async () => {
@@ -115,16 +109,20 @@ const EditTutorial: React.FC = () => {
     setFormData(prev => ({ ...prev, keywords }))
   }
 
-  const handleAddCategory = () => {
-    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
-      const newCat = newCategory.trim()
-      setCategories([...categories, newCat])
-      setFormData(prev => ({
-        ...prev,
-        category: newCat
-      }))
-      setNewCategory('')
-      setShowCategoryModal(false)
+  const handleAddCategory = async () => {
+    if (newCategory.trim()) {
+      try {
+        await addCategory(newCategory.trim())
+        setFormData(prev => ({
+          ...prev,
+          category: newCategory.trim()
+        }))
+        setNewCategory('')
+        setShowCategoryModal(false)
+      } catch (err) {
+        setError('Erro ao adicionar categoria')
+        console.error(err)
+      }
     }
   }
 
@@ -216,9 +214,7 @@ const EditTutorial: React.FC = () => {
   if (loading) {
     return (
       <div className='container-fluid py-5 text-center'>
-        <div
-          className='d-flex justify-content-center align-items-center min-vh-300'          
-        >
+        <div className='d-flex justify-content-center align-items-center min-vh-300'>
           <div>
             <div className='spinner-border text-primary mb-3' role='status'>
               <span className='visually-hidden'>Carregando...</span>
@@ -341,8 +337,8 @@ const EditTutorial: React.FC = () => {
                         >
                           <option value=''>Selecione uma categoria</option>
                           {categories.map(cat => (
-                            <option key={cat} value={cat}>
-                              {cat}
+                            <option key={cat.id} value={cat.id}>
+                              {cat.icon} {cat.name}
                             </option>
                           ))}
                         </select>
@@ -352,7 +348,9 @@ const EditTutorial: React.FC = () => {
                           onClick={() => setShowCategoryModal(true)}
                           aria-label='categoria'
                         >
-                          <i className='fas fa-plus'>Cadastrar nova categoria ?</i>
+                          <i className='fas fa-plus'>
+                            Cadastrar nova categoria ?
+                          </i>
                         </button>
                       </div>
                     </div>

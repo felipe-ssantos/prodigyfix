@@ -7,6 +7,7 @@ export interface Tutorial {
   category: string;
   keywords: string[];
   imageUrl?: string;
+  videoUrl?: string;
   author: string;
   createdAt: Date;
   updatedAt: Date;

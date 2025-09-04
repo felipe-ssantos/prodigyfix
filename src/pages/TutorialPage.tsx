@@ -259,9 +259,34 @@ const TutorialPage = () => {
                 </header>
 
                 <div className='tutorial-content mb-5'>
+                  <style>
+                    {`
+                      .tutorial-content .video-container {
+                        position: relative;
+                        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+                        height: 0;
+                        overflow: hidden;
+                        max-width: 100%;
+                        margin: 2rem 0;
+                      }
+                      .tutorial-content .video-container iframe {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                      }
+                    `}
+                  </style>
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: tutorial.content
+                      __html: tutorial.content.replace(
+                        /<iframe(.+?)<\/iframe>/g,
+                        match => `<div class="video-container">${match}</div>`
+                      )
                     }}
                     className='lh-lg'
                   />

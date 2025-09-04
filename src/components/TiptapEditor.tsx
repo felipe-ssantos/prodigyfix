@@ -1,11 +1,11 @@
-// src/components/TiptapEditor.tsx - Versão corrigida e acessível
 import React, { useState, useRef } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import Youtube from '@tiptap/extension-youtube'
 import {
   ref as storageRef,
   uploadBytes,
@@ -44,12 +44,12 @@ interface ImageUploadModal {
   error: string | null
 }
 
-const TiptapEditor: React.FC<TiptapEditorProps> = ({
+const TiptapEditor = ({
   content,
   onChange,
   placeholder = 'Escreva seu conteúdo aqui...',
   className = ''
-}) => {
+}: TiptapEditorProps): JSX.Element => {
   const [imageModal, setImageModal] = useState<ImageUploadModal>({
     show: false,
     file: null,
@@ -99,6 +99,18 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
           HTMLAttributes: {
             class: 'bg-light p-3 rounded mb-3 border'
           }
+        },
+        // Disable extensions that we'll add separately to avoid duplicates
+        underline: false,
+        link: false
+      }),
+      Youtube.configure({
+        controls: true,
+        width: 840,
+        height: 472.5,
+        inline: false,
+        HTMLAttributes: {
+          class: 'youtube-video my-4 rounded shadow-sm'
         }
       }),
       Underline,
@@ -194,18 +206,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         .run()
 
       // Fechar modal
-      setImageModal({
-        show: false,
-        file: null,
-        preview: null,
-        uploading: false,
-        error: null
-      })
-
-      // Limpar input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''
-      }
+      closeImageModal()
     } catch (error) {
       console.error('Erro ao fazer upload da imagem:', error)
       setImageModal(prev => ({
@@ -250,12 +251,15 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const setLink = () => {
     const previousUrl = editor?.getAttributes('link').href
     const url = window.prompt('Digite a URL:', previousUrl)
-    if (url === null) return
+
+    if (url === null || !editor) return
+
     if (url === '') {
-      editor?.chain().focus().extendMarkRange('link').unsetLink().run()
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
-    editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
   if (!editor) {
