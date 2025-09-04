@@ -385,19 +385,34 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   )
 
   const incrementViews = useCallback(async (id: string) => {
-    try {
+    try {       
+
       const tutorialRef = doc(db, 'tutorials', id)
       const tutorialSnap = await getDoc(tutorialRef)
 
-      if (tutorialSnap.exists()) {
-        const currentViews = tutorialSnap.data().views || 0
-        await updateDoc(tutorialRef, {
-          views: currentViews + 1,
-          updatedAt: new Date()
-        })
+      if (!tutorialSnap.exists()) {
+        console.error('❌ Tutorial não encontrado:', id)
+        return
       }
+
+      const currentData = tutorialSnap.data()
+      const currentViews = currentData?.views || 0
+
+
+      // Importante: Atualizando APENAS o campo views
+      await updateDoc(tutorialRef, {
+        views: currentViews + 1
+      })
+
     } catch (err) {
-      console.error('Erro ao incrementar visualizações:', err)
+      const error = err as { code?: string; message?: string }
+      console.error('❌ Erro detalhado:', {
+        error,
+        code: error?.code,
+        message: error?.message,
+        id,
+        projectId: import.meta.env.VITE_FB_CONFIG_C
+      })
     }
   }, [])
 
