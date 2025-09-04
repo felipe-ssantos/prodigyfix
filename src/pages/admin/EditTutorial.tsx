@@ -214,7 +214,9 @@ const EditTutorial: React.FC = () => {
   if (loading) {
     return (
       <div className='container-fluid py-5 text-center'>
-        <div className='d-flex justify-content-center align-items-center min-vh-300'>
+        <div
+          className='d-flex justify-content-center align-items-center min-vh-300'          
+        >
           <div>
             <div className='spinner-border text-primary mb-3' role='status'>
               <span className='visually-hidden'>Carregando...</span>
@@ -348,9 +350,7 @@ const EditTutorial: React.FC = () => {
                           onClick={() => setShowCategoryModal(true)}
                           aria-label='categoria'
                         >
-                          <i className='fas fa-plus'>
-                            Cadastrar nova categoria ?
-                          </i>
+                          <i className='fas fa-plus'>Cadastrar nova categoria ?</i>
                         </button>
                       </div>
                     </div>
