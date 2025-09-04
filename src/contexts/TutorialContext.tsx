@@ -204,7 +204,11 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         )
       )
     } catch (error: unknown) {
-      const errorObj = error as { code?: string; message?: string; stack?: string }
+      const errorObj = error as {
+        code?: string
+        message?: string
+        stack?: string
+      }
       console.error('❌ Erro detalhado:', {
         error,
         code: errorObj.code,
