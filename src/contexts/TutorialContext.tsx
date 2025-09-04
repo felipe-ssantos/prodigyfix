@@ -159,18 +159,22 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         throw new Error('Tutorial não encontrado')
       }
 
-      const currentViews = tutorialDoc.data()?.views ?? 0
+      const currentData = tutorialDoc.data()
+      const updatedData = {
+        ...currentData,
+        views: (currentData?.views || 0) + 1
+      }
 
-      // Atualiza no Firebase
+      // Atualiza apenas o campo views no Firebase
       await updateDoc(tutorialRef, {
-        views: currentViews + 1
+        views: updatedData.views
       })
 
       // Incrementa localmente após sucesso no Firebase
       setTutorials(prev =>
         prev.map(tutorial =>
           tutorial.id === id
-            ? { ...tutorial, views: (tutorial.views ?? 0) + 1 }
+            ? { ...tutorial, views: updatedData.views }
             : tutorial
         )
       )
@@ -180,7 +184,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
       setTutorials(prev =>
         prev.map(tutorial =>
           tutorial.id === id
-            ? { ...tutorial, views: (tutorial.views ?? 0) + 1 }
+            ? { ...tutorial, views: (tutorial.views || 0) + 1 }
             : tutorial
         )
       )
