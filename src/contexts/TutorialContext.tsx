@@ -150,24 +150,49 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
 
   // Função para incrementar visualizações (com tratamento de erro)
   const incrementViews = async (id: string): Promise<void> => {
+    console.log('🔍 Debug - Iniciando incrementViews:', {
+      id,
+      projectId: import.meta.env.VITE_FB_CONFIG_C,
+      auth: !!auth.currentUser
+    })
+
     try {
       const tutorialRef = doc(db, 'tutorials', id)
 
       // Primeiro, verifica se o documento existe e tem o campo views
       const tutorialDoc = await getDoc(tutorialRef)
       if (!tutorialDoc.exists()) {
+        console.error('❌ Tutorial não encontrado:', id)
         throw new Error('Tutorial não encontrado')
       }
 
       const currentData = tutorialDoc.data()
+      console.log('📊 Estado atual:', {
+        id,
+        currentViews: currentData?.views,
+        hasViewsField: 'views' in currentData,
+        docPath: tutorialRef.path
+      })
+
       const updatedData = {
         ...currentData,
         views: (currentData?.views || 0) + 1
       }
 
+      console.log('⚡ Tentando atualizar:', {
+        id,
+        newViews: updatedData.views,
+        updatePayload: { views: updatedData.views }
+      })
+
       // Atualiza apenas o campo views no Firebase
       await updateDoc(tutorialRef, {
         views: updatedData.views
+      })
+
+      console.log('✅ Atualização bem-sucedida:', {
+        id,
+        newViews: updatedData.views
       })
 
       // Incrementa localmente após sucesso no Firebase
@@ -178,8 +203,18 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
             : tutorial
         )
       )
-    } catch (error) {
-      console.error('Erro ao incrementar visualizações:', error)
+    } catch (error: unknown) {
+      const errorObj = error as { code?: string; message?: string; stack?: string }
+      console.error('❌ Erro detalhado:', {
+        error,
+        code: errorObj.code,
+        message: errorObj.message,
+        id,
+        projectId: import.meta.env.VITE_FB_CONFIG_C,
+        auth: !!auth.currentUser,
+        stack: errorObj.stack
+      })
+
       // Em caso de erro, ainda incrementa localmente para melhor UX
       setTutorials(prev =>
         prev.map(tutorial =>
