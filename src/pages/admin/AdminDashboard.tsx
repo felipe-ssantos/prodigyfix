@@ -32,6 +32,42 @@ const AdminDashboard: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [initializingCategories, setInitializingCategories] = useState(false)
   const [showInitMessage, setShowInitMessage] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedDifficulty, setSelectedDifficulty] = useState('')
+  const [sortBy, setSortBy] = useState('newest')
+
+  // Filtra e ordena os tutoriais
+  const filteredTutorials = tutorials
+    .filter((tutorial: Tutorial) => {
+      const matchesSearch = searchQuery
+        ? tutorial.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tutorial.description.toLowerCase().includes(searchQuery.toLowerCase())
+        : true
+      const matchesCategory = selectedCategory
+        ? tutorial.category === selectedCategory
+        : true
+      const matchesDifficulty = selectedDifficulty
+        ? tutorial.difficulty === selectedDifficulty
+        : true
+      return matchesSearch && matchesCategory && matchesDifficulty
+    })
+    .sort((a: Tutorial, b: Tutorial) => {
+      switch (sortBy) {
+        case 'oldest':
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          )
+        case 'views':
+          return b.views - a.views
+        case 'title':
+          return a.title.localeCompare(b.title)
+        default: // 'newest'
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+      }
+    })
 
   const stats = {
     totalTutorials: tutorials.length,
@@ -44,7 +80,8 @@ const AdminDashboard: React.FC = () => {
         (Date.now() - new Date(t.createdAt).getTime()) / (1000 * 60 * 60 * 24)
       return daysAgo <= 7
     }).length,
-    totalCategories: categories.length
+    totalCategories: categories.length,
+    filteredCount: filteredTutorials.length
   }
 
   const handleDeleteTutorial = (tutorial: Tutorial) => {
@@ -273,6 +310,7 @@ const AdminDashboard: React.FC = () => {
               <div className='col-md-4 text-end'>
                 <div className='btn-group'>
                   <button
+                    type='button'
                     onClick={handleInitializeCategories}
                     disabled={initializingCategories}
                     className='btn btn-outline-primary'
@@ -291,6 +329,7 @@ const AdminDashboard: React.FC = () => {
                     )}
                   </button>
                   <button
+                    type='button'
                     onClick={handleCheckCategoriesStatus}
                     className='btn btn-outline-secondary'
                     title='Verificar status das categorias (console)'
@@ -303,14 +342,88 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
         <div className='card'>
-          <div className='card-header d-flex justify-content-between align-items-center'>
-            <h5 className='mb-0'>Tutoriais Recentes</h5>
-            <Link
-              to='/admin/tutorials'
-              className='btn btn-sm btn-outline-primary'
-            >
-              Ver Todos
-            </Link>
+          <div className='card-header'>
+            <div className='d-flex justify-content-between align-items-center mb-3'>
+              <h5 className='mb-0'>Tutoriais Recentes</h5>
+              <Link
+                to='/admin/tutorials'
+                className='btn btn-sm btn-outline-primary'
+              >
+                Ver Todos
+              </Link>
+            </div>
+
+            {/* Barra de pesquisa e filtros */}
+            <div className='row g-3'>
+              <div className='col-md-4'>
+                <div className='input-group'>
+                  <span className='input-group-text'>
+                    <i className='fas fa-search'>🔍</i>
+                  </span>
+                  <input
+                    type='text'
+                    className='form-control'
+                    placeholder='Pesquisar tutoriais...'
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    aria-label='Pesquisar tutoriais'
+                  />
+                </div>
+              </div>
+              <div className='col-md-3'>
+                <label className='visually-hidden' htmlFor='categoryFilter'>
+                  Filtrar por categoria
+                </label>
+                <select
+                  id='categoryFilter'
+                  className='form-select'
+                  value={selectedCategory}
+                  onChange={e => setSelectedCategory(e.target.value)}
+                  aria-label='Filtrar por categoria'
+                >
+                  <option value=''>Todas as categorias</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.icon} {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='col-md-3'>
+                <label className='visually-hidden' htmlFor='difficultyFilter'>
+                  Filtrar por dificuldade
+                </label>
+                <select
+                  id='difficultyFilter'
+                  className='form-select'
+                  value={selectedDifficulty}
+                  onChange={e => setSelectedDifficulty(e.target.value)}
+                  aria-label='Filtrar por dificuldade'
+                >
+                  <option value=''>Todas as dificuldades</option>
+                  <option value='Iniciante'>Iniciante</option>
+                  <option value='Intermediário'>Intermediário</option>
+                  <option value='Avançado'>Avançado</option>
+                </select>
+              </div>
+              <div className='col-md-2'>
+                <label className='visually-hidden' htmlFor='sortFilter'>
+                  Ordenar por
+                </label>
+                <select
+                  id='sortFilter'
+                  className='form-select'
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                  aria-label='Ordenar tutoriais'
+                >
+                  <option value='newest'>Mais recentes</option>
+                  <option value='oldest'>Mais antigos</option>
+                  <option value='views'>Mais visualizados</option>
+                  <option value='title'>Título (A-Z)</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div className='card-body'>
             {tutorials.length === 0 ? (
@@ -339,68 +452,71 @@ const AdminDashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {tutorials.slice(0, 10).map((tutorial: Tutorial) => (
-                      <tr key={tutorial.id}>
-                        <td>
-                          <Link
-                            to={`/tutorial/${tutorial.id}`}
-                            className='text-decoration-none'
-                          >
-                            {tutorial.title}
-                          </Link>
-                        </td>
-                        <td>
-                          <span className='badge bg-secondary d-flex align-items-center gap-1 w-fit-content'>
-                            <span>{getCategoryIcon(tutorial.category)}</span>
-                            <span>{getCategoryName(tutorial.category)}</span>
-                          </span>
-                        </td>
-                        <td>
-                          <span
-                            className={`badge bg-${
-                              tutorial.difficulty === 'Iniciante'
-                                ? 'success'
-                                : tutorial.difficulty === 'Intermediário'
-                                ? 'warning'
-                                : 'danger'
-                            }`}
-                          >
-                            {tutorial.difficulty}
-                          </span>
-                        </td>
-                        <td>{tutorial.views.toLocaleString()}</td>
-                        <td>
-                          {new Date(tutorial.createdAt).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </td>
-                        <td>
-                          <div className='btn-group btn-group-sm'>
+                    {filteredTutorials
+                      .slice(0, 10)
+                      .map((tutorial: Tutorial) => (
+                        <tr key={tutorial.id}>
+                          <td>
                             <Link
                               to={`/tutorial/${tutorial.id}`}
-                              className='btn btn-outline-primary'
-                              title='Visualizar'
+                              className='text-decoration-none'
                             >
-                              <FaEye />
+                              {tutorial.title}
                             </Link>
-                            <Link
-                              to={`/admin/tutorials/${tutorial.id}/edit`}
-                              className='btn btn-outline-warning'
-                              title='Editar'
+                          </td>
+                          <td>
+                            <span className='badge bg-secondary d-flex align-items-center gap-1 w-fit-content'>
+                              <span>{getCategoryIcon(tutorial.category)}</span>
+                              <span>{getCategoryName(tutorial.category)}</span>
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              className={`badge bg-${
+                                tutorial.difficulty === 'Iniciante'
+                                  ? 'success'
+                                  : tutorial.difficulty === 'Intermediário'
+                                  ? 'warning'
+                                  : 'danger'
+                              }`}
                             >
-                              <FaEdit />
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteTutorial(tutorial)}
-                              className='btn btn-outline-danger'
-                              title='Excluir'
-                            >
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                              {tutorial.difficulty}
+                            </span>
+                          </td>
+                          <td>{tutorial.views.toLocaleString()}</td>
+                          <td>
+                            {new Date(tutorial.createdAt).toLocaleDateString(
+                              'pt-BR'
+                            )}
+                          </td>
+                          <td>
+                            <div className='btn-group btn-group-sm'>
+                              <Link
+                                to={`/tutorial/${tutorial.id}`}
+                                className='btn btn-outline-primary'
+                                title='Visualizar'
+                              >
+                                <FaEye />
+                              </Link>
+                              <Link
+                                to={`/admin/tutorials/${tutorial.id}/edit`}
+                                className='btn btn-outline-warning'
+                                title='Editar'
+                              >
+                                <FaEdit />
+                              </Link>
+                              <button
+                                type='button'
+                                onClick={() => handleDeleteTutorial(tutorial)}
+                                className='btn btn-outline-danger'
+                                title='Excluir'
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
