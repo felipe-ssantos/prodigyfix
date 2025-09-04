@@ -5,6 +5,7 @@ import { FaTerminal } from 'react-icons/fa'
 import { useTutorials } from '../hooks/useTutorials'
 import TutorialCard from '../components/ui/TutorialCard'
 import CategorySection from '../components/CategorySection'
+import '../styles/HomePage.css'
 
 const HomePage: React.FC = () => {
   const { categories, tutorials, getTutorialsByCategory } = useTutorials()
@@ -49,29 +50,35 @@ const HomePage: React.FC = () => {
 
   return (
     <div className='container-fluid py-4'>
-      {/* Active Filter */}
+      {/* Active Filter Banner */}
       {selectedCategory && selectedCategoryData && (
         <div className='row mb-4'>
           <div className='col-12'>
-            <div className='alert alert-info d-flex align-items-center justify-content-between'>
-              <div>
-                <div className='d-flex align-items-center gap-2 mb-2'>
-                  <span className='fs-4'>{selectedCategoryData.icon}</span>
-                  <h2 className='mb-0'>{selectedCategoryData.name}</h2>
-                  <span className='badge bg-primary ms-2'>
-                    {filteredTutorials.length} tutorial
-                    {filteredTutorials.length !== 1 ? 's' : ''}
-                  </span>
+            <div className='alert alert-info border-0 shadow-sm'>
+              <div className='row align-items-center'>
+                <div className='col-md-10'>
+                  <div className='d-flex align-items-center gap-2 mb-2'>
+                    <span className='fs-4'>{selectedCategoryData.icon}</span>
+                    <h2 className='mb-0 h4'>{selectedCategoryData.name}</h2>
+                    <span className='badge bg-primary'>
+                      {filteredTutorials.length} tutorial
+                      {filteredTutorials.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <p className='mb-0 text-muted'>
+                    {selectedCategoryData.description}
+                  </p>
                 </div>
-                <p className='mb-0'>{selectedCategoryData.description}</p>
+                <div className='col-md-2 text-end'>
+                  <Link
+                    to='/'
+                    className='btn btn-outline-primary btn-sm'
+                    aria-label='Limpar filtro de categoria'
+                  >
+                    Limpar filtro
+                  </Link>
+                </div>
               </div>
-              <Link
-                to='/'
-                className='btn btn-outline-primary btn-sm'
-                aria-label='Limpar filtro de categoria'
-              >
-                Limpar filtro
-              </Link>
             </div>
           </div>
         </div>
@@ -87,108 +94,141 @@ const HomePage: React.FC = () => {
 
         {/* Main Content */}
         <main className='col-lg-9'>
-          {/* Featured Tutorials by Category */}
-          {!selectedCategory && featuredTutorialsByCategory.length > 0 && (
-            <section className='mb-5'>
-              <div className='d-flex align-items-center justify-content-between mb-4'>
-                <div>
-                  <h2 className='fw-bold mb-1 text-start d-flex align-items-center gap-2'>
-                    <span>⭐</span>
-                    <span>Destaques por Categoria</span>
-                  </h2>
-                  <p className='ml-3 text-dark mb-0 text-start'>
-                    Os tutoriais mais populares por categoria
-                  </p>
+          {/* Recent Tutorials Section - Show first when no filter */}
+          {!selectedCategory && (
+            <section className='recent-tutorials-section mb-5'>
+              <header className='mb-4'>
+                <div className='d-flex align-items-center justify-content-between'>
+                  <div>
+                    <div className='d-flex align-items-center gap-2 mb-1'>
+                      <span className='fs-3'>🕒</span>
+                      <h2 className='fw-bold mb-0'>Tutoriais Recentes</h2>
+                    </div>
+                    <p className='text-muted mb-0'>
+                      Conteúdo mais recente adicionado à plataforma
+                    </p>
+                  </div>
+                  <span className='badge bg-primary fs-6'>
+                    {recentTutorials.length} tutorial
+                    {recentTutorials.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-              </div>
+              </header>
 
-              {featuredTutorialsByCategory.map(category => (
-                <div key={category.id} className='mb-4'>
-                  <div className='d-flex align-items-center mb-3 gap-2'>
-                    <h3 className='fw-bold mb-0 d-flex align-items-center gap-2'>
-                      <span>{category.icon}</span>
-                      <span>{category.name}</span>
-                    </h3>
-                    <span className='badge bg-primary'>
-                      {category.tutorialCount} tutorial
-                      {category.tutorialCount !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  <p className='text-muted mb-3'>{category.description}</p>
-                  <div className='row g-4'>
-                    {category.tutorials.map(tutorial => (
-                      <div key={tutorial.id} className='col-md-6 col-xl-4'>
-                        <TutorialCard
-                          tutorial={tutorial}
-                          showCategory={false}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className='text-end mt-2'>
-                    <Link
-                      to={`/?category=${category.id}`}
-                      className='btn btn-sm btn-outline-primary'
-                      aria-label={`Ver todos os tutoriais de ${category.name}`}
-                    >
-                      Ver todos em {category.name} →
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </section>
-          )}
-
-          {/* Main Tutorial List */}
-          <section>
-            <div className='d-flex align-items-center justify-content-between mb-4'>
-              <div>
-                <h2 className='fw-bold mb-1 d-flex align-items-center gap-2'>
-                  {selectedCategory && selectedCategoryData ? (
-                    <>
-                      <span>📁</span>
-                      <span>{selectedCategoryData.name}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>🕒</span>
-                      <span>Tutoriais Recentes</span>
-                    </>
-                  )}
-                </h2>
-                <p className='text-dark mb-0'>
-                  {selectedCategory
-                    ? selectedCategoryData?.description ||
-                      'Tutoriais desta categoria organizados por data'
-                    : 'Conteúdo mais recente adicionado à plataforma'}
-                </p>
-              </div>
-              <span className='badge bg-primary fs-6'>
-                {displayTutorials.length} tutorial
-                {displayTutorials.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-
-            {displayTutorials.length > 0 ? (
               <div className='row g-4'>
-                {displayTutorials.map(tutorial => (
+                {recentTutorials.map(tutorial => (
                   <div key={tutorial.id} className='col-md-6 col-xl-4'>
                     <TutorialCard tutorial={tutorial} />
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className='text-center py-5'>
-                <div className='mb-4'>
-                  <FaTerminal className='display-1 text-muted opacity-25' />
+            </section>
+          )}
+
+          {/* Featured Tutorials by Category - Show after recent when no filter */}
+          {!selectedCategory && featuredTutorialsByCategory.length > 0 && (
+            <section className='mb-5'>
+              <header className='mb-4'>
+                <div className='d-flex align-items-center gap-2 mb-2'>
+                  <span className='fs-3'>⭐</span>
+                  <h2 className='fw-bold mb-0'>Destaques por Categoria</h2>
                 </div>
-                <h3 className='text-muted mb-3'>Nenhum tutorial encontrado</h3>
-                <p className='text-muted mb-4'>
-                  {selectedCategory
-                    ? 'Não há tutoriais disponíveis nesta categoria no momento.'
-                    : 'Nenhum tutorial disponível no momento. Volte em breve!'}
-                </p>
-                {selectedCategory && (
+              </header>
+
+              <div className='featured-categories-container'>
+                {featuredTutorialsByCategory.map((category, index) => (
+                  <div
+                    key={category.id}
+                    className={`featured-category-section ${
+                      index < featuredTutorialsByCategory.length - 1
+                        ? 'mb-5'
+                        : 'mb-4'
+                    }`}
+                  >
+                    {/* Category Header */}
+                    <div className='category-header mb-3'>
+                      <div className='d-flex align-items-center justify-content-between flex-wrap gap-2'>
+                        <div className='d-flex align-items-center gap-2'>
+                          <span className='fs-4'>{category.icon}</span>
+                          <h3 className='h5 mb-0 fw-bold'>{category.name}</h3>
+                          <span className='badge bg-secondary'>
+                            {category.tutorialCount} total
+                          </span>
+                        </div>
+                        <Link
+                          to={`/?category=${category.id}`}
+                          className='btn btn-outline-primary btn-sm d-flex align-items-center gap-1'
+                          aria-label={`Ver todos os tutoriais de ${category.name}`}
+                        >
+                          <span>Ver todos</span>
+                          <span>→</span>
+                        </Link>
+                      </div>
+                      <p className='text-muted small mb-0 mt-1'>
+                        {category.description}
+                      </p>
+                    </div>
+
+                    {/* Category Cards */}
+                    <div className='row g-3'>
+                      {category.tutorials.map(tutorial => (
+                        <div key={tutorial.id} className='col-md-6 col-xl-4'>
+                          <TutorialCard
+                            tutorial={tutorial}
+                            showCategory={false}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Filtered Tutorials Section - Show when category is selected */}
+          {selectedCategory && (
+            <section className='filtered-tutorials-section'>
+              <header className='mb-4'>
+                <div className='d-flex align-items-center justify-content-between'>
+                  <div>
+                    <div className='d-flex align-items-center gap-2 mb-1'>
+                      <span className='fs-3'>📁</span>
+                      <h2 className='fw-bold mb-0'>
+                        {selectedCategoryData?.name}
+                      </h2>
+                    </div>
+                    <p className='text-muted mb-0'>
+                      {selectedCategoryData?.description ||
+                        'Tutoriais desta categoria organizados por data'}
+                    </p>
+                  </div>
+                  <span className='badge bg-primary fs-6'>
+                    {displayTutorials.length} tutorial
+                    {displayTutorials.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              </header>
+
+              {displayTutorials.length > 0 ? (
+                <div className='row g-4'>
+                  {displayTutorials.map(tutorial => (
+                    <div key={tutorial.id} className='col-md-6 col-xl-4'>
+                      <TutorialCard tutorial={tutorial} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className='empty-state text-center py-5'>
+                  <div className='mb-4'>
+                    <FaTerminal className='display-1 text-muted opacity-25' />
+                  </div>
+                  <h3 className='text-muted mb-3'>
+                    Nenhum tutorial encontrado
+                  </h3>
+                  <p className='text-muted mb-4'>
+                    Não há tutoriais disponíveis nesta categoria no momento.
+                  </p>
                   <Link
                     to='/'
                     className='btn btn-primary'
@@ -196,10 +236,23 @@ const HomePage: React.FC = () => {
                   >
                     Ver todos os tutoriais
                   </Link>
-                )}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Empty State for No Tutorials at All */}
+          {!selectedCategory && tutorials.length === 0 && (
+            <div className='empty-state text-center py-5'>
+              <div className='mb-4'>
+                <FaTerminal className='display-1 text-muted opacity-25' />
               </div>
-            )}
-          </section>
+              <h3 className='text-muted mb-3'>Nenhum tutorial disponível</h3>
+              <p className='text-muted mb-4'>
+                Nenhum tutorial disponível no momento. Volte em breve!
+              </p>
+            </div>
+          )}
         </main>
       </div>
     </div>

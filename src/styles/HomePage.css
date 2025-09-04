@@ -1,0 +1,268 @@
+/* src/pages/HomePage.css */
+
+.featured-categories-container {
+    margin-bottom: 2rem;
+}
+
+.featured-category-section {
+    position: relative;
+}
+
+.featured-category-section:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -1.5rem;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #dee2e6 20%, #dee2e6 80%, transparent);
+}
+
+/* ===== CATEGORY HEADERS ===== */
+.category-header {
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.category-header h3 {
+    color: #495057;
+    transition: color 0.2s ease-in-out;
+}
+
+.featured-category-section:hover .category-header h3 {
+    color: #0d6efd;
+}
+
+/* ===== SECTION HEADERS ===== */
+.recent-tutorials-section header,
+.filtered-tutorials-section header {
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem !important;
+}
+
+.recent-tutorials-section header::after,
+.filtered-tutorials-section header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(45deg, #0d6efd, #6f42c1);
+    border-radius: 2px;
+}
+
+/* ===== CARD GRID IMPROVEMENTS ===== */
+.row.g-3>[class*="col-"] {
+    margin-bottom: 1rem;
+}
+
+.row.g-4>[class*="col-"] {
+    margin-bottom: 1.5rem;
+}
+
+/* Ensure equal height cards in featured sections */
+.featured-category-section .row.g-3 {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.featured-category-section .row.g-3>[class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== EMPTY STATE STYLING ===== */
+.empty-state {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+}
+
+.empty-state .display-1 {
+    font-size: 4rem;
+}
+
+/* ===== BADGE ENHANCEMENTS ===== */
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    font-weight: 500;
+}
+
+.badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000;
+    font-weight: 600;
+}
+
+.badge.fs-6 {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.75rem;
+}
+
+/* ===== ALERT IMPROVEMENTS ===== */
+.alert-info.border-0 {
+    background: linear-gradient(135deg, #cff4fc 0%, #b6effb 100%);
+    color: #055160;
+}
+
+.alert-info .badge.bg-primary {
+    background-color: #0d6efd !important;
+    color: white;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+    .featured-category-section {
+        margin-bottom: 2rem !important;
+    }
+
+    .category-header .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .category-header .btn {
+        align-self: flex-end;
+    }
+
+    .recent-tutorials-section header .d-flex,
+    .filtered-tutorials-section header .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .recent-tutorials-section header .badge,
+    .filtered-tutorials-section header .badge {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .featured-categories-container {
+        margin-bottom: 1rem;
+    }
+
+    .featured-category-section {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .category-header {
+        text-align: center;
+    }
+
+    .category-header .d-flex {
+        justify-content: center;
+    }
+
+    .fs-3 {
+        font-size: 1.5rem !important;
+    }
+
+    .fs-4 {
+        font-size: 1.25rem !important;
+    }
+}
+
+/* ===== CARD HOVER EFFECTS ===== */
+.recent-tutorials-section .card,
+.filtered-tutorials-section .card,
+.featured-category-section .card {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #dee2e6;
+    position: relative;
+    overflow: hidden;
+}
+
+.recent-tutorials-section .card:hover,
+.filtered-tutorials-section .card:hover,
+.featured-category-section .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.15);
+    border-color: #0d6efd;
+}
+
+.recent-tutorials-section .card::before,
+.filtered-tutorials-section .card::before,
+.featured-category-section .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0d6efd, transparent);
+    transition: left 0.5s ease-in-out;
+}
+
+.recent-tutorials-section .card:hover::before,
+.filtered-tutorials-section .card:hover::before,
+.featured-category-section .card:hover::before {
+    left: 100%;
+}
+
+/* Card content hover effects */
+.recent-tutorials-section .card:hover .card-title,
+.filtered-tutorials-section .card:hover .card-title,
+.featured-category-section .card:hover .card-title {
+    color: #0d6efd;
+    transition: color 0.2s ease-in-out;
+}
+
+.recent-tutorials-section .card:hover .card-img-top,
+.filtered-tutorials-section .card:hover .card-img-top,
+.featured-category-section .card:hover .card-img-top {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Section hover effects */
+.featured-category-section {
+    transition: all 0.2s ease-in-out;
+}
+
+.featured-category-section:hover {
+    background: rgba(13, 110, 253, 0.02);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: -1rem;
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+.btn:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.category-header h3:focus {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+
+    .featured-categories-container,
+    .recent-tutorials-section,
+    .filtered-tutorials-section {
+        break-inside: avoid;
+    }
+
+    .featured-category-section {
+        break-inside: avoid;
+        margin-bottom: 1rem !important;
+    }
+
+    .btn {
+        display: none !important;
+    }
+
+    .badge {
+        border: 1px solid #000;
+        background: white !important;
+        color: #000 !important;
+    }
+}

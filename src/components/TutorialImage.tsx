@@ -1,12 +1,12 @@
-// src/components/TutorialImage.tsx - Versão aprimorada
+// src/components/TutorialImage.tsx - Versão aprimorada sem inline styles
 import React, { useState } from 'react'
 import { useImageUrl } from '../hooks/useImageUrl'
+import '../styles/TutorialImage.css'
 
 interface TutorialImageProps {
   imageName?: string
   alt: string
   className?: string
-  style?: React.CSSProperties
   loading?: 'eager' | 'lazy'
   showLoadingText?: boolean
   fallbackIcon?: string
@@ -20,7 +20,6 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
   imageName,
   alt,
   className = '',
-  style,
   loading = 'lazy',
   showLoadingText = true,
   fallbackIcon = '🖼️',
@@ -35,17 +34,7 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
 
   // Skeleton loading component
   const SkeletonLoader = () => (
-    <div
-      className={`bg-light d-flex align-items-center justify-content-center ${className} skeleton-loader`}
-      style={{
-        minHeight: '200px',
-        background:
-          'linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%)',
-        backgroundSize: '400% 100%',
-        animation: 'skeleton 1.5s ease-in-out infinite',
-        ...style
-      }}
-    >
+    <div className={`skeleton-loader ${className}`}>
       {showLoadingText && (
         <div className='text-center'>
           <div className='spinner-border text-secondary mb-2' role='status'>
@@ -59,14 +48,7 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
 
   // Placeholder component
   const Placeholder = ({ message = 'Sem imagem' }: { message?: string }) => (
-    <div
-      className={`bg-light d-flex align-items-center justify-content-center text-muted ${className} placeholder-image`}
-      style={{
-        minHeight: '200px',
-        border: '2px dashed #dee2e6',
-        ...style
-      }}
-    >
+    <div className={`placeholder-image ${className}`}>
       <div className='text-center'>
         <div className='fs-1 mb-2' role='img' aria-label='Placeholder'>
           {fallbackIcon}
@@ -76,15 +58,8 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
     </div>
   )
 
-  // Show skeleton while URL is loading
-  if (urlLoading) {
-    return <SkeletonLoader />
-  }
-
-  // Show placeholder if no image or error occurred
-  if (!imageUrl || error) {
-    return <Placeholder message={error || 'Sem imagem'} />
-  }
+  if (urlLoading) return <SkeletonLoader />
+  if (!imageUrl || error) return <Placeholder message={error || 'Sem imagem'} />
 
   const handleImageLoad = () => {
     setImageLoaded(true)
@@ -97,30 +72,21 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
     onError?.(error || 'Erro ao carregar imagem')
   }
 
-  // Show placeholder if image failed to load
-  if (imageError) {
-    return <Placeholder message='Erro ao carregar imagem' />
-  }
+  if (imageError) return <Placeholder message='Erro ao carregar imagem' />
 
   return (
     <div className='position-relative'>
-      {/* Show skeleton until image loads */}
       {!imageLoaded && <SkeletonLoader />}
 
       <img
         src={imageUrl}
         alt={alt}
         className={`${className} ${
-          !imageLoaded ? 'opacity-0 position-absolute' : ''
+          !imageLoaded ? 'image-placeholder' : 'image-loaded'
         }`}
-        style={
-          imageLoaded
-            ? style
-            : { ...style, top: 0, left: 0, width: '100%', height: '100%' }
-        }
-        loading={loading}
         onLoad={handleImageLoad}
         onError={handleImageError}
+        loading={loading}
         sizes={sizes}
         srcSet={srcSet}
       />
@@ -130,7 +96,7 @@ const TutorialImage: React.FC<TutorialImageProps> = ({
 
 export default TutorialImage
 
-// Componentes específicos aprimorados
+// Componentes específicos aprimorados usando CSS externo
 export const TutorialCardImage: React.FC<{
   imageName?: string
   title: string
@@ -139,12 +105,7 @@ export const TutorialCardImage: React.FC<{
   <TutorialImage
     imageName={imageName}
     alt={`Imagem do tutorial: ${title}`}
-    className='card-img-top'
-    style={{
-      height: '200px',
-      objectFit: 'cover',
-      width: '100%'
-    }}
+    className='tutorial-card-image card-img-top'
     loading={lazy ? 'lazy' : 'eager'}
     fallbackIcon='📚'
   />
@@ -158,12 +119,9 @@ export const TutorialDetailImage: React.FC<{
   <TutorialImage
     imageName={imageName}
     alt={`Imagem do tutorial: ${title}`}
-    className={`img-fluid rounded ${responsive ? 'w-100' : ''}`}
-    style={{
-      maxHeight: '400px',
-      objectFit: 'cover',
-      ...(responsive ? { width: '100%' } : {})
-    }}
+    className={`tutorial-detail-image img-fluid rounded ${
+      responsive ? 'w-100' : ''
+    }`}
     loading='eager'
     fallbackIcon='📖'
   />
@@ -174,21 +132,17 @@ export const TutorialThumbnail: React.FC<{
   title: string
   size?: 'sm' | 'md' | 'lg'
 }> = ({ imageName, title, size = 'md' }) => {
-  const sizeMap = {
-    sm: { width: '60px', height: '60px' },
-    md: { width: '100px', height: '100px' },
-    lg: { width: '150px', height: '150px' }
+  const sizeClass = {
+    sm: 'tutorial-thumbnail-sm',
+    md: 'tutorial-thumbnail-md',
+    lg: 'tutorial-thumbnail-lg'
   }
 
   return (
     <TutorialImage
       imageName={imageName}
       alt={`Miniatura: ${title}`}
-      className='rounded'
-      style={{
-        ...sizeMap[size],
-        objectFit: 'cover'
-      }}
+      className={`rounded ${sizeClass[size]}`}
       loading='lazy'
       showLoadingText={false}
       fallbackIcon='🔗'
@@ -203,13 +157,7 @@ export const TutorialHeroImage: React.FC<{
   <TutorialImage
     imageName={imageName}
     alt={`Imagem de destaque: ${title}`}
-    className='img-fluid rounded shadow-lg'
-    style={{
-      width: '100%',
-      minHeight: '300px',
-      maxHeight: '500px',
-      objectFit: 'cover'
-    }}
+    className='tutorial-hero-image img-fluid rounded shadow-lg'
     loading='eager'
     fallbackIcon='🌟'
   />
