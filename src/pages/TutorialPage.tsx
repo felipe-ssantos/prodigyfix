@@ -412,6 +412,16 @@ const TutorialPage = () => {
                   </div>
                 </div>
 
+                <style>
+                  {`
+                    .tutorial-nav-btn {
+                      max-width: 45%;
+                    }
+                    .tutorial-nav-text {
+                      min-width: 0;
+                    }
+                  `}
+                </style>
                 <nav className='d-flex justify-content-between mt-5 pt-4 border-top tutorial-navigation'>
                   {prevTutorial ? (
                     <Link
@@ -419,7 +429,7 @@ const TutorialPage = () => {
                       className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
                     >
                       <FaArrowLeft className='me-2 flex-shrink-0' />
-                      <div className='text-start'>
+                      <div className='text-start tutorial-nav-text'>
                         <small className='d-block text-muted'>Anterior</small>
                         <span className='text-truncate d-block'>
                           {prevTutorial.title}
@@ -434,7 +444,7 @@ const TutorialPage = () => {
                       to={`/tutorial/${nextTutorial.id}`}
                       className='btn btn-outline-primary d-flex align-items-center text-decoration-none tutorial-nav-btn'
                     >
-                      <div className='text-end'>
+                      <div className='text-end tutorial-nav-text'>
                         <small className='d-block text-muted'>Próximo</small>
                         <span className='text-truncate d-block'>
                           {nextTutorial.title}
