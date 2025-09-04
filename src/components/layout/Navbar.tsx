@@ -105,7 +105,7 @@ const Navbar = () => {
                   placeholder='Buscar tutoriais...'
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  aria-label='Pesquisar tutoriais'                  
+                  aria-label='Pesquisar tutoriais'
                 />
                 <button
                   className='btn btn-light'
