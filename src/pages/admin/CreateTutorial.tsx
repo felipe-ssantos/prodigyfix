@@ -10,6 +10,98 @@ import type { Tutorial } from '../../types'
 import TiptapEditor from '../../components/TiptapEditor'
 import { Modal, Button } from 'react-bootstrap'
 
+// Componente TagInput
+interface TagInputProps {
+  label: string
+  tags: string[]
+  onTagsChange: (tags: string[]) => void
+  placeholder?: string
+  helpText?: string
+  required?: boolean
+}
+
+const TagInput: React.FC<TagInputProps> = ({
+  label,
+  tags,
+  onTagsChange,
+  placeholder = 'Digite uma tag',
+  helpText,
+  required = false
+}) => {
+  const [inputValue, setInputValue] = useState('')
+
+  const handleAddTag = () => {
+    const trimmedValue = inputValue.trim()
+    if (trimmedValue && !tags.includes(trimmedValue)) {
+      onTagsChange([...tags, trimmedValue])
+      setInputValue('')
+    }
+  }
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    onTagsChange(tags.filter(tag => tag !== tagToRemove))
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleAddTag()
+    }
+  }
+
+  return (
+    <div className='mb-3'>
+      <label className='form-label fw-semibold'>
+        {label} {required && <span className='text-danger'>*</span>}
+      </label>
+
+      <div className='input-group mb-2'>
+        <input
+          type='text'
+          className='form-control'
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          onKeyUp={handleKeyPress}
+          placeholder={placeholder}
+        />
+        <button
+          type='button'
+          className='btn btn-outline-primary'
+          onClick={handleAddTag}
+          disabled={!inputValue.trim() || tags.includes(inputValue.trim())}
+          aria-label='Adicionar tag'
+        >
+          <i className='fas fa-plus'>Adicionar Tag/Key</i>
+        </button>
+      </div>
+
+      {helpText && (
+        <small className='form-text text-muted mb-2 d-block'>{helpText}</small>
+      )}
+
+      <div className='d-flex flex-wrap gap-2'>
+        {tags.map((tag, index) => (
+          <span
+            key={index}
+            className='badge bg-primary d-flex align-items-center'
+          >
+            {tag}
+            <button
+              type='button'
+              className='btn-close btn-close-white ms-2 text-small'              
+              onClick={() => handleRemoveTag(tag)}
+              aria-label={`Remover tag ${tag}`}
+            ></button>
+          </span>
+        ))}
+        {tags.length === 0 && (
+          <span className='text-muted fst-italic'>Nenhuma tag adicionada</span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 const CreateTutorial: React.FC = () => {
   const navigate = useNavigate()
   const { currentUser } = useAuth()
@@ -66,22 +158,14 @@ const CreateTutorial: React.FC = () => {
     }
   }
 
-  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const tags = e.target.value
-      .split(',')
-      .map(tag => tag.trim())
-      .filter(tag => tag)
+  const handleTagsChange = (tags: string[]) => {
     setFormData(prev => ({
       ...prev,
       tags
     }))
   }
 
-  const handleKeywordsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const keywords = e.target.value
-      .split(',')
-      .map(keyword => keyword.trim())
-      .filter(keyword => keyword)
+  const handleKeywordsChange = (keywords: string[]) => {
     setFormData(prev => ({
       ...prev,
       keywords
@@ -301,9 +385,11 @@ const CreateTutorial: React.FC = () => {
                           onClick={() => setShowCategoryModal(true)}
                           aria-label='Adicionar nova categoria'
                         >
-                          <i className='fas fa-plus' aria-hidden='true'>
-                            Criar nova catergoria ?
-                          </i>
+                          <i
+                            className='fas fa-plus me-1'
+                            aria-hidden='true'
+                          ></i>
+                          Criar nova categoria ?
                         </button>
                       </div>
                     </div>
@@ -330,46 +416,21 @@ const CreateTutorial: React.FC = () => {
                       </select>
                     </div>
 
-                    <div className='mb-3'>
-                      <label htmlFor='tags' className='form-label fw-semibold'>
-                        Tags
-                      </label>
-                      <input
-                        type='text'
-                        className='form-control'
-                        id='tags'
-                        name='tags'
-                        value={formData.tags.join(', ')}
-                        onChange={handleTagsChange}
-                        placeholder='tag1, tag2, tag3'
-                        aria-describedby='tagsHelp'
-                      />
-                      <small id='tagsHelp' className='form-text text-muted'>
-                        Separe as tags com vírgulas
-                      </small>
-                    </div>
-
-                    <div className='mb-3'>
-                      <label
-                        htmlFor='keywords'
-                        className='form-label fw-semibold'
-                      >
-                        Palavras-chave
-                      </label>
-                      <input
-                        type='text'
-                        className='form-control'
-                        id='keywords'
-                        name='keywords'
-                        value={formData.keywords.join(', ')}
-                        onChange={handleKeywordsChange}
-                        placeholder='keyword1, keyword2, keyword3'
-                        aria-describedby='keywordsHelp'
-                      />
-                      <small id='keywordsHelp' className='form-text text-muted'>
-                        Para otimização de pesquisa
-                      </small>
-                    </div>
+                    <TagInput
+                      label='Tags'
+                      tags={formData.tags}
+                      onTagsChange={handleTagsChange}
+                      placeholder='Digite uma tag'
+                      helpText='Adicione tags para facilitar a busca'
+                    />
+                    
+                    <TagInput
+                      label='Palavras-chave'
+                      tags={formData.keywords}
+                      onTagsChange={handleKeywordsChange}
+                      placeholder='Digite uma palavra-chave'
+                      helpText='Para otimização de pesquisa (SEO)'
+                    />
                   </div>
                 </div>
 
