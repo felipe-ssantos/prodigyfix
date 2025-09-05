@@ -1,4 +1,3 @@
-// src/pages/admin/UsefulLinksManager.tsx
 import React, { useState, useEffect, useMemo } from 'react'
 import {
   FaPlus,
@@ -291,6 +290,7 @@ const UsefulLinksManager: React.FC = () => {
           </p>
         </div>
         <button
+          type='button'
           className='btn btn-primary'
           onClick={() => setIsAdding(true)}
           disabled={isAdding}
@@ -473,6 +473,7 @@ const UsefulLinksManager: React.FC = () => {
                   <div className='col-12'>
                     <div className='d-flex align-items-center gap-3'>
                       <button
+                        type='button'
                         className='btn btn-outline-warning btn-sm'
                         onClick={clearFilters}
                         aria-label='Remover todos os filtros aplicados'
@@ -750,6 +751,7 @@ const UsefulLinksManager: React.FC = () => {
                       Os filtros aplicados não retornaram resultados.
                     </p>
                     <button
+                      type='button'
                       className='btn btn-outline-primary'
                       onClick={clearFilters}
                       aria-label='Remover todos os filtros'
@@ -762,6 +764,7 @@ const UsefulLinksManager: React.FC = () => {
                   <>
                     <p className='text-muted'>Nenhum recurso cadastrado.</p>
                     <button
+                      type='button'
                       className='btn btn-primary'
                       onClick={() => setIsAdding(true)}
                       aria-label='Adicionar primeiro recurso'
@@ -782,6 +785,7 @@ const UsefulLinksManager: React.FC = () => {
                       </th>
                       <th scope='col'>
                         <button
+                          type='button'
                           className='btn btn-link text-white text-decoration-none p-0 fw-semibold'
                           onClick={() => handleSort('name')}
                           aria-label='Ordenar por nome'
@@ -792,6 +796,7 @@ const UsefulLinksManager: React.FC = () => {
                       <th scope='col'>URL</th>
                       <th scope='col'>
                         <button
+                          type='button'
                           className='btn btn-link text-white text-decoration-none p-0 fw-semibold'
                           onClick={() => handleSort('theme')}
                           aria-label='Ordenar por tema'
@@ -801,6 +806,7 @@ const UsefulLinksManager: React.FC = () => {
                       </th>
                       <th scope='col'>
                         <button
+                          type='button'
                           className='btn btn-link text-white text-decoration-none p-0 fw-semibold'
                           onClick={() => handleSort('category')}
                           aria-label='Ordenar por categoria'
@@ -810,6 +816,7 @@ const UsefulLinksManager: React.FC = () => {
                       </th>
                       <th scope='col'>
                         <button
+                          type='button'
                           className='btn btn-link text-white text-decoration-none p-0 fw-semibold'
                           onClick={() => handleSort('order')}
                           aria-label='Ordenar por ordem'
@@ -1119,7 +1126,7 @@ const UsefulLinksManager: React.FC = () => {
             </div>
           </div>
         </div>
-      </aside>      
+      </aside>
     </div>
   )
 }

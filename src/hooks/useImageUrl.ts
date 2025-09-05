@@ -1,4 +1,3 @@
-// src/hooks/useImageUrl.ts - Versão completa e tipada
 import { useState, useEffect, useRef } from "react";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../services/firebase";

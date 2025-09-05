@@ -1,4 +1,3 @@
-//src/services/usefulLinks.ts
 import { FirebaseError } from "firebase/app";
 import {
   collection,
@@ -12,7 +11,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { UsefulLink } from "../types/usefulLinks"; // Importação adicionada
+import { UsefulLink } from "../types/usefulLinks";
 
 export const getUsefulLinks = async (theme?: string) => {
   try {
@@ -41,8 +40,7 @@ export const getUsefulLinks = async (theme?: string) => {
 
     return groupedLinks;
   } catch (error) {
-    console.error("Erro ao buscar links:", error);
-    // Add more specific error message
+    console.error("Erro ao buscar links:", error);    
     if (error instanceof FirebaseError && error.code === "permission-denied") {
       throw new Error(
         "Erro de permissão ao acessar os links. Por favor, verifique as regras do Firestore."

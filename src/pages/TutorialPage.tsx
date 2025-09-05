@@ -1,4 +1,3 @@
-// src/pages/TutorialPage.tsx - Atualizado para usar TutorialDetailImage
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
@@ -20,6 +19,7 @@ import {
 } from '../components/TutorialImage'
 import type { Tutorial } from '../types'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import '../styles/TutorialPage.css'
 
 const TutorialPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -213,7 +213,7 @@ const TutorialPage = () => {
                   <h1 className='fw-bold mb-3 display-6'>{tutorial.title}</h1>
                   <p className='lead text-muted mb-4'>{tutorial.description}</p>
 
-                  {/* Usando TutorialDetailImage aqui */}
+                  {/* Usando TutorialDetailImage */}
                   {tutorial.imageUrl && (
                     <div className='mb-4 tutorial-cover-image'>
                       <TutorialDetailImage
@@ -259,28 +259,6 @@ const TutorialPage = () => {
                 </header>
 
                 <div className='tutorial-content mb-5'>
-                  <style>
-                    {`
-                      .tutorial-content .video-container {
-                        position: relative;
-                        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-                        height: 0;
-                        overflow: hidden;
-                        max-width: 100%;
-                        margin: 2rem 0;
-                      }
-                      .tutorial-content .video-container iframe {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        border: none;
-                        border-radius: 8px;
-                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                      }
-                    `}
-                  </style>
                   <div
                     dangerouslySetInnerHTML={{
                       __html: tutorial.content.replace(
@@ -412,16 +390,6 @@ const TutorialPage = () => {
                   </div>
                 </div>
 
-                <style>
-                  {`
-                    .tutorial-nav-btn {
-                      max-width: 45%;
-                    }
-                    .tutorial-nav-text {
-                      min-width: 0;
-                    }
-                  `}
-                </style>
                 <nav className='d-flex justify-content-between mt-5 pt-4 border-top tutorial-navigation'>
                   {prevTutorial ? (
                     <Link

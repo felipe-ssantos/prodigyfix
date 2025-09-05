@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import React, { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { FaTerminal } from 'react-icons/fa'
@@ -24,7 +23,7 @@ const HomePage: React.FC = () => {
     }
   }, [searchParams, tutorials, getTutorialsByCategory])
 
-  // Get featured tutorials grouped by category
+  // tutoriais agrupados por categoria
   const featuredTutorialsByCategory = categories
     .map(category => ({
       ...category,
@@ -50,7 +49,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className='container-fluid py-4'>
-      {/* Active Filter Banner */}
+      {/* Filtro Ativo */}
       {selectedCategory && selectedCategoryData && (
         <div className='row mb-4'>
           <div className='col-12'>
@@ -85,16 +84,16 @@ const HomePage: React.FC = () => {
       )}
 
       <div className='row'>
-        {/* Sidebar with Categories */}
+        {/* Sidebar com Categorias */}
         <aside className='col-lg-3 mb-4'>
           <div className='position-sticky top-0 pt-2'>
             <CategorySection />
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Conteúdo Principal */}
         <main className='col-lg-9'>
-          {/* Recent Tutorials Section - Show first when no filter */}
+          {/* Tutoriais Recentes */}
           {!selectedCategory && (
             <section className='recent-tutorials-section mb-5'>
               <header className='mb-4'>
@@ -125,7 +124,7 @@ const HomePage: React.FC = () => {
             </section>
           )}
 
-          {/* Featured Tutorials by Category - Show after recent when no filter */}
+          {/* Tutoriais em Destaque por Categoria - Mostrar após os recentes quando nenhum filtro */}
           {!selectedCategory && featuredTutorialsByCategory.length > 0 && (
             <section className='mb-5'>
               <header className='mb-4'>
@@ -145,7 +144,7 @@ const HomePage: React.FC = () => {
                         : 'mb-4'
                     }`}
                   >
-                    {/* Category Header */}
+                    {/* Cabeçalho da Categoria */}
                     <div className='category-header mb-3'>
                       <div className='d-flex align-items-center justify-content-between flex-wrap gap-2'>
                         <div className='d-flex align-items-center gap-2'>
@@ -169,7 +168,7 @@ const HomePage: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Category Cards */}
+                    {/* Cartões da Categoria */}
                     <div className='row g-3'>
                       {category.tutorials.map(tutorial => (
                         <div key={tutorial.id} className='col-md-6 col-xl-4'>
@@ -186,7 +185,7 @@ const HomePage: React.FC = () => {
             </section>
           )}
 
-          {/* Filtered Tutorials Section - Show when category is selected */}
+          {/* Seção de Tutoriais Filtrados - Mostrar quando uma categoria é selecionada */}
           {selectedCategory && (
             <section className='filtered-tutorials-section'>
               <header className='mb-4'>
@@ -241,7 +240,7 @@ const HomePage: React.FC = () => {
             </section>
           )}
 
-          {/* Empty State for No Tutorials at All */}
+          {/* Estado Vazio para Nenhum Tutorial */}
           {!selectedCategory && tutorials.length === 0 && (
             <div className='empty-state text-center py-5'>
               <div className='mb-4'>

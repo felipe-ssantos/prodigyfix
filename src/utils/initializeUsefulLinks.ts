@@ -1,6 +1,6 @@
 // src/utils/initializeUsefulLinks.ts
 import { addUsefulLink } from "../services/usefulLinks";
-import { UsefulLink } from "../types/usefulLinks"; // Importação adicionada
+import { UsefulLink } from "../types/usefulLinks"; 
 
 export const initializeDefaultLinks = async () => {
   const defaultLinks: Omit<UsefulLink, "id" | "createdAt" | "updatedAt">[] = [
@@ -13,8 +13,7 @@ export const initializeDefaultLinks = async () => {
       theme: "tools",
       order: 1,
       isActive: true,
-    },
-    // Adicione todos os outros links padrão aqui...
+    },    
   ];
 
   try {

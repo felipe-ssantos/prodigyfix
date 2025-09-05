@@ -1,4 +1,3 @@
-// src/hooks/useTutorials.ts
 import { useContext } from "react";
 import {
   TutorialContext,

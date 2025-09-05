@@ -1,4 +1,3 @@
-// src/pages/UsefulLinksPage.tsx
 import React, { useState, useMemo } from 'react'
 import {
   FaExternalLinkAlt,
@@ -362,6 +361,7 @@ const UsefulLinksPage = () => {
                 {hasActiveFilters && (
                   <div className='col-12'>
                     <button
+                      type='button'
                       className='btn btn-outline-danger btn-sm'
                       onClick={clearFilters}
                       aria-label='Remover todos os filtros aplicados'
@@ -396,6 +396,7 @@ const UsefulLinksPage = () => {
             </p>
             {hasActiveFilters && (
               <button
+                type='button'
                 className='btn btn-primary'
                 onClick={clearFilters}
                 aria-label='Remover filtros para ver todos os recursos'

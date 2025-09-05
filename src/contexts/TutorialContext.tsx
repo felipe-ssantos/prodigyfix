@@ -20,14 +20,10 @@ import type { Tutorial, Category, SearchFilters } from '../types'
 interface TutorialContextType {
   tutorials: Tutorial[]
   categories: Category[]
-  favorites: string[]
   loading: boolean
   error: string | null
   categoriesLoading: boolean
   categoriesError: string | null
-  addToFavorites: (tutorialId: string) => void
-  removeFromFavorites: (tutorialId: string) => void
-  isFavorite: (tutorialId: string) => boolean
   searchTutorials: (query: string, filters?: SearchFilters) => Tutorial[]
   getTutorialById: (id: string) => Tutorial | undefined
   getTutorialsByCategory: (category: string) => Tutorial[]
@@ -59,7 +55,6 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   const [user] = useAuthState(auth) as [User | null, boolean, Error | undefined]
   const [tutorials, setTutorials] = useState<Tutorial[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [categoriesLoading, setCategoriesLoading] = useState(true)
@@ -123,30 +118,10 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     }
   }
 
-  // Carrega favoritos do usuário (se estiver logado)
-  const loadFavorites = React.useCallback(async () => {
-    if (!user) {
-      setFavorites([])
-      return
-    }
-
-    try {
-      // Implementar lógica de favoritos se necessário
-      // Por enquanto, mantém vazio
-      setFavorites([])
-    } catch (err) {
-      console.error('Erro ao carregar favoritos:', err)
-    }
-  }, [user])
-
   useEffect(() => {
     loadTutorials()
     loadCategories()
   }, [])
-
-  useEffect(() => {
-    loadFavorites()
-  }, [user, loadFavorites])
 
   // Função para incrementar visualizações (com tratamento de erro)
   const incrementViews = async (id: string): Promise<void> => {
@@ -228,23 +203,6 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
         )
       )
     }
-  }
-
-  // Implementações das funções de favoritos
-  const addToFavorites = (tutorialId: string) => {
-    if (!favorites.includes(tutorialId)) {
-      setFavorites(prev => [...prev, tutorialId])
-      // Aqui você pode adicionar lógica para salvar no Firebase se necessário
-    }
-  }
-
-  const removeFromFavorites = (tutorialId: string) => {
-    setFavorites(prev => prev.filter(id => id !== tutorialId))
-    // Aqui você pode adicionar lógica para remover do Firebase se necessário
-  }
-
-  const isFavorite = (tutorialId: string) => {
-    return favorites.includes(tutorialId)
   }
 
   // Função de busca
@@ -422,14 +380,10 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   const contextValue: TutorialContextType = {
     tutorials,
     categories,
-    favorites,
     loading,
     error,
     categoriesLoading,
     categoriesError,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
     searchTutorials,
     getTutorialById,
     getTutorialsByCategory,

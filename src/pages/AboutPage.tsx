@@ -1,4 +1,3 @@
-// src/pages/AboutPage.tsx
 import React from 'react'
 import { FaTools, FaLaptop, FaShieldAlt, FaLightbulb } from 'react-icons/fa'
 
@@ -19,7 +18,7 @@ const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Mission Section */}
+      {/* Seção de Missão */}
       <div className='row mb-5'>
         <div className='col-lg-6'>
           <h2 className='mb-4'>Nossa Missão</h2>
@@ -141,7 +140,7 @@ const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Call to Action */}
+      {/* Chamada para Ação */}
       <div className='row'>
         <div className='col-12'>
           <div className='card bg-primary text-white text-center'>

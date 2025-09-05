@@ -1,4 +1,3 @@
-// src/providers/TutorialProvider.tsx
 import React, { useState, useEffect, ReactNode, useCallback } from 'react'
 import {
   collection,
@@ -28,7 +27,6 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
 }) => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [categoriesLoading, setCategoriesLoading] = useState(true)
@@ -90,7 +88,7 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     []
   )
 
-  // Load tutorials from Firestore
+  // Carregar tutoriais do Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(
       query(collection(db, 'tutorials'), orderBy('createdAt', 'desc')),
@@ -184,46 +182,6 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
       }
     }
   }, [tutorials, categories])
-
-  // Load favorites from localStorage
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem('bootpedia-favorites')
-    if (savedFavorites) {
-      try {
-        setFavorites(JSON.parse(savedFavorites))
-      } catch (err) {
-        console.error('Erro ao carregar favoritos:', err)
-        setFavorites([])
-      }
-    }
-  }, [])
-
-  // Save favorites to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('bootpedia-favorites', JSON.stringify(favorites))
-    } catch (err) {
-      console.error('Erro ao salvar favoritos:', err)
-    }
-  }, [favorites])
-
-  const addToFavorites = useCallback((tutorialId: string) => {
-    setFavorites(prev => {
-      if (!prev.includes(tutorialId)) {
-        return [...prev, tutorialId]
-      }
-      return prev
-    })
-  }, [])
-
-  const removeFromFavorites = useCallback((tutorialId: string) => {
-    setFavorites(prev => prev.filter(id => id !== tutorialId))
-  }, [])
-
-  const isFavorite = useCallback(
-    (tutorialId: string) => favorites.includes(tutorialId),
-    [favorites]
-  )
 
   const searchTutorials = useCallback(
     (searchQuery: string, filters?: SearchFilters) => {
@@ -371,22 +329,17 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
     [normalizeDifficulty]
   )
 
-  const deleteTutorial = useCallback(
-    async (id: string) => {
-      try {
-        await deleteDoc(doc(db, 'tutorials', id))
-        removeFromFavorites(id)
-      } catch (err) {
-        console.error('Erro ao excluir tutorial:', err)
-        throw new Error('Falha ao excluir tutorial. Tente novamente.')
-      }
-    },
-    [removeFromFavorites]
-  )
+  const deleteTutorial = useCallback(async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'tutorials', id))
+    } catch (err) {
+      console.error('Erro ao excluir tutorial:', err)
+      throw new Error('Falha ao excluir tutorial. Tente novamente.')
+    }
+  }, [])
 
   const incrementViews = useCallback(async (id: string) => {
-    try {       
-
+    try {
       const tutorialRef = doc(db, 'tutorials', id)
       const tutorialSnap = await getDoc(tutorialRef)
 
@@ -398,12 +351,10 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
       const currentData = tutorialSnap.data()
       const currentViews = currentData?.views || 0
 
-
       // Importante: Atualizando APENAS o campo views
       await updateDoc(tutorialRef, {
         views: currentViews + 1
       })
-
     } catch (err) {
       const error = err as { code?: string; message?: string }
       console.error('❌ Erro detalhado:', {
@@ -433,14 +384,10 @@ export const TutorialProvider: React.FC<TutorialProviderProps> = ({
   const value: TutorialContextType = {
     tutorials,
     categories,
-    favorites,
     loading,
     error,
     categoriesLoading,
     categoriesError,
-    addToFavorites,
-    removeFromFavorites,
-    isFavorite,
     searchTutorials,
     getTutorialById,
     getTutorialsByCategory,

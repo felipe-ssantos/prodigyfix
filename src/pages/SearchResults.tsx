@@ -38,7 +38,7 @@ const SearchResults: React.FC = () => {
   ) => {
     const newFilters = { ...filters }
     if (value) {
-      newFilters[key] = value as string & string[] // Type assertion mais segura
+      newFilters[key] = value as string & string[]
     } else {
       delete newFilters[key]
     }
@@ -79,27 +79,29 @@ const SearchResults: React.FC = () => {
           <div className='d-flex justify-content-between align-items-center mb-3'>
             <div>
               <button
+                type='button'
                 className='btn btn-outline-secondary btn-sm'
                 onClick={() => setShowFilters(!showFilters)}
-                aria-label={showFilters ? 'Hide filters' : 'Show filters'}
+                aria-label={showFilters ? 'Esconder filtros' : 'Mostrar filtros'}
               >
                 <FaFilter className='me-1' />
-                Filters
+                Filtros
               </button>
               {hasActiveFilters && (
                 <button
+                  type='button'
                   className='btn btn-outline-danger btn-sm ms-2'
                   onClick={clearFilters}
-                  aria-label='Clear filters'
+                  aria-label='Limpar filtros'
                 >
                   <FaTimes className='me-1' />
-                  Clear Filters
+                  Limpar filtros
                 </button>
               )}
             </div>
             <div className='text-muted'>
               {searchResults.total}{' '}
-              {searchResults.total === 1 ? 'result' : 'results'} found
+              {searchResults.total === 1 ? 'resultado' : 'resultados'} encontrados
             </div>
           </div>
 
@@ -107,11 +109,11 @@ const SearchResults: React.FC = () => {
           {showFilters && (
             <div className='card mb-4'>
               <div className='card-body'>
-                <h6 className='mb-3'>Filter Results</h6>
+                <h6 className='mb-3'>Resultado da Pesquisa</h6>
                 <div className='row g-3'>
                   <div className='col-md-6'>
                     <label htmlFor='category-filter' className='form-label'>
-                      Category
+                      Categoria
                     </label>
                     <select
                       id='category-filter'
@@ -125,7 +127,7 @@ const SearchResults: React.FC = () => {
                       }
                       aria-label='Select category'
                     >
-                      <option value=''>All Categories</option>
+                      <option value=''>Todas as Categorias</option>
                       {categories.map((category: Category) => (
                         <option key={category.id} value={category.id}>
                           {category.name}
@@ -135,7 +137,7 @@ const SearchResults: React.FC = () => {
                   </div>
                   <div className='col-md-6'>
                     <label htmlFor='difficulty-filter' className='form-label'>
-                      Difficulty
+                      Dificuldade
                     </label>
                     <select
                       id='difficulty-filter'
@@ -149,15 +151,15 @@ const SearchResults: React.FC = () => {
                       }
                       aria-label='Select difficulty level'
                     >
-                      <option value=''>All Difficulties</option>
-                      <option value='beginner'>Beginner</option>
-                      <option value='intermediate'>Intermediate</option>
-                      <option value='advanced'>Advanced</option>
+                      <option value=''>Todas as Dificuldades</option>
+                      <option value='beginner'>Iniciante</option>
+                      <option value='intermediate'>Intermediário</option>
+                      <option value='advanced'>Avançado</option>
                     </select>
                   </div>
                   <div className='col-md-6'>
                     <label htmlFor='time-range-filter' className='form-label'>
-                      Time Range
+                      Faixa de Tempo
                     </label>
                     <select
                       id='time-range-filter'
@@ -171,11 +173,11 @@ const SearchResults: React.FC = () => {
                       }
                       aria-label='Select time range'
                     >
-                      <option value=''>Any Time</option>
-                      <option value='0-15'>0-15 minutes</option>
-                      <option value='15-30'>15-30 minutes</option>
-                      <option value='30-60'>30-60 minutes</option>
-                      <option value='60+'>60+ minutes</option>
+                      <option value=''>Qualquer Tempo</option>
+                      <option value='0-15'>0-15 minutos</option>
+                      <option value='15-30'>15-30 minutos</option>
+                      <option value='30-60'>30-60 minutos</option>
+                      <option value='60+'>60+ minutos</option>
                     </select>
                   </div>
                 </div>
@@ -234,16 +236,17 @@ const SearchResults: React.FC = () => {
                 <span className='display-1 text-muted'>🔍</span>
               </div>
               <h4 className='text-muted'>
-                {query ? 'No results found' : 'Start searching'}
+                {query ? 'Nenhum resultado encontrado' : 'Comece a pesquisar'}
               </h4>
               <p className='text-muted'>
                 {query
-                  ? `No tutorials found for "${query}". Try different keywords or adjust your filters.`
-                  : 'Enter keywords to search for tutorials.'}
+                  ? `Nenhum tutorial encontrado para "${query}". Tente palavras-chave diferentes ou ajuste seus filtros.`
+                  : 'Digite palavras-chave para pesquisar tutoriais.'}
               </p>
               {query && (
                 <div className='mt-3'>
                   <button
+                    type='button'
                     className='btn btn-outline-secondary'
                     onClick={() => {
                       setQuery('')
@@ -251,7 +254,7 @@ const SearchResults: React.FC = () => {
                     }}
                     aria-label='Clear search'
                   >
-                    Clear Search
+                    Limpar Pesquisa
                   </button>
                 </div>
               )}

@@ -1,10 +1,9 @@
-//src\services\firebase.ts
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Configuração usando variáveis de ambiente
+// Variáveis de ambiente
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_CONFIG_A,
   authDomain: import.meta.env.VITE_FB_CONFIG_B,
@@ -14,7 +13,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FB_CONFIG_F,
 };
 
-// Inicializar de forma segura
+// Inicialização do Firebase
 function initializeFirebase() {
   try {
     const app = initializeApp(firebaseConfig);
@@ -35,9 +34,9 @@ const { app, auth, db, storage } = initializeFirebase();
 
 export { app, auth, db, storage };
 
-// Mock uploadImage function - replace with actual Firebase Storage implementation
+// Mock uploadImage
 export const uploadImage = async (file: File): Promise<string> => {
-  // Mock implementation - replace with actual Firebase Storage upload
+  // Replace Firebase Storage upload
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => {
