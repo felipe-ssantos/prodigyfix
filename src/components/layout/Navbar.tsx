@@ -49,7 +49,7 @@ const Navbar = () => {
           <div>
             <div className='fw-bold fs-5'>Prodigy Informática</div>
             <div className='fs-6 small opacity-75 d-none d-lg-block'>
-              Assistência confiável, soluções rápidas
+              Assistência confiável, soluções adequadas
             </div>
           </div>
         </Link>
