@@ -26,7 +26,8 @@ import {
   FaUndo,
   FaRedo,
   FaUpload,
-  FaTimes
+  FaTimes,
+  FaYoutube
 } from 'react-icons/fa'
 
 interface TiptapEditorProps {
@@ -233,7 +234,6 @@ const TiptapEditor = ({
   const openImageDialog = () => {
     fileInputRef.current?.click()
   }
-
   const addImageByUrl = () => {
     const url = window.prompt('Digite a URL da imagem:')
     if (url && editor) {
@@ -245,6 +245,15 @@ const TiptapEditor = ({
           alt: 'Imagem do tutorial'
         })
         .run()
+    }
+  }
+
+  const addYoutubeVideo = () => {
+    const url = window.prompt('Cole a URL do vídeo do YouTube:')
+    if (url && editor) {
+      editor.commands.setYoutubeVideo({
+        src: url
+      })
     }
   }
 
@@ -494,6 +503,19 @@ const TiptapEditor = ({
                 </li>
               </ul>
             </div>
+          </div>
+
+          {/* Vídeo do YouTube */}
+          <div className='btn-group' role='group' aria-label='Inserir vídeo'>
+            <button
+              type='button'
+              onClick={addYoutubeVideo}
+              className='btn btn-sm btn-outline-secondary'
+              aria-label='Inserir vídeo do YouTube'
+              title='Inserir vídeo do YouTube'
+            >
+              <FaYoutube />
+            </button>
           </div>
 
           {/* Desfazer/Refazer */}

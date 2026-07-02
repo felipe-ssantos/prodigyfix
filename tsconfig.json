@@ -14,7 +14,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,  // Corrigido aqui
+    "noEmit": true,
     "jsx": "react-jsx",
 
     /* Linting */
@@ -23,11 +23,7 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
-    /* Type imports */
-    "verbatimModuleSyntax": false,
-
     /* Path mapping */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
