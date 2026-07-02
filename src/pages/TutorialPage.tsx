@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import DOMPurify from 'dompurify'
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -261,9 +262,20 @@ const TutorialPage = () => {
                 <div className='tutorial-content mb-5'>
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: tutorial.content.replace(
-                        /<iframe(.+?)<\/iframe>/g,
-                        match => `<div class="video-container">${match}</div>`
+                      __html: DOMPurify.sanitize(
+                        tutorial.content.replace(
+                          /<iframe(.+?)<\/iframe>/g,
+                          match => `<div class="video-container">${match}</div>`
+                        ),
+                        {
+                          ADD_TAGS: ['iframe'],
+                          ADD_ATTR: [
+                            'allow',
+                            'allowfullscreen',
+                            'frameborder',
+                            'src'
+                          ]
+                        }
                       )
                     }}
                     className='lh-lg'
