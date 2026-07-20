@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { ref as storageRef, uploadBytes, deleteObject } from 'firebase/storage'
-import { db, storage } from '../../services/firebase'
+import { db } from '../../services/firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTutorials } from '../../hooks/useTutorials'
+import { uploadImageToCloudinary } from '../../services/cloudinary'
 import TiptapEditor from '../../components/TiptapEditor'
 import type { Tutorial } from '../../types'
 import { Modal, Button } from 'react-bootstrap'
@@ -84,7 +84,7 @@ const TagInput: React.FC<TagInputProps> = ({
             {tag}
             <button
               type='button'
-              className='btn-close btn-close-white ms-2 text-small'              
+              className='btn-close btn-close-white ms-2 text-small'
               onClick={() => handleRemoveTag(tag)}
               aria-label={`Remover tag ${tag}`}
             ></button>
@@ -115,7 +115,6 @@ const EditTutorial: React.FC = () => {
     estimatedTime: 0,
     imageUrl: ''
   })
-  const [originalImageUrl, setOriginalImageUrl] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -136,8 +135,7 @@ const EditTutorial: React.FC = () => {
             ...data,
             tags: data.tags || [],
             keywords: data.keywords || []
-          })
-          setOriginalImageUrl(data.imageUrl || '')
+          })        
         } else {
           setError('Tutorial não encontrado')
         }
@@ -239,34 +237,16 @@ const EditTutorial: React.FC = () => {
     setError('')
 
     try {
-      let imageName = formData.imageUrl
+      let imageUrl = formData.imageUrl
 
       if (imageFile) {
-        // Remove a imagem antiga se existir
-        if (originalImageUrl) {
-          try {
-            const oldImageRef = storageRef(
-              storage,
-              `tutorials/${originalImageUrl}`
-            )
-            await deleteObject(oldImageRef)
-          } catch (err) {
-            console.warn('Erro ao remover imagem antiga:', err)
-          }
-        }
-
-        // Upload da nova imagem (armazena apenas o nome do arquivo)
-        const fileName = `${Date.now()}_${imageFile.name.replace(/\s+/g, '_')}`
-        const newImageRef = storageRef(storage, `tutorials/${fileName}`)
-        await uploadBytes(newImageRef, imageFile)
-        imageName = fileName
+        imageUrl = await uploadImageToCloudinary(imageFile)
       }
 
-      // Atualiza no Firestore (armazenando apenas o nome do arquivo)
       const tutorialRef = doc(db, 'tutorials', id)
       await updateDoc(tutorialRef, {
         ...formData,
-        imageUrl: imageName, // Armazena apenas o nome do arquivo
+        imageUrl,
         updatedAt: new Date()
       })
 

@@ -34,16 +34,4 @@ const { app, auth, db, storage } = initializeFirebase();
 
 export { app, auth, db, storage };
 
-// Mock uploadImage
-export const uploadImage = async (file: File): Promise<string> => {
-  // Replace Firebase Storage upload
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      resolve(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  });
-};
-
 export default app;

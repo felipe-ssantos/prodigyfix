@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTutorials } from '../../hooks/useTutorials'
-import { db, storage } from '../../services/firebase'
+import { db } from '../../services/firebase'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { ref, uploadBytes } from 'firebase/storage'
+import { uploadImageToCloudinary } from '../../services/cloudinary'
 import type { Tutorial } from '../../types'
 import TiptapEditor from '../../components/TiptapEditor'
 import { Modal, Button } from 'react-bootstrap'
@@ -88,7 +88,7 @@ const TagInput: React.FC<TagInputProps> = ({
             {tag}
             <button
               type='button'
-              className='btn-close btn-close-white ms-2 text-small'              
+              className='btn-close btn-close-white ms-2 text-small'
               onClick={() => handleRemoveTag(tag)}
               aria-label={`Remover tag ${tag}`}
             ></button>
@@ -229,20 +229,15 @@ const CreateTutorial: React.FC = () => {
         throw new Error('Usuário não autenticado')
       }
 
-      let imageName = formData.imageUrl || ''
+      let imageUrl = formData.imageUrl
 
       if (imageFile) {
-        const fileName = `${Date.now()}_${imageFile.name
-          .toLowerCase()
-          .replace(/\s+/g, '-')}`
-        const storageRef = ref(storage, `tutorials/${fileName}`)
-        await uploadBytes(storageRef, imageFile)
-        imageName = fileName
+        imageUrl = await uploadImageToCloudinary(imageFile)
       }
 
       const tutorialData = {
         ...formData,
-        imageUrl: imageName,
+        imageUrl,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         views: 0,
@@ -423,7 +418,7 @@ const CreateTutorial: React.FC = () => {
                       placeholder='Digite uma tag'
                       helpText='Adicione tags para facilitar a busca'
                     />
-                    
+
                     <TagInput
                       label='Palavras-chave'
                       tags={formData.keywords}
