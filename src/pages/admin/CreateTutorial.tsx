@@ -1,5 +1,5 @@
 // src/pages/admin/CreateTutorial.tsx
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTutorials } from '../../hooks/useTutorials'
@@ -8,6 +8,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { uploadImageToCloudinary } from '../../services/cloudinary'
 import type { Tutorial } from '../../types'
 import TiptapEditor from '../../components/TiptapEditor'
+import TutorialPreview from '../../components/TutorialPreview'
 import { Modal, Button } from 'react-bootstrap'
 
 // Componente TagInput
@@ -125,6 +126,23 @@ const CreateTutorial: React.FC = () => {
   const [error, setError] = useState('')
   const [newCategory, setNewCategory] = useState('')
   const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload')
+  const [imageUrlInput, setImageUrlInput] = useState('')
+  const [previewObjectUrl, setPreviewObjectUrl] = useState('')
+
+  // Gera/libera a URL de preview quando o arquivo muda
+  useEffect(() => {
+    if (imageFile) {
+      const objectUrl = URL.createObjectURL(imageFile)
+      setPreviewObjectUrl(objectUrl)
+      return () => URL.revokeObjectURL(objectUrl)
+    }
+    setPreviewObjectUrl('')
+  }, [imageFile])
+
+  // URL efetiva a exibir no preview, independente da origem
+  const previewImageSrc =
+    imageMode === 'upload' ? previewObjectUrl : imageUrlInput.trim()
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -231,8 +249,10 @@ const CreateTutorial: React.FC = () => {
 
       let imageUrl = formData.imageUrl
 
-      if (imageFile) {
+      if (imageMode === 'upload' && imageFile) {
         imageUrl = await uploadImageToCloudinary(imageFile)
+      } else if (imageMode === 'url' && imageUrlInput.trim()) {
+        imageUrl = imageUrlInput.trim()
       }
 
       const tutorialData = {
@@ -449,34 +469,93 @@ const CreateTutorial: React.FC = () => {
                       <i className='fas fa-image me-2' aria-hidden='true'></i>
                       Imagem de Capa
                     </h2>
-                    <div className='mb-3'>
-                      <label htmlFor='image' className='form-label'>
-                        Selecione uma imagem
-                      </label>
-                      <input
-                        type='file'
-                        className='form-control'
-                        id='image'
-                        name='image'
-                        accept='image/*'
-                        onChange={handleImageChange}
-                        aria-describedby='imageHelp'
-                      />
-                      <small id='imageHelp' className='form-text text-muted'>
-                        Máx. 5MB (JPG, PNG, GIF, WebP)
-                      </small>
-                      {imageFile && (
-                        <div className='mt-2'>
-                          <span className='badge bg-success'>
-                            <i
-                              className='fas fa-check-circle me-1'
-                              aria-hidden='true'
-                            ></i>
-                            {imageFile.name}
-                          </span>
-                        </div>
-                      )}
+
+                    <div
+                      className='btn-group w-100 mb-3'
+                      role='group'
+                      aria-label='Origem da imagem'
+                    >
+                      <button
+                        type='button'
+                        className={`btn btn-outline-primary ${
+                          imageMode === 'upload' ? 'active' : ''
+                        }`}
+                        onClick={() => {
+                          setImageMode('upload')
+                          setImageUrlInput('')
+                        }}
+                      >
+                        <i className='fas fa-upload me-2'></i>
+                        Fazer upload
+                      </button>
+                      <button
+                        type='button'
+                        className={`btn btn-outline-primary ${
+                          imageMode === 'url' ? 'active' : ''
+                        }`}
+                        onClick={() => {
+                          setImageMode('url')
+                          setImageFile(null)
+                        }}
+                      >
+                        <i className='fas fa-link me-2'></i>
+                        Usar URL
+                      </button>
                     </div>
+
+                    {imageMode === 'upload' ? (
+                      <div className='mb-3'>
+                        <label htmlFor='image' className='form-label'>
+                          Selecione uma imagem
+                        </label>
+                        <input
+                          type='file'
+                          className='form-control'
+                          id='image'
+                          name='image'
+                          accept='image/*'
+                          onChange={handleImageChange}
+                          aria-describedby='imageHelp'
+                        />
+                        <small id='imageHelp' className='form-text text-muted'>
+                          Máx. 5MB (JPG, PNG, GIF, WebP)
+                        </small>
+                      </div>
+                    ) : (
+                      <div className='mb-3'>
+                        <label htmlFor='imageUrlInput' className='form-label'>
+                          URL da imagem
+                        </label>
+                        <input
+                          type='url'
+                          className='form-control'
+                          id='imageUrlInput'
+                          value={imageUrlInput}
+                          onChange={e => setImageUrlInput(e.target.value)}
+                          placeholder='https://exemplo.com/imagem.jpg'
+                        />
+                        <small className='form-text text-muted'>
+                          Usa a imagem direto da URL, sem consumir espaço no
+                          Cloudinary
+                        </small>
+                      </div>
+                    )}
+
+                    {previewImageSrc && (
+                      <div className='mt-3'>
+                        <p className='small text-muted mb-2'>Preview:</p>
+                        <img
+                          src={previewImageSrc}
+                          alt='Preview da capa'
+                          className='img-fluid rounded border'
+                          style={{ maxHeight: '200px', objectFit: 'cover' }}
+                          onError={e => {
+                            ;(e.target as HTMLImageElement).style.display =
+                              'none'
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className='mb-3'>
@@ -494,6 +573,37 @@ const CreateTutorial: React.FC = () => {
                       min='0'
                       value={formData.estimatedTime}
                       onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Preview Section */}
+              <div className='row mt-4 pt-3 border-top'>
+                <div className='col-12'>
+                  <div className='mb-4'>
+                    <h2 className='text-muted border-bottom pb-2 mb-3'>
+                      <i className='fas fa-eye me-2' aria-hidden='true'></i>
+                      Preview
+                    </h2>
+                    <TutorialPreview
+                      title={formData.title || 'Título do Tutorial'}
+                      description={
+                        formData.description ||
+                        'Descrição do tutorial aparecerá aqui...'
+                      }
+                      imageSrc={previewImageSrc}
+                      difficulty={formData.difficulty}
+                      categoryName={
+                        categories.find(c => c.id === formData.category)
+                          ?.name || ''
+                      }
+                      categoryIcon={
+                        categories.find(c => c.id === formData.category)
+                          ?.icon || '📁'
+                      }
+                      estimatedTime={formData.estimatedTime}
+                      tags={formData.tags}
                     />
                   </div>
                 </div>

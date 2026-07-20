@@ -1,4 +1,3 @@
-// src/components/TutorialImage.tsx - Versão aprimorada sem inline styles
 import React, { useState } from 'react'
 import { useImageUrl } from '../hooks/useImageUrl'
 import '../styles/TutorialImage.css'
